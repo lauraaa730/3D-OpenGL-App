@@ -1,0 +1,60 @@
+﻿singlemesh.obj : error LNK2019: unresolved external symbol aiGetMaterialColor referenced in function "private: bool __cdecl SingleMesh::loadSingleMesh(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const &,struct _ShaderProgram *,struct _ObjectGeometry * *)" (?loadSingleMesh@SingleMesh@@AEAA_NAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@PEAU_ShaderProgram@@PEAPEAU_ObjectGeometry@@@Z)
+singlemesh.obj : error LNK2019: unresolved external symbol aiGetMaterialString referenced in function "public: enum aiReturn __cdecl aiMaterial::Get(char const *,unsigned int,unsigned int,struct aiString &)const " (?Get@aiMaterial@@QEBA?AW4aiReturn@@PEBDIIAEAUaiString@@@Z)
+singlemesh.obj : error LNK2019: unresolved external symbol "public: __cdecl Assimp::Importer::Importer(void)" (??0Importer@Assimp@@QEAA@XZ) referenced in function "private: bool __cdecl SingleMesh::loadSingleMesh(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const &,struct _ShaderProgram *,struct _ObjectGeometry * *)" (?loadSingleMesh@SingleMesh@@AEAA_NAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@PEAU_ShaderProgram@@PEAPEAU_ObjectGeometry@@@Z)
+singlemesh.obj : error LNK2019: unresolved external symbol "public: __cdecl Assimp::Importer::~Importer(void)" (??1Importer@Assimp@@QEAA@XZ) referenced in function "private: bool __cdecl SingleMesh::loadSingleMesh(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const &,struct _ShaderProgram *,struct _ObjectGeometry * *)" (?loadSingleMesh@SingleMesh@@AEAA_NAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@PEAU_ShaderProgram@@PEAPEAU_ObjectGeometry@@@Z)
+singlemesh.obj : error LNK2019: unresolved external symbol "public: bool __cdecl Assimp::Importer::SetPropertyInteger(char const *,int)" (?SetPropertyInteger@Importer@Assimp@@QEAA_NPEBDH@Z) referenced in function "private: bool __cdecl SingleMesh::loadSingleMesh(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const &,struct _ShaderProgram *,struct _ObjectGeometry * *)" (?loadSingleMesh@SingleMesh@@AEAA_NAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@PEAU_ShaderProgram@@PEAPEAU_ObjectGeometry@@@Z)
+singlemesh.obj : error LNK2019: unresolved external symbol "public: struct aiScene const * __cdecl Assimp::Importer::ReadFile(char const *,unsigned int)" (?ReadFile@Importer@Assimp@@QEAAPEBUaiScene@@PEBDI@Z) referenced in function "private: bool __cdecl SingleMesh::loadSingleMesh(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const &,struct _ShaderProgram *,struct _ObjectGeometry * *)" (?loadSingleMesh@SingleMesh@@AEAA_NAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@PEAU_ShaderProgram@@PEAPEAU_ObjectGeometry@@@Z)
+singlemesh.obj : error LNK2019: unresolved external symbol "public: char const * __cdecl Assimp::Importer::GetErrorString(void)const " (?GetErrorString@Importer@Assimp@@QEBAPEBDXZ) referenced in function "private: bool __cdecl SingleMesh::loadSingleMesh(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const &,struct _ShaderProgram *,struct _ObjectGeometry * *)" (?loadSingleMesh@SingleMesh@@AEAA_NAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@PEAU_ShaderProgram@@PEAPEAU_ObjectGeometry@@@Z)
+singlemesh.obj : error LNK2019: unresolved external symbol "void __cdecl pgr::checkGLError(char const *,int)" (?checkGLError@pgr@@YAXPEBDH@Z) referenced in function "private: bool __cdecl SingleMesh::loadSingleMesh(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const &,struct _ShaderProgram *,struct _ObjectGeometry * *)" (?loadSingleMesh@SingleMesh@@AEAA_NAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@PEAU_ShaderProgram@@PEAPEAU_ObjectGeometry@@@Z)
+singlemesh.obj : error LNK2001: unresolved external symbol _ptrc_glDrawElements
+singlemesh.obj : error LNK2001: unresolved external symbol _ptrc_glBindBuffer
+triangle.obj : error LNK2001: unresolved external symbol _ptrc_glBindBuffer
+singlemesh.obj : error LNK2001: unresolved external symbol _ptrc_glBufferData
+triangle.obj : error LNK2001: unresolved external symbol _ptrc_glBufferData
+singlemesh.obj : error LNK2001: unresolved external symbol _ptrc_glBufferSubData
+singlemesh.obj : error LNK2001: unresolved external symbol _ptrc_glDeleteBuffers
+triangle.obj : error LNK2001: unresolved external symbol _ptrc_glDeleteBuffers
+singlemesh.obj : error LNK2001: unresolved external symbol _ptrc_glGenBuffers
+triangle.obj : error LNK2001: unresolved external symbol _ptrc_glGenBuffers
+singlemesh.obj : error LNK2001: unresolved external symbol _ptrc_glEnableVertexAttribArray
+triangle.obj : error LNK2001: unresolved external symbol _ptrc_glEnableVertexAttribArray
+singlemesh.obj : error LNK2001: unresolved external symbol _ptrc_glUniformMatrix4fv
+triangle.obj : error LNK2001: unresolved external symbol _ptrc_glUniformMatrix4fv
+singlemesh.obj : error LNK2001: unresolved external symbol _ptrc_glUseProgram
+triangle.obj : error LNK2001: unresolved external symbol _ptrc_glUseProgram
+singlemesh.obj : error LNK2001: unresolved external symbol _ptrc_glVertexAttribPointer
+triangle.obj : error LNK2001: unresolved external symbol _ptrc_glVertexAttribPointer
+singlemesh.obj : error LNK2001: unresolved external symbol _ptrc_glBindVertexArray
+triangle.obj : error LNK2001: unresolved external symbol _ptrc_glBindVertexArray
+singlemesh.obj : error LNK2001: unresolved external symbol _ptrc_glDeleteVertexArrays
+triangle.obj : error LNK2001: unresolved external symbol _ptrc_glDeleteVertexArrays
+singlemesh.obj : error LNK2001: unresolved external symbol _ptrc_glGenVertexArrays
+triangle.obj : error LNK2001: unresolved external symbol _ptrc_glGenVertexArrays
+skeleton.obj : error LNK2019: unresolved external symbol __imp_glutInitWindowSize referenced in function main
+skeleton.obj : error LNK2019: unresolved external symbol __imp_glutInitDisplayMode referenced in function main
+skeleton.obj : error LNK2019: unresolved external symbol __imp_glutMainLoop referenced in function main
+skeleton.obj : error LNK2019: unresolved external symbol __imp_glutPostRedisplay referenced in function "void __cdecl timerCb(int)" (?timerCb@@YAXH@Z)
+skeleton.obj : error LNK2019: unresolved external symbol __imp_glutSwapBuffers referenced in function "void __cdecl displayCb(void)" (?displayCb@@YAXXZ)
+skeleton.obj : error LNK2019: unresolved external symbol __imp_glutTimerFunc referenced in function "void __cdecl timerCb(int)" (?timerCb@@YAXH@Z)
+skeleton.obj : error LNK2019: unresolved external symbol __imp_glutKeyboardFunc referenced in function main
+skeleton.obj : error LNK2019: unresolved external symbol __imp_glutReshapeFunc referenced in function main
+skeleton.obj : error LNK2019: unresolved external symbol __imp_glutDisplayFunc referenced in function main
+skeleton.obj : error LNK2019: unresolved external symbol __imp_glutGet referenced in function "void __cdecl timerCb(int)" (?timerCb@@YAXH@Z)
+skeleton.obj : error LNK2019: unresolved external symbol __imp___glutInitWithExit referenced in function glutInit_ATEXIT_HACK
+skeleton.obj : error LNK2019: unresolved external symbol __imp___glutCreateWindowWithExit referenced in function glutCreateWindow_ATEXIT_HACK
+skeleton.obj : error LNK2019: unresolved external symbol __imp_glutLeaveMainLoop referenced in function "void __cdecl keyboardCb(unsigned char,int,int)" (?keyboardCb@@YAXEHH@Z)
+skeleton.obj : error LNK2019: unresolved external symbol __imp_glutCloseFunc referenced in function main
+skeleton.obj : error LNK2019: unresolved external symbol __imp_glutInitContextVersion referenced in function main
+skeleton.obj : error LNK2019: unresolved external symbol __imp_glutInitContextFlags referenced in function main
+skeleton.obj : error LNK2019: unresolved external symbol "unsigned int __cdecl pgr::createShaderFromSource(unsigned int,class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const &)" (?createShaderFromSource@pgr@@YAIIAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z) referenced in function "void __cdecl loadShaderPrograms(void)" (?loadShaderPrograms@@YAXXZ)
+skeleton.obj : error LNK2019: unresolved external symbol "unsigned int __cdecl pgr::createProgram(unsigned int const *)" (?createProgram@pgr@@YAIPEBI@Z) referenced in function "void __cdecl loadShaderPrograms(void)" (?loadShaderPrograms@@YAXXZ)
+skeleton.obj : error LNK2019: unresolved external symbol "void __cdecl pgr::deleteProgramAndShaders(unsigned int)" (?deleteProgramAndShaders@pgr@@YAXI@Z) referenced in function "void __cdecl cleanupShaderPrograms(void)" (?cleanupShaderPrograms@@YAXXZ)
+skeleton.obj : error LNK2019: unresolved external symbol "bool __cdecl pgr::initialize(int,int,enum pgr::DebugLevel)" (?initialize@pgr@@YA_NHHW4DebugLevel@1@@Z) referenced in function main
+skeleton.obj : error LNK2019: unresolved external symbol "void __cdecl pgr::dieWithError(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const &)" (?dieWithError@pgr@@YAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z) referenced in function main
+skeleton.obj : error LNK2001: unresolved external symbol _ptrc_glClear
+skeleton.obj : error LNK2001: unresolved external symbol _ptrc_glGetAttribLocation
+skeleton.obj : error LNK2001: unresolved external symbol _ptrc_glGetUniformLocation
+triangle.obj : error LNK2001: unresolved external symbol _ptrc_glDrawArrays
+C:\PGR\pgr-framework\lib\pgrd.lib : warning LNK4272: library machine type 'x86' conflicts with target machine type 'x64'
+C:\PGR\pgr-framework\lib\freeglut.lib : warning LNK4272: library machine type 'x86' conflicts with target machine type 'x64'
+C:\PGR\semestralka\kostra\x64\Debug\skeleton.exe : fatal error LNK1120: 46 unresolved externals
