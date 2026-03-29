@@ -123,7 +123,7 @@ void drawScene(void)
 		-10.0f * SCENE_DEPTH, 10.0f * SCENE_DEPTH
 	);
 	
-	glm::mat4 projectionMatrix = orthoProjectionMatrix;
+	glm::mat4 projectionMatrix = glm::perspective(glm::radians(50.0f), WINDOW_WIDTH / (float)WINDOW_HEIGHT, 0.1f, 10.0f);
 
 	glm::vec3 cameraCenter = myCamera.direction + myCamera.position;
 
@@ -196,6 +196,13 @@ void keyboardCb(unsigned char keyPressed, int mouseX, int mouseY) {
 	case ('a'):
 		keyMap[KEY_LEFT_ARROW] = true;
 		break;
+	case ('w'):
+		keyMap[KEY_UP_ARROW] = true;
+		std::cout << myCamera.position.z << std::endl;
+		break;
+	case ('s'):
+		keyMap[KEY_DOWN_ARROW] = true;
+		break;
 	default:
 		;
 	}
@@ -217,6 +224,12 @@ void keyboardUpCb(unsigned char keyReleased, int mouseX, int mouseY) {
 		break;
 	case ('a'):
 		keyMap[KEY_LEFT_ARROW] = false;
+		break;
+	case ('w'):
+		keyMap[KEY_UP_ARROW] = false;
+		break;
+	case ('s'):
+		keyMap[KEY_DOWN_ARROW] = false;
 		break;
 	default:
 		;
@@ -303,10 +316,10 @@ void timerCb(int)
 		myCamera.Move(glm::vec3(-0.05f, 0.0f, 0.0f));
 
 	if (keyMap[KEY_UP_ARROW] == true)
-		myCamera.Move(glm::vec3(0.0f, 0.0f, 0.0f)); //zatim takto 
+		myCamera.Move(glm::vec3(0.0f, 0.0f, -0.05f)); 
 
 	if (keyMap[KEY_DOWN_ARROW] == true)
-		myCamera.Move(glm::vec3(0.0f, 0.0f, 0.0f));
+		myCamera.Move(glm::vec3(0.0f, 0.0f, 0.05f));
 
 #endif // task_1_0
 
