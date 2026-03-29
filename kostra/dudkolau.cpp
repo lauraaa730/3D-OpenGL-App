@@ -43,6 +43,8 @@
 #define SCENE_HEIGHT 1.0f
 #define SCENE_DEPTH  1.0f
 
+enum { KEY_LEFT_ARROW, KEY_RIGHT_ARROW, KEY_UP_ARROW, KEY_DOWN_ARROW, KEY_SPACE, KEY_SHIFT, KEYS_COUNT };
+bool keyMap[KEYS_COUNT];
 
 constexpr int WINDOW_WIDTH = 500;
 constexpr int WINDOW_HEIGHT = 500;
@@ -183,9 +185,19 @@ void reshapeCb(int newWidth, int newHeight) {
  */
 void keyboardCb(unsigned char keyPressed, int mouseX, int mouseY) {
 
-	if (keyPressed == 27) {
+	switch (keyPressed) {
+	case 27:
 		glutLeaveMainLoop();
 		exit(EXIT_SUCCESS);
+	case ('d'):
+		keyMap[KEY_RIGHT_ARROW] = true;
+		//std::cout << myCamera.position.x << std::endl; 
+		break;
+	case ('a'):
+		keyMap[KEY_LEFT_ARROW] = true;
+		break;
+	default:
+		;
 	}
 }
 
@@ -198,6 +210,17 @@ void keyboardCb(unsigned char keyPressed, int mouseX, int mouseY) {
  * \param mouseY mouse (cursor) Y position
  */
 void keyboardUpCb(unsigned char keyReleased, int mouseX, int mouseY) {
+
+	switch (keyReleased) {
+	case ('d'):
+		keyMap[KEY_RIGHT_ARROW] = false;
+		break;
+	case ('a'):
+		keyMap[KEY_LEFT_ARROW] = false;
+		break;
+	default:
+		;
+	}
 }
 
 //
@@ -272,6 +295,19 @@ void timerCb(int)
 		if (object != nullptr)
 			object->update(elapsedTime, &sceneRootMatrix);
 	}
+
+	if (keyMap[KEY_RIGHT_ARROW] == true)
+		myCamera.Move(glm::vec3(0.05f, 0.0f, 0.0f));
+
+	if (keyMap[KEY_LEFT_ARROW] == true)
+		myCamera.Move(glm::vec3(-0.05f, 0.0f, 0.0f));
+
+	if (keyMap[KEY_UP_ARROW] == true)
+		myCamera.Move(glm::vec3(0.0f, 0.0f, 0.0f)); //zatim takto 
+
+	if (keyMap[KEY_DOWN_ARROW] == true)
+		myCamera.Move(glm::vec3(0.0f, 0.0f, 0.0f));
+
 #endif // task_1_0
 
 	// and plan a new event
@@ -341,7 +377,7 @@ int main(int argc, char** argv) {
 		glutDisplayFunc(displayCb);
 		glutReshapeFunc(reshapeCb);
 		glutKeyboardFunc(keyboardCb);
-		// glutKeyboardUpFunc(keyboardUpCb);
+		glutKeyboardUpFunc(keyboardUpCb);
 		// glutSpecialFunc(specialKeyboardCb);     // key pressed
 		// glutSpecialUpFunc(specialKeyboardUpCb); // key released
 		// glutMouseFunc(mouseCb);
