@@ -16,7 +16,10 @@ void Triangle::draw(const glm::mat4& viewMatrix, const glm::mat4& projectionMatr
 	if(initialized && (shaderProgram != nullptr)) {
 		glUseProgram(shaderProgram->program);
 
-		glUniformMatrix4fv(shaderProgram->locations.PVMmatrix, 1, GL_FALSE, glm::value_ptr(globalModelMatrix));
+		glm::mat4 PVM = projectionMatrix * viewMatrix * globalModelMatrix;
+
+		glUniformMatrix4fv(shaderProgram->locations.PVMmatrix, 1, GL_FALSE,
+			glm::value_ptr(PVM));
 
 		glBindVertexArray(geometry->vertexArrayObject);
 		glDrawArrays(GL_TRIANGLES, 0, 3);

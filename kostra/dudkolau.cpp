@@ -37,16 +37,42 @@
 #include "object.h"
 #include "triangle.h"
 #include "singlemesh.h"
+#include "Camera.h"
+
+#define SCENE_WIDTH  1.0f
+#define SCENE_HEIGHT 1.0f
+#define SCENE_DEPTH  1.0f
 
 
 constexpr int WINDOW_WIDTH = 500;
 constexpr int WINDOW_HEIGHT = 500;
-constexpr char WINDOW_TITLE[] = "PGR: Application Skeleton";
+constexpr char WINDOW_TITLE[] = "PGR: dudkolau";
+
+
 
 ObjectList objects;
 
 // shared shader programs
 ShaderProgram commonShaderProgram;
+
+Camera myCamera;
+
+
+/*
+THE CORE ENGINE LOOP
+
+1. Setup
+* create window
+* load shaders
+* create objects
+
+2. Main loop
+* Handled by GLUT, not while(true)
+
+3. Delegation
+actual rendering -> object->draw(...)
+updates -> object->update(...)
+*/
 
 
 // -----------------------  OpenGL stuff ---------------------------------
@@ -56,26 +82,9 @@ ShaderProgram commonShaderProgram;
  */
 void loadShaderPrograms()
 {
-	std::string vertexShaderSrc =
-		"#version 140\n"
-		"in vec2 position;\n"
-		"uniform mat4 PVM;\n"
-		"void main() {\n"
-		"  gl_Position = PVM * vec4(position, 0.0f, 1.0f);\n"
-		"}\n"
-		;
-
-	std::string fragmentShaderSrc =
-		"#version 140\n"
-		"out vec4 fragmentColor;"
-		"void main() {\n"
-		"  fragmentColor = vec4(1.0f, 1.0f, 1.0f, 1.0f);\n"
-		"}\n"
-		;
-
 	GLuint shaders[] = {
-	  pgr::createShaderFromSource(GL_VERTEX_SHADER, vertexShaderSrc),
-	  pgr::createShaderFromSource(GL_FRAGMENT_SHADER, fragmentShaderSrc),
+	  pgr::createShaderFromFile(GL_VERTEX_SHADER, "shaders/simple.vert"),
+	  pgr::createShaderFromFile(GL_FRAGMENT_SHADER, "shaders/simple.frag"),
 	  0
 	};
 
@@ -105,8 +114,24 @@ void cleanupShaderPrograms(void) {
  */
 void drawScene(void)
 {
-	glm::mat4 viewMatrix = glm::mat4(1.0f);
-	glm::mat4 projectionMatrix = glm::mat4(1.0f);
+	// setup parallel projection
+	const glm::mat4 orthoProjectionMatrix = glm::ortho(
+		-SCENE_WIDTH, SCENE_WIDTH,
+		-SCENE_HEIGHT, SCENE_HEIGHT,
+		-10.0f * SCENE_DEPTH, 10.0f * SCENE_DEPTH
+	);
+	
+	glm::mat4 projectionMatrix = orthoProjectionMatrix;
+
+	glm::vec3 cameraCenter = myCamera.direction + myCamera.position;
+
+	glm::mat4 viewMatrix = glm::lookAt(
+		myCamera.position,
+		cameraCenter,
+		myCamera.upVector
+	);
+
+	//glm::mat4 viewMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(50.0f, 0.0f, 0.0f));
 
 	for (ObjectInstance* object : objects) {   // for (auto object : objects) {
 		if (object != nullptr)
@@ -141,6 +166,9 @@ void reshapeCb(int newWidth, int newHeight) {
 
 	// glViewport(...);
 };
+
+
+
 
 // -----------------------  Keyboard ---------------------------------
 
@@ -230,6 +258,7 @@ void passiveMouseMotionCb(int mouseX, int mouseY) {
 
 /**
  * \brief Callback responsible for the scene update.
+ * Physics, animation, movement...
  */
 void timerCb(int)
 {
@@ -262,6 +291,7 @@ void initApplication() {
 	// init OpenGL
 	// - all programs (shaders), buffers, textures, ...
 	loadShaderPrograms();
+	myCamera = Camera::Camera();
 
 	objects.push_back(new Triangle(&commonShaderProgram));
 	// objects.push_back(new SingleMesh(&commonShaderProgram));
@@ -335,8 +365,9 @@ int main(int argc, char** argv) {
 	// handle window close by the user
 	glutCloseFunc(finalizeApplication);
 
+	//MAIN LOOP----------------------------------------------------------
 	// Infinite loop handling the events
-	glutMainLoop();
+	glutMainLoop(); //calls displaz and update (timerFc)
 
 	// code after glutLeaveMainLoop()
 	// cleanup
