@@ -43,7 +43,7 @@
 #define SCENE_HEIGHT 1.0f
 #define SCENE_DEPTH  1.0f
 
-enum { KEY_LEFT_ARROW, KEY_RIGHT_ARROW, KEY_UP_ARROW, KEY_DOWN_ARROW, KEY_SPACE, KEY_SHIFT, KEYS_COUNT };
+enum { KEY_LEFT, KEY_RIGHT, KEY_FORWARD, KEY_BACKWARDS, KEY_UP, KEY_DOWN, KEYS_COUNT };
 bool keyMap[KEYS_COUNT];
 
 constexpr int WINDOW_WIDTH = 500;
@@ -190,18 +190,18 @@ void keyboardCb(unsigned char keyPressed, int mouseX, int mouseY) {
 		glutLeaveMainLoop();
 		exit(EXIT_SUCCESS);
 	case ('d'):
-		keyMap[KEY_RIGHT_ARROW] = true;
+		keyMap[KEY_RIGHT] = true;
 		//std::cout << myCamera.position.x << std::endl; 
 		break;
 	case ('a'):
-		keyMap[KEY_LEFT_ARROW] = true;
+		keyMap[KEY_LEFT] = true;
 		break;
 	case ('w'):
-		keyMap[KEY_UP_ARROW] = true;
+		keyMap[KEY_FORWARD] = true;
 		std::cout << myCamera.position.z << std::endl;
 		break;
 	case ('s'):
-		keyMap[KEY_DOWN_ARROW] = true;
+		keyMap[KEY_BACKWARDS] = true;
 		break;
 	default:
 		;
@@ -220,21 +220,22 @@ void keyboardUpCb(unsigned char keyReleased, int mouseX, int mouseY) {
 
 	switch (keyReleased) {
 	case ('d'):
-		keyMap[KEY_RIGHT_ARROW] = false;
+		keyMap[KEY_RIGHT] = false;
 		break;
 	case ('a'):
-		keyMap[KEY_LEFT_ARROW] = false;
+		keyMap[KEY_LEFT] = false;
 		break;
 	case ('w'):
-		keyMap[KEY_UP_ARROW] = false;
+		keyMap[KEY_FORWARD] = false;
 		break;
 	case ('s'):
-		keyMap[KEY_DOWN_ARROW] = false;
+		keyMap[KEY_BACKWARDS] = false;
 		break;
 	default:
 		;
 	}
 }
+
 
 //
 /**
@@ -246,9 +247,29 @@ void keyboardUpCb(unsigned char keyReleased, int mouseX, int mouseY) {
  * \param mouseY mouse (cursor) Y position
  */
 void specialKeyboardCb(int specKeyPressed, int mouseX, int mouseY) {
+	switch (specKeyPressed) {
+	case GLUT_KEY_CTRL_L :
+		keyMap[KEY_DOWN] = true;
+		break;
+	case GLUT_KEY_SHIFT_L: 
+		keyMap[KEY_UP] = true;
+		break;
+	default:
+		;
+	}
 }
 
 void specialKeyboardUpCb(int specKeyReleased, int mouseX, int mouseY) {
+	switch (specKeyReleased) {
+	case GLUT_KEY_CTRL_L :
+		keyMap[KEY_DOWN] = false;
+		break;
+	case GLUT_KEY_SHIFT_L: 
+		keyMap[KEY_UP] = false;
+		break;
+	default:
+		;
+	}
 } // key released
 
 // -----------------------  Mouse ---------------------------------
@@ -309,17 +330,23 @@ void timerCb(int)
 			object->update(elapsedTime, &sceneRootMatrix);
 	}
 
-	if (keyMap[KEY_RIGHT_ARROW] == true)
+	if (keyMap[KEY_RIGHT] == true)
 		myCamera.Move(glm::vec3(0.05f, 0.0f, 0.0f));
 
-	if (keyMap[KEY_LEFT_ARROW] == true)
+	if (keyMap[KEY_LEFT] == true)
 		myCamera.Move(glm::vec3(-0.05f, 0.0f, 0.0f));
 
-	if (keyMap[KEY_UP_ARROW] == true)
-		myCamera.Move(glm::vec3(0.0f, 0.0f, -0.05f)); 
+	if (keyMap[KEY_FORWARD] == true)
+		myCamera.Move(myCamera.direction * 0.1f); 
 
-	if (keyMap[KEY_DOWN_ARROW] == true)
-		myCamera.Move(glm::vec3(0.0f, 0.0f, 0.05f));
+	if (keyMap[KEY_BACKWARDS] == true)
+		myCamera.Move(myCamera.direction * -0.1f);
+
+	if (keyMap[KEY_UP] == true)
+		myCamera.Move(myCamera.upVector * 0.1f);
+
+	if (keyMap[KEY_DOWN] == true)
+		myCamera.Move(myCamera.upVector * -0.1f);
 
 #endif // task_1_0
 
@@ -391,8 +418,8 @@ int main(int argc, char** argv) {
 		glutReshapeFunc(reshapeCb);
 		glutKeyboardFunc(keyboardCb);
 		glutKeyboardUpFunc(keyboardUpCb);
-		// glutSpecialFunc(specialKeyboardCb);     // key pressed
-		// glutSpecialUpFunc(specialKeyboardUpCb); // key released
+		glutSpecialFunc(specialKeyboardCb);     // key pressed
+		glutSpecialUpFunc(specialKeyboardUpCb); // key released
 		// glutMouseFunc(mouseCb);
 		// glutMotionFunc(mouseMotionCb);
 #ifndef SKELETON // @task_1_0
