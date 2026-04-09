@@ -50,6 +50,11 @@ constexpr int WINDOW_WIDTH = 500;
 constexpr int WINDOW_HEIGHT = 500;
 constexpr char WINDOW_TITLE[] = "PGR: dudkolau";
 
+//mouse movement handling
+float lastMousePosX = WINDOW_WIDTH/2;
+float lastMousePosY = WINDOW_HEIGHT/2;
+bool firstMouse = true;
+
 
 
 ObjectList objects;
@@ -219,7 +224,7 @@ void keyboardCb(unsigned char keyPressed, int mouseX, int mouseY) {
 void keyboardUpCb(unsigned char keyReleased, int mouseX, int mouseY) {
 
 	switch (keyReleased) {
-	case ('d'):
+	case ('d') :
 		keyMap[KEY_RIGHT] = false;
 		break;
 	case ('a'):
@@ -304,11 +309,39 @@ void mouseMotionCb(int mouseX, int mouseY) {
  * \param mouseY mouse (cursor) Y position
  */
 void passiveMouseMotionCb(int mouseX, int mouseY) {
-
+	//most of this code was written based on https://learnopengl.com/Getting-Started/Camera
 	// mouse hovering over window
 
-	// create display event to redraw window contents if needed (and not handled in the timer callback)
-	// glutPostRedisplay();
+
+	float xoffset = mouseX - lastMousePosX;
+	float yoffset = mouseY - lastMousePosY;
+
+	const float sensitivity = 0.05f;
+	xoffset *= sensitivity;
+	yoffset *= sensitivity;
+
+	myCamera.yaw += xoffset;
+	myCamera.pitch -= yoffset;
+
+	if (myCamera.pitch > 89.0f)
+		myCamera.pitch = 89.0f;
+	if (myCamera.pitch < -89.0f)
+		myCamera.pitch = -89.0f;
+
+	glm::vec3 direction;
+	direction.x = cos(glm::radians(myCamera.yaw)) * cos(glm::radians(myCamera.pitch));
+	direction.y = sin(glm::radians(myCamera.pitch));
+	direction.z = sin(glm::radians(myCamera.yaw)) * cos(glm::radians(myCamera.pitch));
+	myCamera.direction = glm::normalize(direction);
+
+	// set mouse pointer to the window center
+	glutWarpPointer(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
+
+	glutPostRedisplay();
+	
+
+	
+	
 }
 
 // -----------------------  Timer ---------------------------------
@@ -331,10 +364,10 @@ void timerCb(int)
 	}
 
 	if (keyMap[KEY_RIGHT] == true)
-		myCamera.Move(glm::vec3(0.05f, 0.0f, 0.0f));
+		myCamera.Move(-0.05f* glm::cross(myCamera.upVector, myCamera.direction));
 
 	if (keyMap[KEY_LEFT] == true)
-		myCamera.Move(glm::vec3(-0.05f, 0.0f, 0.0f));
+		myCamera.Move(0.05f * glm::cross(myCamera.upVector, myCamera.direction));
 
 	if (keyMap[KEY_FORWARD] == true)
 		myCamera.Move(myCamera.direction * 0.1f); 
@@ -399,6 +432,7 @@ void finalizeApplication(void) {
  */
 int main(int argc, char** argv) {
 
+
 	// initialize the GLUT library (windowing system)
 	glutInit(&argc, argv);
 
@@ -420,8 +454,12 @@ int main(int argc, char** argv) {
 		glutKeyboardUpFunc(keyboardUpCb);
 		glutSpecialFunc(specialKeyboardCb);     // key pressed
 		glutSpecialUpFunc(specialKeyboardUpCb); // key released
-		// glutMouseFunc(mouseCb);
-		// glutMotionFunc(mouseMotionCb);
+		glutPassiveMotionFunc(passiveMouseMotionCb);
+		//glutMouseFunc(mouseCb);
+		//glutMotionFunc(mouseMotionCb);
+
+		glutSetCursor(GLUT_CURSOR_NONE);
+
 #ifndef SKELETON // @task_1_0
 		glutTimerFunc(33, timerCb, 0);
 #else
