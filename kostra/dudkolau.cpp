@@ -47,8 +47,8 @@
 enum { KEY_LEFT, KEY_RIGHT, KEY_FORWARD, KEY_BACKWARDS, KEY_UP, KEY_DOWN, KEYS_COUNT };
 bool keyMap[KEYS_COUNT];
 
-constexpr int WINDOW_WIDTH = 500;
-constexpr int WINDOW_HEIGHT = 500;
+constexpr int WINDOW_WIDTH = 1080;
+constexpr int WINDOW_HEIGHT = 920;
 constexpr char WINDOW_TITLE[] = "PGR: dudkolau";
 
 //mouse movement handling

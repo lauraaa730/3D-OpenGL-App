@@ -2,6 +2,7 @@
 #include <glm/mat4x4.hpp>
 #include "pgr.h"
 #include "object.h"
+#include <iostream>
 #pragma once
 
 extern const std::string skyboxVertexShaderSrc;
@@ -36,5 +37,6 @@ public:
 private:
     ObjectGeometry* geometry;
 	void initSkyboxGeometry(ObjectGeometry** geometry);
+    GLuint loadCubemap(const std::vector<std::string>& faces);
 };
 
