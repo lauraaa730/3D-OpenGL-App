@@ -22,7 +22,7 @@ void Triangle::draw(const glm::mat4& viewMatrix, const glm::mat4& projectionMatr
 			glm::value_ptr(PVM));
 
 		glBindVertexArray(geometry->vertexArrayObject);
-		glDrawArrays(GL_TRIANGLES, 0, 3);
+		glDrawArrays(GL_TRIANGLES, 0, 6);
 		glBindVertexArray(0);
 	}
 	else {
@@ -35,12 +35,16 @@ Triangle::Triangle(ShaderProgram* shdrPrg) : ObjectInstance(shdrPrg), initialize
 	geometry = new ObjectGeometry;
 
 	static constexpr float vertices[] = {
-	  0.0f,  0.5f,
-	 -0.5f, -0.5f,
-	  0.5f, -0.5f,
+	  0.0f,  0.5f, 0.0f,
+	 -0.5f, -0.5f, 0.0f,
+	  0.5f, -0.5f, 0.0f,
+
+	  0.0f,  0.5f, 0.0f,
+	 -0.5f, -0.5f, 0.0f,
+	  -0.5f, 0.5f, 0.0f,
 	};
 
-	geometry->numTriangles = 1;
+	geometry->numTriangles = 2;
 	geometry->elementBufferObject = 0;
 
 	glGenVertexArrays(1, &geometry->vertexArrayObject);

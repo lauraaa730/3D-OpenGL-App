@@ -5,12 +5,14 @@
     <ClCompile Include="dudkolau.cpp" />
     <ClCompile Include="triangle.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Skybox.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="object.h" />
     <ClInclude Include="singlemesh.h" />
     <ClInclude Include="triangle.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="Skybox.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Shaders">

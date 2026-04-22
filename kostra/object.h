@@ -38,8 +38,8 @@ typedef struct _ObjectGeometry {
 	GLuint        elementBufferObject;  ///< identifier for the element buffer object
 	GLuint        vertexArrayObject;    ///< identifier for the vertex array object
 	unsigned int  numTriangles;         ///< number of triangles in the mesh
+	GLuint        texture;
 
-	// ...
 } ObjectGeometry;
 
 class ObjectInstance;

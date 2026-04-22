@@ -38,6 +38,7 @@
 #include "triangle.h"
 #include "singlemesh.h"
 #include "Camera.h"
+#include "Skybox.h"
 
 #define SCENE_WIDTH  1.0f
 #define SCENE_HEIGHT 1.0f
@@ -57,12 +58,25 @@ bool firstMouse = true;
 
 
 
+static constexpr float vertices_test_obj[] = {
+	  0.0f,  0.5f, 
+	 -0.5f, -0.5f,
+	  0.5f, -0.5f,
+
+	  0.0f,  0.5f,
+	 -0.5f, -0.5f,
+	  -0.5f, 0.5f,
+};
+
+
+
 ObjectList objects;
 
 // shared shader programs
 ShaderProgram commonShaderProgram;
 
 Camera myCamera;
+Skybox mySkybox;
 
 
 /*
@@ -105,7 +119,31 @@ void loadShaderPrograms()
 	assert(commonShaderProgram.locations.position != -1);
 	// ...
 
+	//SKYBOX SHADERS
+    // create the program with two shaders
+
+	skyboxShaderProgram.program = pgr::createProgram({ 
+		pgr::createShaderFromSource(GL_VERTEX_SHADER, skyboxVertexShaderSrc) , 
+		pgr::createShaderFromSource(GL_FRAGMENT_SHADER, skyboxFragmentShaderSrc) });
+
+	skyboxShaderProgram.positionLocation =
+		glGetAttribLocation(skyboxShaderProgram.program, "position");
+
+	skyboxShaderProgram.skyboxSamplerLocation =
+		glGetUniformLocation(skyboxShaderProgram.program, "skyboxSampler");
+
+	skyboxShaderProgram.viewNoTranslationLocation =
+		glGetUniformLocation(skyboxShaderProgram.program, "viewNoTranslation");
+
+	skyboxShaderProgram.projectionMatrixLocation =
+		glGetUniformLocation(skyboxShaderProgram.program, "projection");
+
+	if (!skyboxShaderProgram.program) {
+		std::cout << "SKY BOX SHADER COMPILATION FAILED!\N" << std::endl;
+	}
+
 	commonShaderProgram.initialized = true;
+	skyboxShaderProgram.initialized = true;
 }
 
 /**
@@ -114,6 +152,7 @@ void loadShaderPrograms()
 void cleanupShaderPrograms(void) {
 
 	pgr::deleteProgramAndShaders(commonShaderProgram.program);
+	//TODO pgr::deleteProgramAndShaders(skyboxFarPlaneShaderProgram.program);
 }
 
 /**
@@ -137,6 +176,8 @@ void drawScene(void)
 		cameraCenter,
 		myCamera.upVector
 	);
+
+	mySkybox.draw(viewMatrix, projectionMatrix);
 
 	//glm::mat4 viewMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(50.0f, 0.0f, 0.0f));
 
@@ -400,7 +441,7 @@ void initApplication() {
 	// init OpenGL
 	// - all programs (shaders), buffers, textures, ...
 	loadShaderPrograms();
-	myCamera = Camera::Camera();
+	mySkybox.init();
 
 	objects.push_back(new Triangle(&commonShaderProgram));
 	// objects.push_back(new SingleMesh(&commonShaderProgram));

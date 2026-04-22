@@ -1,0 +1,11 @@
+#DownloadModelFormat: FBX
+#GeometryFile: House.fbx
+#PreviewFile: House.jpg
+#OtherFiles: DirtyBuild_Base.png, Equipment.png, Equipment_normal.png, Equipment_roughness.png, Generator_base.png, Glass_Base.png, House.fbx, Laggue_base.png, Laggue_normal.png, Roof_base.png, Roof_normal.png, Roof_Roughness.png, Wall_Roughness.png, Generator_normal.png, Generator_roughness.png, Laggue_roughness.png, Wall_normal.png
+#DownloadedFromURL: https://sketchfab.com/3d-models/low-house-building-apocalypse-dirty-a4ba41df514e447095c2106f85734093
+#DateOfDownload: 03.5.2025
+#CreatedBy: YadroGames
+#CreatedIn: Blender
+#UploadedBy: Nikolaenkov Grigorii
+#Description: Model of a little house with transparent windows
+#NumberOfPolygons: 990
