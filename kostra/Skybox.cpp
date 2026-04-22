@@ -41,7 +41,7 @@ void Skybox::init() {
         "resources/skybox/night-no-moon/jettelly_no_moon_LEFT.png",  // GL_TEXTURE_CUBE_MAP_POSITIVE_X //LEFT
         "resources/skybox/night-no-moon/jettelly_no_moon_RIGHT.png",  // GL_TEXTURE_CUBE_MAP_NEGATIVE_X //RIGHT
         "resources/skybox/night-no-moon/jettelly_no_moon_DOWN.png",  // GL_TEXTURE_CUBE_MAP_POSITIVE_Y //BOTTOM 
-        "resources/skybox/night-no-moon/jettelly_no_moon_UP.png",  // GL_TEXTURE_CUBE_MAP_NEGATIVE_Y //TOP
+        "resources/skybox/night-no-moon/jettelly_moon_UP.png",  // GL_TEXTURE_CUBE_MAP_NEGATIVE_Y //TOP
         "resources/skybox/night-no-moon/jettelly_no_moon_FRONT.png",  // GL_TEXTURE_CUBE_MAP_POSITIVE_Z // FRONT
         "resources/skybox/night-no-moon/jettelly_no_moon_BACK.png"   // GL_TEXTURE_CUBE_MAP_NEGATIVE_Z //BACK
     };
@@ -53,10 +53,10 @@ void Skybox::draw(const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix
 {
     glUseProgram(skyboxShaderProgram.program);
 
-    // 1. Remove translation from view matrix (skybox stays at camera position)
+    //remove translation from view matrix (skybox stays at camera position)
     glm::mat4 viewNoTranslation = glm::mat4(glm::mat3(viewMatrix));
 
-    // 2. Upload uniforms
+    //pload uniforms
     glUniformMatrix4fv(
         skyboxShaderProgram.viewNoTranslationLocation,
         1,
@@ -71,27 +71,24 @@ void Skybox::draw(const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix
         glm::value_ptr(projectionMatrix)
     );
 
-    // 3. Bind cubemap texture (stored in geometry)
+    //bind cubemap texture (stored in geometry)
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_CUBE_MAP, geometry->texture);
     glUniform1i(skyboxShaderProgram.skyboxSamplerLocation, 0);
 
-    //glUniform1i(skyboxShaderProgram.skyboxSamplerLocation, 0);
-
-    // 4. Draw cube
+    //draw cube
     glBindVertexArray(geometry->vertexArrayObject);
     glDrawElements(GL_TRIANGLES, geometry->numTriangles * 3, GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
 
-    // 5. Cleanup
+    //cleanup
     glUseProgram(0);
-
 }
 
 void Skybox::initSkyboxGeometry(ObjectGeometry** geometry) {
     *geometry = new ObjectGeometry;
 
-    // cube vertices (positions only)
+    //cube vertices
     float vertices[] = {
         -1, -1, -1,
          1, -1, -1,
@@ -103,7 +100,7 @@ void Skybox::initSkyboxGeometry(ObjectGeometry** geometry) {
         -1,  1,  1
     };
 
-    // indices (12 triangles)
+    //indices (12 triangles) = 6 squares
     unsigned int indices[] = {
         0,1,2, 2,3,0, // back
         4,5,6, 6,7,4, // front

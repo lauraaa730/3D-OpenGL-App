@@ -48,7 +48,7 @@ enum { KEY_LEFT, KEY_RIGHT, KEY_FORWARD, KEY_BACKWARDS, KEY_UP, KEY_DOWN, KEYS_C
 bool keyMap[KEYS_COUNT];
 
 constexpr int WINDOW_WIDTH = 1080;
-constexpr int WINDOW_HEIGHT = 920;
+constexpr int WINDOW_HEIGHT = 850;
 constexpr char WINDOW_TITLE[] = "PGR: dudkolau";
 
 //mouse movement handling
@@ -244,7 +244,7 @@ void keyboardCb(unsigned char keyPressed, int mouseX, int mouseY) {
 		break;
 	case ('w'):
 		keyMap[KEY_FORWARD] = true;
-		std::cout << myCamera.position.z << std::endl;
+		//std::cout << myCamera.position.z << std::endl;
 		break;
 	case ('s'):
 		keyMap[KEY_BACKWARDS] = true;
