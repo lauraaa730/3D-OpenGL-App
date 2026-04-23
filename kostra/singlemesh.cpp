@@ -14,10 +14,21 @@ void SingleMesh::draw(const glm::mat4& viewMatrix, const glm::mat4& projectionMa
 	if (initialized && (shaderProgram != nullptr)) {
 		glUseProgram(shaderProgram->program);
 
-		glUniformMatrix4fv(shaderProgram->locations.PVMmatrix, 1, GL_FALSE, glm::value_ptr(globalModelMatrix));
+		glm::mat4 PVM = projectionMatrix * viewMatrix * globalModelMatrix;
+
+		glUniformMatrix4fv(shaderProgram->locations.PVMmatrix, 1, GL_FALSE, glm::value_ptr(PVM));
+
+		//BIND TEXTURE ---
+		if (textureID != 0) {
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, textureID);
+			glUniform1i(shaderProgram->locations.texSampler, 0); //tell sampler to use GL_TEXTURE0
+		}
+		//---
 
 		glBindVertexArray(geometry->vertexArrayObject);
 		glDrawElements(GL_TRIANGLES, geometry->numTriangles * 3, GL_UNSIGNED_INT, 0);
+
 		glBindVertexArray(0);
 	}
 	else {
@@ -114,6 +125,34 @@ bool SingleMesh::loadSingleMesh(const std::string& fileName, ShaderProgram* shad
 		validInit = true;
 	}
 
+	//EXTRACT TEXTURE COORDINATES ---
+	GLuint texCoordBufferObject = 0; //maybe add this variable to ObjectGeometry struct in object.h ?
+
+	//check if the model actually has texture coordinates
+	if (mesh->HasTextureCoords(0)) {
+
+		std::vector<float> texCoords;
+		for (unsigned int i = 0; i < mesh->mNumVertices; ++i) {
+			//uv coordinates
+			texCoords.push_back(mesh->mTextureCoords[0][i].x);
+			texCoords.push_back(mesh->mTextureCoords[0][i].y);
+		}
+
+		//create VBO for texture coordinates
+		glGenBuffers(1, &texCoordBufferObject);
+		glBindBuffer(GL_ARRAY_BUFFER, texCoordBufferObject);
+		glBufferData(GL_ARRAY_BUFFER, texCoords.size() * sizeof(float), texCoords.data(), GL_STATIC_DRAW);
+
+		//connect to shader's texCoord attribute
+		if (shader->locations.texCoord != -1) {
+			glEnableVertexAttribArray(shader->locations.texCoord);
+			glVertexAttribPointer(shader->locations.texCoord, 2, GL_FLOAT, GL_FALSE, 0, 0);
+		}
+	}
+	else {
+		std::cout << "Warning: Loaded model has no texture coordinates!" << std::endl;
+	}
+
 	glBindVertexArray(0);
 
 	(*geometry)->numTriangles = mesh->mNumFaces;
@@ -122,11 +161,13 @@ bool SingleMesh::loadSingleMesh(const std::string& fileName, ShaderProgram* shad
 }
 
 
-SingleMesh::SingleMesh(ShaderProgram* shdrPrg) : ObjectInstance(shdrPrg), initialized(false)
+SingleMesh::SingleMesh(const std::string& fileName, const std::string& textureName, ShaderProgram* shdrPrg) : ObjectInstance(shdrPrg), initialized(false)
 {
-	const char* MODEL_FILE_NAME = "data/shape.obj";
-
-	if (!loadSingleMesh(MODEL_FILE_NAME, shdrPrg, &geometry)) {
+	textureID = pgr::createTexture(textureName);
+	if (!textureID) {
+		std::cerr << "SingleMesh::SingleMesh(): couldnt create texture!" << std::endl;
+	}
+	if (!loadSingleMesh(fileName, shdrPrg, &geometry)) {
 		if (geometry == nullptr) {
 			std::cerr << "SingleMesh::SingleMesh(): geometry not initialized!" << std::endl;
 		}

@@ -1,0 +1,12 @@
+#DownloadModelFormat: OBJ
+#GeometryFile: hibiscous.obj
+#MaterialFile: none
+#PreviewFile: hibiscous.jpg
+#OtherFiles: hibiscous_color.jpg
+#DownloadedFromURL: https://sketchfab.com/3d-models/hibiscous-flower-b3cd2a88889c4ca3ab2a3de29e60de94
+#DateOfDownload: 6.6.2023
+#CreatedBy: _j.did
+#CreatedIn: Blender
+#UploadedBy: Jakub Profota
+#Description: Hibiscous Flower
+#NumberOfPolygons: 4495

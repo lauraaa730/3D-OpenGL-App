@@ -19,6 +19,9 @@ typedef struct _ShaderProgram {
 		GLint position;
 		// uniforms locations
 		GLint PVMmatrix;
+		GLint texCoord;
+		GLint texSampler;
+		
 	} locations;
 
 	// ...

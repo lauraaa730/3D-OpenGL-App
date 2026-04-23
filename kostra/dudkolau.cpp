@@ -111,8 +111,10 @@ void loadShaderPrograms()
 
 	commonShaderProgram.program = pgr::createProgram(shaders);
 	commonShaderProgram.locations.position = glGetAttribLocation(commonShaderProgram.program, "position");
+	commonShaderProgram.locations.texCoord = glGetAttribLocation(commonShaderProgram.program, "texCoord");
 
 	// other attributes and uniforms
+	commonShaderProgram.locations.texSampler = glGetUniformLocation(commonShaderProgram.program, "texSampler");
 	commonShaderProgram.locations.PVMmatrix = glGetUniformLocation(commonShaderProgram.program, "PVM");
 
 	assert(commonShaderProgram.locations.PVMmatrix != -1);
@@ -177,7 +179,10 @@ void drawScene(void)
 		myCamera.upVector
 	);
 
+	//draw skybox
+	glDepthMask(GL_FALSE);
 	mySkybox.draw(viewMatrix, projectionMatrix);
+	glDepthMask(GL_TRUE);
 
 	//glm::mat4 viewMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(50.0f, 0.0f, 0.0f));
 
@@ -440,10 +445,16 @@ void timerCb(int)
 void initApplication() {
 	// init OpenGL
 	// - all programs (shaders), buffers, textures, ...
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LESS);
+
+
 	loadShaderPrograms();
+
 	mySkybox.init();
 
-	objects.push_back(new Triangle(&commonShaderProgram));
+	//objects.push_back(new Triangle(&commonShaderProgram));
+	objects.push_back(new SingleMesh("myModels/Hibiscous/hibiscous.obj", "myModels/Hibiscous/hibiscous_color.jpg", & commonShaderProgram));
 	// objects.push_back(new SingleMesh(&commonShaderProgram));
 
 	// init your Application
