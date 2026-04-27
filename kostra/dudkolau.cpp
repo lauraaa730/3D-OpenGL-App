@@ -44,7 +44,7 @@
 #define SCENE_HEIGHT 1.0f
 #define SCENE_DEPTH  1.0f
 
-enum { KEY_LEFT, KEY_RIGHT, KEY_FORWARD, KEY_BACKWARDS, KEY_UP, KEY_DOWN, KEYS_COUNT };
+enum { KEY_LEFT, KEY_RIGHT, KEY_FORWARD, KEY_BACKWARDS, KEY_UP, KEY_DOWN, KEY_SWITCH_CAMERA, KEYS_COUNT };
 bool keyMap[KEYS_COUNT];
 
 constexpr int WINDOW_WIDTH = 1080;
@@ -254,6 +254,12 @@ void keyboardCb(unsigned char keyPressed, int mouseX, int mouseY) {
 	case ('s'):
 		keyMap[KEY_BACKWARDS] = true;
 		break;
+	case ('c'):
+		if (!keyMap[KEY_SWITCH_CAMERA]) {
+			keyMap[KEY_SWITCH_CAMERA] = true;
+			myCamera.switchMode();
+		}
+		break;
 	default:
 		;
 	}
@@ -281,6 +287,9 @@ void keyboardUpCb(unsigned char keyReleased, int mouseX, int mouseY) {
 		break;
 	case ('s'):
 		keyMap[KEY_BACKWARDS] = false;
+		break;
+	case ('c'):
+		keyMap[KEY_SWITCH_CAMERA] = false;
 		break;
 	default:
 		;
@@ -358,6 +367,9 @@ void passiveMouseMotionCb(int mouseX, int mouseY) {
 	//most of this code was written based on https://learnopengl.com/Getting-Started/Camera
 	// mouse hovering over window
 
+	if (myCamera.currMode != FREE_LOOK) {
+		return;
+	}
 
 	float xoffset = mouseX - lastMousePosX;
 	float yoffset = mouseY - lastMousePosY;
