@@ -1,0 +1,12 @@
+#DownloadModelFormat: OBJ
+#GeometryFile: fish.obj
+#MaterialFile: fish.mtl
+#PreviewFile: fish_preview.jpg
+#OtherFiles: fish.jpg
+#DownloadedFromURL: https://free3d.com/3d-model/fish-v1--996288.html
+#DateOfDownload: 2.5.2022
+#CreatedBy: Lucia Čahojová
+#CreatedIn: blender
+#UploadedBy: Lucia Čahojová
+#Description: Model of fish
+#NumberOfPolygons: 10000

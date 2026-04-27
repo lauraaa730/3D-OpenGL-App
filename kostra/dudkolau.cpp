@@ -378,6 +378,8 @@ void passiveMouseMotionCb(int mouseX, int mouseY) {
 	xoffset *= sensitivity;
 	yoffset *= sensitivity;
 
+	//TODO maybe refactor this to be a camera function
+
 	myCamera.yaw += xoffset;
 	myCamera.pitch -= yoffset;
 
@@ -465,8 +467,12 @@ void initApplication() {
 
 	mySkybox.init();
 
+	//ADD ALL OBJECTS TO SCENE - todo, read from data header probs
 	//objects.push_back(new Triangle(&commonShaderProgram));
+	objects.push_back(new SingleMesh("myModels/Fish/fish.obj", "myModels/Fish/fish.jpg", &commonShaderProgram));
 	objects.push_back(new SingleMesh("myModels/Hibiscous/hibiscous.obj", "myModels/Hibiscous/hibiscous_color.jpg", & commonShaderProgram));
+	
+	
 	// objects.push_back(new SingleMesh(&commonShaderProgram));
 
 	// init your Application
