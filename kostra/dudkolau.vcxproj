@@ -161,6 +161,7 @@
   <ItemGroup>
     <ClInclude Include="Camera.h" />
     <ClInclude Include="object.h" />
+    <ClInclude Include="SceneObjectsData.h" />
     <ClInclude Include="singlemesh.h" />
     <ClInclude Include="Skybox.h" />
     <ClInclude Include="triangle.h" />

@@ -39,6 +39,7 @@
 #include "singlemesh.h"
 #include "Camera.h"
 #include "Skybox.h"
+#include "SceneObjectsData.h"
 
 #define SCENE_WIDTH  1.0f
 #define SCENE_HEIGHT 1.0f
@@ -469,10 +470,12 @@ void initApplication() {
 
 	//ADD ALL OBJECTS TO SCENE - todo, read from data header probs
 	//objects.push_back(new Triangle(&commonShaderProgram));
-	objects.push_back(new SingleMesh("myModels/Fish/fish.obj", "myModels/Fish/fish.jpg", &commonShaderProgram));
-	objects.push_back(new SingleMesh("myModels/Hibiscous/hibiscous.obj", "myModels/Hibiscous/hibiscous_color.jpg", & commonShaderProgram));
-	
-	
+	for (auto m : myModels) {
+		auto obj = new SingleMesh(m.obj_address, m.texture_address, &commonShaderProgram);
+		obj->setScale(m.scale);
+		objects.push_back(obj);
+	}
+
 	// objects.push_back(new SingleMesh(&commonShaderProgram));
 
 	// init your Application

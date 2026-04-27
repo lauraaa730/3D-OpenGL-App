@@ -114,4 +114,8 @@ public:
 		}
 	}
 
+	virtual void setScale(float scale) {
+		localModelMatrix = glm::scale(localModelMatrix, glm::vec3(scale));
+	}
+
 };

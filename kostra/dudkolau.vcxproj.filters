@@ -13,6 +13,7 @@
     <ClInclude Include="triangle.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Skybox.h" />
+    <ClInclude Include="SceneObjectsData.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Shaders">
