@@ -59,6 +59,8 @@ protected:
 	glm::mat4		localModelMatrix;
 	glm::mat4		globalModelMatrix;
 
+	glm::vec3		positionInWorld;
+
 	// dynamic objects
 	// glm::vec3 direction;
 	// float     speed;
@@ -74,8 +76,16 @@ public:
 	 * \brief ObjectInstance constructor. Takes a pointer to the shader and must create object resources (VBO and VAO)
 	 * \param shdrPrg pointer to the shader program for rendering objects data
 	 */
+	/* puvodni konstruktor
 	ObjectInstance(ShaderProgram* shdrPrg = nullptr) : geometry(nullptr), shaderProgram(shdrPrg) {}
 	~ObjectInstance() {}
+	*/
+
+	ObjectInstance(ShaderProgram* shdrPrg = nullptr) {
+		geometry = nullptr;
+		shaderProgram = shdrPrg;
+		positionInWorld = glm::vec3(0.0f, 0.0f, 0.0f);
+	}
   
 	/**
 	* \brief Recalculates the global matrix and updates all children.
@@ -92,6 +102,7 @@ public:
 			globalModelMatrix = *parentModelMatrix * localModelMatrix;
 		else
 			globalModelMatrix = localModelMatrix;
+
 
 		// update all children
 		for (ObjectInstance* child : children) {
@@ -116,6 +127,11 @@ public:
 
 	virtual void setScale(float scale) {
 		localModelMatrix = glm::scale(localModelMatrix, glm::vec3(scale));
+	}
+
+	virtual void setTranslation(glm::vec3 new_position) {
+		//TODO jaky je presne rozdil mezi globalModelMatrix a localModelMatrix?
+		localModelMatrix = glm::translate(localModelMatrix, new_position-positionInWorld);
 	}
 
 };

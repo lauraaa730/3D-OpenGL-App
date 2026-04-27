@@ -473,6 +473,7 @@ void initApplication() {
 	for (auto m : myModels) {
 		auto obj = new SingleMesh(m.obj_address, m.texture_address, &commonShaderProgram);
 		obj->setScale(m.scale);
+		obj->setTranslation(m.position);
 		objects.push_back(obj);
 	}
 
