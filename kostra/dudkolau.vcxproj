@@ -156,6 +156,7 @@
     <ClCompile Include="singlemesh.cpp" />
     <ClCompile Include="dudkolau.cpp" />
     <ClCompile Include="Skybox.cpp" />
+    <ClCompile Include="Spline.cpp" />
     <ClCompile Include="triangle.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -164,6 +165,7 @@
     <ClInclude Include="SceneObjectsData.h" />
     <ClInclude Include="singlemesh.h" />
     <ClInclude Include="Skybox.h" />
+    <ClInclude Include="Spline.h" />
     <ClInclude Include="triangle.h" />
   </ItemGroup>
   <ItemGroup>

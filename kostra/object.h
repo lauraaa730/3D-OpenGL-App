@@ -1,6 +1,8 @@
 #pragma once
 
 #include "pgr.h"
+#include "Spline.h"
+#include <iostream>
 
 /**
  * \brief Shader program related stuff (id, locations, ...).
@@ -60,11 +62,13 @@ protected:
 	glm::mat4		globalModelMatrix;
 
 	glm::vec3		positionInWorld;
+	glm::vec3		direction;
+	glm::vec3		upVector;
 
 	// dynamic objects
-	// glm::vec3 direction;
-	// float     speed;
-	// ...
+	bool			isDynamic;
+	float			speed;
+	
 
 	ShaderProgram* shaderProgram;
 
@@ -85,6 +89,8 @@ public:
 		geometry = nullptr;
 		shaderProgram = shdrPrg;
 		positionInWorld = glm::vec3(0.0f, 0.0f, 0.0f);
+		isDynamic = false;
+		speed = 1.0f; 
 	}
   
 	/**
@@ -94,14 +100,20 @@ public:
 	* \param parentModelMatrix parent transformation in the scene-graph subtree
 	*/
 	virtual void update(const float elapsedTime, const glm::mat4* parentModelMatrix) {
-		// update model matrix - localModelMatrix - of the instance 
-		// ...
-
+		//update animation in dynamic objects
+		if (isDynamic) {
+			//std::cout << positionInWorld.x << positionInWorld.y << std::endl;
+			float splineTime = elapsedTime * speed;
+			setTranslation(findPointOnClosedCurve(splineTime));
+		}
+		
 		// if we have parent, multiply parent's matrix with ours
 		if (parentModelMatrix != nullptr)
 			globalModelMatrix = *parentModelMatrix * localModelMatrix;
 		else
 			globalModelMatrix = localModelMatrix;
+
+		
 
 
 		// update all children
@@ -132,6 +144,12 @@ public:
 	virtual void setTranslation(glm::vec3 new_position) {
 		//TODO jaky je presne rozdil mezi globalModelMatrix a localModelMatrix?
 		localModelMatrix = glm::translate(localModelMatrix, new_position-positionInWorld);
+		positionInWorld = new_position;
 	}
 
+	virtual void setIsDynamic(bool parameter) {
+		isDynamic = parameter;
+	}
+
+	
 };

@@ -6,6 +6,7 @@
     <ClCompile Include="triangle.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Skybox.cpp" />
+    <ClCompile Include="Spline.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="object.h" />
@@ -14,6 +15,7 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Skybox.h" />
     <ClInclude Include="SceneObjectsData.h" />
+    <ClInclude Include="Spline.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Shaders">

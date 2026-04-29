@@ -468,12 +468,13 @@ void initApplication() {
 
 	mySkybox.init();
 
-	//ADD ALL OBJECTS TO SCENE - todo, read from data header probs
+	//ADD ALL OBJECTS TO SCENE--------------------------------------------------------
 	//objects.push_back(new Triangle(&commonShaderProgram));
 	for (auto m : myModels) {
 		auto obj = new SingleMesh(m.obj_address, m.texture_address, &commonShaderProgram);
 		obj->setScale(m.scale);
 		obj->setTranslation(m.position);
+		obj->setIsDynamic(m.isDynamic);
 		objects.push_back(obj);
 	}
 
