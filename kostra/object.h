@@ -64,10 +64,12 @@ protected:
 	glm::vec3		positionInWorld;
 	glm::vec3		direction;
 	glm::vec3		upVector;
+	float			scale;
 
 	// dynamic objects
 	bool			isDynamic;
 	float			speed;
+	glm::vec3		startPosition;
 	
 
 	ShaderProgram* shaderProgram;
@@ -90,7 +92,10 @@ public:
 		shaderProgram = shdrPrg;
 		positionInWorld = glm::vec3(0.0f, 0.0f, 0.0f);
 		isDynamic = false;
-		speed = 1.0f; 
+		speed = 0.5f; 
+		upVector = glm::vec3(0.0f, 1.0f, 0.0f);
+		direction = glm::vec3(0.0f, 0.0f, 1.0f);
+		startPosition = glm::vec3(0.0f, 0.0f, 0.0f);
 	}
   
 	/**
@@ -104,7 +109,14 @@ public:
 		if (isDynamic) {
 			//std::cout << positionInWorld.x << positionInWorld.y << std::endl;
 			float splineTime = elapsedTime * speed;
-			setTranslation(findPointOnClosedCurve(splineTime));
+
+			glm::vec3 pos = findPointOnClosedCurve(splineTime);
+			glm::vec3 dir = find_1stDerivative_OnClosedCurve(splineTime);
+
+			setPosition(startPosition + pos);
+			setDirection(dir);
+
+			transformObject();
 		}
 		
 		// if we have parent, multiply parent's matrix with ours
@@ -137,18 +149,51 @@ public:
 		}
 	}
 
-	virtual void setScale(float scale) {
-		localModelMatrix = glm::scale(localModelMatrix, glm::vec3(scale));
+	virtual void transformObject() {
+		glm::vec3 x = -glm::normalize(direction);
+
+		glm::vec3 z = -glm::normalize(glm::cross(upVector, x));
+
+		glm::vec3 y = glm::cross(z, x);
+
+		x = x * scale;
+		y = y * scale;
+		z = z * scale;
+
+		glm::mat4 matrix = glm::mat4(
+			x.x, x.y, x.z, 0.0,
+			y.x, y.y, y.z, 0.0,
+			z.x, z.y, z.z, 0.0,
+			positionInWorld.x, positionInWorld.y, positionInWorld.z, 1.0
+		);
+
+		localModelMatrix = matrix;
 	}
 
-	virtual void setTranslation(glm::vec3 new_position) {
+	virtual void setScale(float sc) {
+		scale = sc;
+	}
+
+	virtual void setPosition(glm::vec3 new_position) {
 		//TODO jaky je presne rozdil mezi globalModelMatrix a localModelMatrix?
-		localModelMatrix = glm::translate(localModelMatrix, new_position-positionInWorld);
 		positionInWorld = new_position;
 	}
 
 	virtual void setIsDynamic(bool parameter) {
 		isDynamic = parameter;
+	}
+
+	virtual void setDirection(glm::vec3 dir) {
+		direction = dir;
+	}
+
+	virtual void setUpVector(glm::vec3 upVec) {
+		upVector = upVec;
+	}
+
+	virtual void setStartPosition(glm::vec3 pos) {
+		startPosition = pos;
+		positionInWorld = pos;
 	}
 
 	

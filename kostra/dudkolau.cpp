@@ -45,6 +45,8 @@
 #define SCENE_HEIGHT 1.0f
 #define SCENE_DEPTH  1.0f
 
+#define FAR_CLIPPING_PLANE 100.f
+
 enum { KEY_LEFT, KEY_RIGHT, KEY_FORWARD, KEY_BACKWARDS, KEY_UP, KEY_DOWN, KEY_SWITCH_CAMERA, KEYS_COUNT };
 bool keyMap[KEYS_COUNT];
 
@@ -170,7 +172,12 @@ void drawScene(void)
 		-10.0f * SCENE_DEPTH, 10.0f * SCENE_DEPTH
 	);
 	
-	glm::mat4 projectionMatrix = glm::perspective(glm::radians(50.0f), WINDOW_WIDTH / (float)WINDOW_HEIGHT, 0.1f, 10.0f);
+	glm::mat4 projectionMatrix = glm::perspective(
+		glm::radians(50.0f), 
+		WINDOW_WIDTH / (float)WINDOW_HEIGHT, 
+		0.1f, 
+		FAR_CLIPPING_PLANE
+	);
 
 	glm::vec3 cameraCenter = myCamera.direction + myCamera.position;
 
@@ -473,8 +480,9 @@ void initApplication() {
 	for (auto m : myModels) {
 		auto obj = new SingleMesh(m.obj_address, m.texture_address, &commonShaderProgram);
 		obj->setScale(m.scale);
-		obj->setTranslation(m.position);
+		obj->setStartPosition(m.position);
 		obj->setIsDynamic(m.isDynamic);
+		obj->transformObject();
 		objects.push_back(obj);
 	}
 

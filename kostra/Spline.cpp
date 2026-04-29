@@ -4,19 +4,19 @@
 glm::vec3 controlPoints[] = {
     glm::vec3(0.0f, 0.0f,  0.0f),
 
-    glm::vec3(-3.3f, 0.0f,  3.5f),
-    glm::vec3(-6.6f, 0.0f,  3.5f),
-    glm::vec3(-10.0f, 0.0f, 0.0f),
-    glm::vec3(-6.6f, 0.0f, -3.5f),
-    glm::vec3(-3.3f, 0.0f, -3.5f),
+    glm::vec3(-0.66f, 0.0f,  0.70f),
+    glm::vec3(-1.32f, 0.0f,  0.70f),
+    glm::vec3(-2.00f, 0.0f,  0.0f),
+    glm::vec3(-1.32f, 0.0f, -0.70f),
+    glm::vec3(-0.66f, 0.0f, -0.70f),
 
     glm::vec3(0.0f, 0.0f,  0.0f),
 
-    glm::vec3(3.3f, 0.0f,  3.5f),
-    glm::vec3(6.6f, 0.0f,  3.5f),
-    glm::vec3(10.0f, 0.0f, 0.0f),
-    glm::vec3(6.6f, 0.0f, -3.5f),
-    glm::vec3(3.3f, 0.0f, -3.5f)
+    glm::vec3(0.66f, 0.0f,  0.70f),
+    glm::vec3(1.32f, 0.0f,  0.70f),
+    glm::vec3(2.00f, 0.0f,  0.0f),
+    glm::vec3(1.32f, 0.0f, -0.70f),
+    glm::vec3(0.66f, 0.0f, -0.70f)
 };
 
 int segmentsNum = 12;
