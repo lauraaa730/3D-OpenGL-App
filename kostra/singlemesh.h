@@ -2,6 +2,9 @@
 
 #include "object.h"
 
+/*
+* Class for objects WITH TEXTURE
+*/
 class SingleMesh : public ObjectInstance
 {
 public:

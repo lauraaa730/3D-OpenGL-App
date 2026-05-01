@@ -133,9 +133,9 @@ void Skybox::initSkyboxGeometry(ObjectGeometry** geometry) {
             skyboxShaderProgram.positionLocation,
             3,
             GL_FLOAT,
-            GL_FALSE,
-            0,
-            0
+            GL_FALSE,//dont normalize them
+            0, //STRIDE - space between vertices - 0 means opengl calculates it automatically
+            0 //OFFSET - where to start reading
         );
     }
 

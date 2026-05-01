@@ -40,6 +40,7 @@
 #include "Camera.h"
 #include "Skybox.h"
 #include "SceneObjectsData.h"
+#include "HardcodedObject.h"
 
 #define SCENE_WIDTH  1.0f
 #define SCENE_HEIGHT 1.0f
@@ -115,10 +116,12 @@ void loadShaderPrograms()
 	commonShaderProgram.program = pgr::createProgram(shaders);
 	commonShaderProgram.locations.position = glGetAttribLocation(commonShaderProgram.program, "position");
 	commonShaderProgram.locations.texCoord = glGetAttribLocation(commonShaderProgram.program, "texCoord");
+	commonShaderProgram.locations.color = glGetAttribLocation(commonShaderProgram.program, "color");
 
 	// other attributes and uniforms
 	commonShaderProgram.locations.texSampler = glGetUniformLocation(commonShaderProgram.program, "texSampler");
 	commonShaderProgram.locations.PVMmatrix = glGetUniformLocation(commonShaderProgram.program, "PVM");
+	commonShaderProgram.locations.hasTexture = glGetUniformLocation(commonShaderProgram.program, "hasTexture");
 
 	assert(commonShaderProgram.locations.PVMmatrix != -1);
 	assert(commonShaderProgram.locations.position != -1);
@@ -477,6 +480,7 @@ void initApplication() {
 
 	//ADD ALL OBJECTS TO SCENE--------------------------------------------------------
 	//objects.push_back(new Triangle(&commonShaderProgram));
+	objects.push_back(new HardcodedObject(&commonShaderProgram));
 	for (auto m : myModels) {
 		auto obj = new SingleMesh(m.obj_address, m.texture_address, &commonShaderProgram);
 		obj->setScale(m.scale);
@@ -485,8 +489,6 @@ void initApplication() {
 		obj->transformObject();
 		objects.push_back(obj);
 	}
-
-	// objects.push_back(new SingleMesh(&commonShaderProgram));
 
 	// init your Application
 	// - setup the initial application state

@@ -153,6 +153,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="HardcodedObject.cpp" />
     <ClCompile Include="singlemesh.cpp" />
     <ClCompile Include="dudkolau.cpp" />
     <ClCompile Include="Skybox.cpp" />
@@ -161,6 +162,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="HardcodedObject.h" />
     <ClInclude Include="object.h" />
     <ClInclude Include="SceneObjectsData.h" />
     <ClInclude Include="singlemesh.h" />

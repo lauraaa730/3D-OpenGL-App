@@ -35,13 +35,13 @@ Triangle::Triangle(ShaderProgram* shdrPrg) : ObjectInstance(shdrPrg), initialize
 	geometry = new ObjectGeometry;
 
 	static constexpr float vertices[] = {
-	  0.0f,  0.5f, 0.0f,
-	 -0.5f, -0.5f, 0.0f,
-	  0.5f, -0.5f, 0.0f,
+	  0.0f,  0.0f, 0.0f,
+	 -0.0f, -0.0f, -0.5f,
+	  0.5f, -0.0f, 0.5f,
 
 	  0.0f,  0.5f, 0.0f,
-	 -0.5f, -0.5f, 0.0f,
-	  -0.5f, 0.5f, 0.0f,
+	 -0.0f, 0.0f, -0.5f,
+	  -0.0f, 0.5f, -0.5f,
 	};
 
 	geometry->numTriangles = 2;

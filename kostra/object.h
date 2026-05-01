@@ -19,10 +19,13 @@ typedef struct _ShaderProgram {
 	struct {
 		// vertex attributes locations
 		GLint position;
+		GLint color;
+		GLint texCoord;
+
 		// uniforms locations
 		GLint PVMmatrix;
-		GLint texCoord;
 		GLint texSampler;
+		GLint hasTexture;
 		
 	} locations;
 
@@ -31,6 +34,9 @@ typedef struct _ShaderProgram {
 	_ShaderProgram() : program(0), initialized(false) {
 		locations.position = -1;
 		locations.PVMmatrix = -1;
+		locations.color = -1;
+		locations.texCoord = -1;
+		//TODO zbytek priradit -1
 	}
 
 } ShaderProgram;

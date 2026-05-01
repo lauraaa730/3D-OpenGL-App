@@ -17,6 +17,7 @@ void SingleMesh::draw(const glm::mat4& viewMatrix, const glm::mat4& projectionMa
 		glm::mat4 PVM = projectionMatrix * viewMatrix * globalModelMatrix;
 
 		glUniformMatrix4fv(shaderProgram->locations.PVMmatrix, 1, GL_FALSE, glm::value_ptr(PVM));
+		glUniform1i(shaderProgram->locations.hasTexture, 1);
 
 		//BIND TEXTURE ---
 		if (textureID != 0) {
