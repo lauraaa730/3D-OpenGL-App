@@ -485,9 +485,11 @@ void initApplication() {
 		auto obj = new SingleMesh(m.obj_address, m.texture_address, &commonShaderProgram);
 		obj->setScale(m.scale);
 		obj->setStartPosition(m.position);
+		obj->setDirection(m.direction);
 		obj->setIsDynamic(m.isDynamic);
 		obj->transformObject();
 		objects.push_back(obj);
+		//TODO nesetupuju tady upVector - nemam ho jak poznat
 	}
 
 	// init your Application

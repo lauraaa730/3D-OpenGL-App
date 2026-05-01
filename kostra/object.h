@@ -190,11 +190,15 @@ public:
 	}
 
 	virtual void setDirection(glm::vec3 dir) {
-		direction = dir;
+		direction = glm::normalize(dir);
+
+		//update upvector accordingly
+		glm::vec3 right = glm::normalize(glm::cross(glm::vec3(0.0f, 1.0f, 0.0f), direction));
+		upVector = glm::cross(direction, right);
 	}
 
 	virtual void setUpVector(glm::vec3 upVec) {
-		upVector = upVec;
+		upVector = glm::normalize(upVec);
 	}
 
 	virtual void setStartPosition(glm::vec3 pos) {
