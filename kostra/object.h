@@ -19,6 +19,7 @@ typedef struct _ShaderProgram {
 	struct {
 		// vertex attributes locations
 		GLint position;
+		GLint normal;
 		GLint color;
 		GLint texCoord;
 
@@ -26,6 +27,19 @@ typedef struct _ShaderProgram {
 		GLint PVMmatrix;
 		GLint texSampler;
 		GLint hasTexture;
+		GLint Mmatrix;
+		GLint normalMatrix;
+		GLint Vmatrix;
+
+		GLint matAmbient;
+		GLint matDiffuse;
+		GLint matSpecular;
+		GLint matShininess;
+
+		GLint moonLightAmbient;
+		GLint moonLightDiffuse;
+		GLint moonLightSpecular;
+		GLint moonLightDirection;
 		
 	} locations;
 
@@ -33,10 +47,20 @@ typedef struct _ShaderProgram {
 
 	_ShaderProgram() : program(0), initialized(false) {
 		locations.position = -1;
+		locations.normal = -1;
 		locations.PVMmatrix = -1;
 		locations.color = -1;
 		locations.texCoord = -1;
-		//TODO zbytek priradit -1
+		locations.matAmbient = -1;
+		locations.matDiffuse = -1;
+		locations.matSpecular = -1;
+		locations.matShininess = -1;
+		locations.texSampler = -1;
+		locations.hasTexture = -1;
+		locations.moonLightAmbient = -1;
+		locations.moonLightDiffuse = -1;
+		locations.moonLightDirection = -1;
+		locations.moonLightSpecular = -1;
 	}
 
 } ShaderProgram;
@@ -48,10 +72,21 @@ typedef struct _ObjectGeometry {
 	GLuint        vertexBufferObject;   ///< identifier for the vertex buffer object
 	GLuint        elementBufferObject;  ///< identifier for the element buffer object
 	GLuint        vertexArrayObject;    ///< identifier for the vertex array object
+	GLuint        normalBufferObject;
+	GLuint        texCoordBufferObject;
 	unsigned int  numTriangles;         ///< number of triangles in the mesh
 	GLuint        texture;
 
 } ObjectGeometry;
+
+typedef struct _ObjectMaterial {
+	glm::vec3 ambient;
+	glm::vec3 diffuse;
+	glm::vec3 specular;
+	float shininess;
+	//hasTexture should probably be here
+
+} ObjectMaterial;
 
 class ObjectInstance;
 /**
@@ -64,6 +99,7 @@ class ObjectInstance {
 protected:
 
 	ObjectGeometry* geometry;
+	ObjectMaterial* material;
 	glm::mat4		localModelMatrix;
 	glm::mat4		globalModelMatrix;
 
@@ -95,6 +131,7 @@ public:
 
 	ObjectInstance(ShaderProgram* shdrPrg = nullptr) {
 		geometry = nullptr;
+		material = nullptr;
 		shaderProgram = shdrPrg;
 		positionInWorld = glm::vec3(0.0f, 0.0f, 0.0f);
 		isDynamic = false;

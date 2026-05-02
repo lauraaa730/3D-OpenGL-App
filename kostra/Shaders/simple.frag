@@ -2,16 +2,54 @@
 
 in vec2 vTexCoord;
 in vec3 vColor;
+in vec3 vNormal;
+in vec3 vPos;
 
 uniform sampler2D texSampler;
 uniform bool hasTexture;
+uniform mat4 Vmatrix;
+
+struct Material {
+    vec3 ambient;
+    vec3 diffuse;
+    vec3 specular;
+    float shininess;
+};
+
+uniform Material material;
+
+struct Light {
+    vec3 ambient;
+    vec3 diffuse;
+    vec3 specular;
+    vec3 direction;
+};
+
+uniform Light moonLight;
 
 out vec4 fragmentColor;
 
+
 void main() {
-	if (hasTexture) {
-		fragmentColor = texture(texSampler, vTexCoord);
-	} else {
-		fragmentColor = vec4(vColor, 1.0f);
-	}
+    vec3 N = normalize(vNormal);
+    vec3 L = normalize(mat3(Vmatrix) * -moonLight.direction);   // light direction
+    vec3 V = normalize(-vPos);                 // camera is at origin
+   
+    vec3 baseColor = hasTexture ? texture(texSampler, vTexCoord).rgb: vColor;
+
+    // AMBIENT
+    vec3 ambient = moonLight.ambient * material.ambient;
+
+    // DIFFUSE
+    float diff = max(dot(N, L), 0.0);
+    vec3 diffuse = moonLight.diffuse * diff * material.diffuse;
+
+    // SPECULAR
+    vec3 R = reflect(-L, N);
+    float spec = pow(max(dot(V, R), 0.0), material.shininess);
+    vec3 specular = moonLight.specular * spec * material.specular;
+
+    vec3 result = (ambient + diffuse + specular) * baseColor;
+
+    fragmentColor = vec4(result, 1.0);
 }

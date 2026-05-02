@@ -18,6 +18,19 @@ void HardcodedObject::draw(const glm::mat4& viewMatrix, const glm::mat4& project
 		glUniformMatrix4fv(shaderProgram->locations.PVMmatrix, 1, GL_FALSE,
 			glm::value_ptr(PVM));
 
+		glUniformMatrix4fv(shaderProgram->locations.Mmatrix, 1, GL_FALSE, glm::value_ptr(globalModelMatrix));
+
+		//send material properties
+		glUniform3fv(shaderProgram->locations.matDiffuse, 1, glm::value_ptr(material->diffuse));
+		glUniform3fv(shaderProgram->locations.matAmbient, 1, glm::value_ptr(material->ambient));
+		glUniform3fv(shaderProgram->locations.matSpecular, 1, glm::value_ptr(material->specular));
+		glUniform1f(shaderProgram->locations.matShininess, material->shininess);
+
+		glm::mat4 normalMat4 = glm::transpose(glm::inverse(globalModelMatrix));
+		glm::mat3 normalMat3 = glm::mat3(normalMat4);
+		glUniformMatrix3fv(shaderProgram->locations.normalMatrix, 1, GL_FALSE, glm::value_ptr(normalMat3));
+
+
 		//no texture
 		glUniform1i(shaderProgram->locations.hasTexture, 0);
 
@@ -47,6 +60,12 @@ void HardcodedObject::draw(const glm::mat4& viewMatrix, const glm::mat4& project
 HardcodedObject::HardcodedObject(ShaderProgram* shdrPrg) : ObjectInstance(shdrPrg), initialized(false)
 {
 	geometry = new ObjectGeometry;
+	material = new ObjectMaterial;
+
+	material->ambient = glm::vec3(0.2f, 0.2f, 0.2f);
+	material->diffuse = glm::vec3(0.5f, 0.5f, 0.5f);
+	material->specular = glm::vec3(0.1f, 0.1f, 0.1f);
+	material->shininess = 8.0f;
 
 	//OBJECT DATA
 	//TODO - MOVE TO DATA FILE AND READ FROM THERE
@@ -131,6 +150,41 @@ HardcodedObject::HardcodedObject(ShaderProgram* shdrPrg) : ObjectInstance(shdrPr
 
 	geometry->numTriangles = 52;
 
+	int numVertices = sizeof(vertices) / (6 * sizeof(float)); // 6 floats per vertex
+	int numIndices = sizeof(indices) / sizeof(unsigned int);
+
+	//calculate normals ---
+	std::vector<glm::vec3> calculatedNormals(numVertices, glm::vec3(0.0f));
+
+	for (int i = 0; i < numIndices; i += 3) {
+		unsigned int idx0 = indices[i];
+		unsigned int idx1 = indices[i + 1];
+		unsigned int idx2 = indices[i + 2];
+
+		//extract 3D positions of the triangle's 3 vertices
+		//6 floats per vertex: X,Y,Z,R,G,B)
+		glm::vec3 v0(vertices[idx0 * 6], vertices[idx0 * 6 + 1], vertices[idx0 * 6 + 2]);
+		glm::vec3 v1(vertices[idx1 * 6], vertices[idx1 * 6 + 1], vertices[idx1 * 6 + 2]);
+		glm::vec3 v2(vertices[idx2 * 6], vertices[idx2 * 6 + 1], vertices[idx2 * 6 + 2]);
+
+		//calculate  two edges of the triangle
+		glm::vec3 edge1 = v1 - v0;
+		glm::vec3 edge2 = v2 - v0;
+
+		//alculate normal of this specific face
+		glm::vec3 faceNormal = glm::normalize(glm::cross(edge2, edge1));
+
+		//add this face normal to all 3 vertices that touch this face
+		calculatedNormals[idx0] += faceNormal;
+		calculatedNormals[idx1] += faceNormal;
+		calculatedNormals[idx2] += faceNormal;
+	}
+
+	//normalize all normals
+	for (int i = 0; i < numVertices; ++i) {
+		calculatedNormals[i] = glm::normalize(calculatedNormals[i]);
+	}
+
 	//VAO
 	glGenVertexArrays(1, &geometry->vertexArrayObject);
 	glBindVertexArray(geometry->vertexArrayObject);
@@ -169,6 +223,23 @@ HardcodedObject::HardcodedObject(ShaderProgram* shdrPrg) : ObjectInstance(shdrPr
 			(void*)(3*sizeof(float)) //after position
 		); 
 
+		//normals attribute
+		if (shaderProgram->locations.normal != -1) {
+			glGenBuffers(1, &geometry->normalBufferObject);
+			glBindBuffer(GL_ARRAY_BUFFER, geometry->normalBufferObject);
+			
+			glBufferData(GL_ARRAY_BUFFER, calculatedNormals.size() * sizeof(glm::vec3), calculatedNormals.data(), GL_STATIC_DRAW);
+
+			glEnableVertexAttribArray(shaderProgram->locations.normal);
+			glVertexAttribPointer(shaderProgram->locations.normal, 
+				3, 
+				GL_FLOAT, 
+				GL_FALSE, 
+				0, 
+				0
+			);
+		}
+
 		initialized = true;
 	}
 	else {
@@ -182,6 +253,7 @@ HardcodedObject::~HardcodedObject() {
 	glDeleteVertexArrays(1, &(geometry->vertexArrayObject));
 	glDeleteBuffers(1, &(geometry->elementBufferObject));
 	glDeleteBuffers(1, &(geometry->vertexBufferObject));
+	glDeleteBuffers(1, &(geometry->normalBufferObject));
 
 	delete geometry;
 	geometry = nullptr;

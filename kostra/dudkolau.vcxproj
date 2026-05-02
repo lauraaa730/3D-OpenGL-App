@@ -158,17 +158,16 @@
     <ClCompile Include="dudkolau.cpp" />
     <ClCompile Include="Skybox.cpp" />
     <ClCompile Include="Spline.cpp" />
-    <ClCompile Include="triangle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
     <ClInclude Include="HardcodedObject.h" />
+    <ClInclude Include="Light.h" />
     <ClInclude Include="object.h" />
     <ClInclude Include="SceneObjectsData.h" />
     <ClInclude Include="singlemesh.h" />
     <ClInclude Include="Skybox.h" />
     <ClInclude Include="Spline.h" />
-    <ClInclude Include="triangle.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\simple.frag" />

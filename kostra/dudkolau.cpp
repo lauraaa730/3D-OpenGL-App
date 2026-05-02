@@ -35,12 +35,12 @@
 #include <iostream>
 #include "pgr.h"
 #include "object.h"
-#include "triangle.h"
 #include "singlemesh.h"
 #include "Camera.h"
 #include "Skybox.h"
 #include "SceneObjectsData.h"
 #include "HardcodedObject.h"
+#include "Light.h"
 
 #define SCENE_WIDTH  1.0f
 #define SCENE_HEIGHT 1.0f
@@ -81,6 +81,7 @@ ShaderProgram commonShaderProgram;
 
 Camera myCamera;
 Skybox mySkybox;
+SceneLights sceneLights;
 
 
 /*
@@ -98,7 +99,12 @@ THE CORE ENGINE LOOP
 actual rendering -> object->draw(...)
 updates -> object->update(...)
 */
-
+void setUpLights() {
+	sceneLights.moonLight.ambient = glm::vec3(0.2f, 0.2f, 0.5f);
+	sceneLights.moonLight.diffuse = glm::vec3(0.4f, 0.5f, 0.8f);
+	sceneLights.moonLight.specular = glm::vec3(0.3f, 0.4f, 0.6f);
+	sceneLights.moonLight.direction = glm::normalize(glm::vec3(0.0f, -1.0f, 0.2f));
+}
 
 // -----------------------  OpenGL stuff ---------------------------------
 
@@ -117,11 +123,26 @@ void loadShaderPrograms()
 	commonShaderProgram.locations.position = glGetAttribLocation(commonShaderProgram.program, "position");
 	commonShaderProgram.locations.texCoord = glGetAttribLocation(commonShaderProgram.program, "texCoord");
 	commonShaderProgram.locations.color = glGetAttribLocation(commonShaderProgram.program, "color");
+	commonShaderProgram.locations.normal = glGetAttribLocation(commonShaderProgram.program, "normal");
 
 	// other attributes and uniforms
-	commonShaderProgram.locations.texSampler = glGetUniformLocation(commonShaderProgram.program, "texSampler");
-	commonShaderProgram.locations.PVMmatrix = glGetUniformLocation(commonShaderProgram.program, "PVM");
-	commonShaderProgram.locations.hasTexture = glGetUniformLocation(commonShaderProgram.program, "hasTexture");
+	commonShaderProgram.locations.texSampler   = glGetUniformLocation(commonShaderProgram.program, "texSampler");
+	commonShaderProgram.locations.PVMmatrix    = glGetUniformLocation(commonShaderProgram.program, "PVMmatrix");
+	commonShaderProgram.locations.hasTexture   = glGetUniformLocation(commonShaderProgram.program, "hasTexture");
+	commonShaderProgram.locations.Mmatrix	   = glGetUniformLocation(commonShaderProgram.program, "Mmatrix");
+	commonShaderProgram.locations.normalMatrix = glGetUniformLocation(commonShaderProgram.program, "normalMatrix");
+	commonShaderProgram.locations.Vmatrix	  = glGetUniformLocation(commonShaderProgram.program, "Vmatrix");
+	//materials
+	commonShaderProgram.locations.matAmbient   = glGetUniformLocation(commonShaderProgram.program, "material.ambient");
+	commonShaderProgram.locations.matDiffuse   = glGetUniformLocation(commonShaderProgram.program, "material.diffuse");
+	commonShaderProgram.locations.matSpecular  = glGetUniformLocation(commonShaderProgram.program, "material.specular");
+	commonShaderProgram.locations.matShininess = glGetUniformLocation(commonShaderProgram.program, "material.shininess");
+	//lights
+	commonShaderProgram.locations.moonLightAmbient = glGetUniformLocation(commonShaderProgram.program, "moonLight.ambient");
+	commonShaderProgram.locations.moonLightDiffuse = glGetUniformLocation(commonShaderProgram.program, "moonLight.diffuse");
+	commonShaderProgram.locations.moonLightSpecular = glGetUniformLocation(commonShaderProgram.program, "moonLight.specular");
+	commonShaderProgram.locations.moonLightDirection = glGetUniformLocation(commonShaderProgram.program, "moonLight.direction");
+
 
 	assert(commonShaderProgram.locations.PVMmatrix != -1);
 	assert(commonShaderProgram.locations.position != -1);
@@ -195,6 +216,25 @@ void drawScene(void)
 	mySkybox.draw(viewMatrix, projectionMatrix);
 	glDepthMask(GL_TRUE);
 
+
+	//TODO cant i set this in load shaders???
+	glUseProgram(commonShaderProgram.program);
+
+	glUniformMatrix4fv(commonShaderProgram.locations.Vmatrix, 1, GL_FALSE,
+		glm::value_ptr(viewMatrix));
+
+	glUniform3fv(commonShaderProgram.locations.moonLightAmbient, 1,
+		glm::value_ptr(sceneLights.moonLight.ambient));
+
+	glUniform3fv(commonShaderProgram.locations.moonLightDiffuse, 1,
+		glm::value_ptr(sceneLights.moonLight.diffuse));
+
+	glUniform3fv(commonShaderProgram.locations.moonLightSpecular, 1,
+		glm::value_ptr(sceneLights.moonLight.specular));
+
+	glUniform3fv(commonShaderProgram.locations.moonLightDirection, 1,
+		glm::value_ptr(sceneLights.moonLight.direction));
+
 	//glm::mat4 viewMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(50.0f, 0.0f, 0.0f));
 
 	for (ObjectInstance* object : objects) {   // for (auto object : objects) {
@@ -235,6 +275,7 @@ void reshapeCb(int newWidth, int newHeight) {
 
 
 // -----------------------  Keyboard ---------------------------------
+#pragma region KeyboardHandling
 
 /**
  * \brief Handle the key pressed event.
@@ -415,6 +456,9 @@ void passiveMouseMotionCb(int mouseX, int mouseY) {
 	
 }
 
+#pragma endregion
+
+
 // -----------------------  Timer ---------------------------------
 
 /**
@@ -473,24 +517,30 @@ void initApplication() {
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
 
+	setUpLights();
 
 	loadShaderPrograms();
 
 	mySkybox.init();
 
 	//ADD ALL OBJECTS TO SCENE--------------------------------------------------------
-	//objects.push_back(new Triangle(&commonShaderProgram));
 	objects.push_back(new HardcodedObject(&commonShaderProgram));
 	for (auto m : myModels) {
 		auto obj = new SingleMesh(m.obj_address, m.texture_address, &commonShaderProgram);
+
+		//setup object
 		obj->setScale(m.scale);
 		obj->setStartPosition(m.position);
 		obj->setDirection(m.direction);
 		obj->setIsDynamic(m.isDynamic);
 		obj->transformObject();
+
 		objects.push_back(obj);
-		//TODO nesetupuju tady upVector - nemam ho jak poznat
 	}
+
+	//initialize keyboard map
+	for (int i = 0; i < KEYS_COUNT; i++)
+		keyMap[i] = false;
 
 	// init your Application
 	// - setup the initial application state

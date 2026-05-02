@@ -17,7 +17,7 @@ public:
 
 private:
 
-	bool loadSingleMesh(const std::string& fileName, ShaderProgram* shader, ObjectGeometry** geometry);
+	bool loadSingleMesh(const std::string& fileName, ShaderProgram* shader, ObjectGeometry** geometry, ObjectMaterial** material);
 
 	bool initialized;  ///< object has the shader with defined locations
 	GLuint textureID;
