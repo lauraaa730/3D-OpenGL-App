@@ -45,9 +45,14 @@ void main() {
     vec3 diffuse = moonLight.diffuse * diff * material.diffuse;
 
     // SPECULAR
-    vec3 R = reflect(-L, N);
-    float spec = pow(max(dot(V, R), 0.0), material.shininess);
-    vec3 specular = moonLight.specular * spec * material.specular;
+    vec3 specular = vec3(0.0);
+
+    if (diff > 0.0) { //only calculate it if its hitting the front of the face
+        vec3 R = reflect(-L, N);
+        float shininess = max(material.shininess, 0.001); //safety check, because 0.0 shininess causes problems
+        float spec = pow(max(dot(V, R), 0.0), shininess);
+        vec3 specular = moonLight.specular * spec * material.specular;
+    }
 
     vec3 result = (ambient + diffuse + specular) * baseColor;
 
