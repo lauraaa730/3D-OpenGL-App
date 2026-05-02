@@ -24,12 +24,14 @@ void SingleMesh::draw(const glm::mat4& viewMatrix, const glm::mat4& projectionMa
 		glUniform1f(shaderProgram->locations.matShininess, material->shininess);
 
 		// normal matrix
-		glm::mat3 normalMat = glm::transpose(glm::inverse(glm::mat3(globalModelMatrix)));
+		glm::mat4 normalMat4 = glm::transpose(glm::inverse(globalModelMatrix));
+		glm::mat3 normalMat3 = glm::mat3(normalMat4);
 
-		// send matrices
+		//send matrices
+		glUniformMatrix3fv(shaderProgram->locations.normalMatrix, 1, GL_FALSE, glm::value_ptr(normalMat3));
 		glUniformMatrix4fv(shaderProgram->locations.PVMmatrix, 1, GL_FALSE, glm::value_ptr(PVM));
 		glUniformMatrix4fv(shaderProgram->locations.Mmatrix, 1, GL_FALSE, glm::value_ptr(globalModelMatrix));
-		glUniformMatrix4fv(shaderProgram->locations.normalMatrix, 1, GL_FALSE, glm::value_ptr(normalMat));
+		
 
 		//BIND TEXTURE ---
 		if (textureID != 0) {

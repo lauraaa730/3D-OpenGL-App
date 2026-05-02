@@ -60,20 +60,6 @@ float lastMousePosX = WINDOW_WIDTH/2;
 float lastMousePosY = WINDOW_HEIGHT/2;
 bool firstMouse = true;
 
-
-
-static constexpr float vertices_test_obj[] = {
-	  0.0f,  0.5f, 
-	 -0.5f, -0.5f,
-	  0.5f, -0.5f,
-
-	  0.0f,  0.5f,
-	 -0.5f, -0.5f,
-	  -0.5f, 0.5f,
-};
-
-
-
 ObjectList objects;
 
 // shared shader programs
@@ -102,8 +88,8 @@ updates -> object->update(...)
 void setUpLights() {
 	sceneLights.moonLight.ambient = glm::vec3(0.2f, 0.2f, 0.5f);
 	sceneLights.moonLight.diffuse = glm::vec3(0.4f, 0.5f, 0.8f);
-	sceneLights.moonLight.specular = glm::vec3(0.3f, 0.4f, 0.6f);
-	sceneLights.moonLight.direction = glm::normalize(glm::vec3(0.05f, -1.0f, -0.9f));
+	sceneLights.moonLight.specular = glm::vec3(1.0f, 1.0f, 1.0f);
+	sceneLights.moonLight.direction = glm::normalize(glm::vec3(1.0f, -1.0f, -0.1f));
 }
 
 // -----------------------  OpenGL stuff ---------------------------------
