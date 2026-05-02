@@ -510,7 +510,7 @@ void initApplication() {
 	mySkybox.init();
 
 	//ADD ALL OBJECTS TO SCENE--------------------------------------------------------
-	objects.push_back(new HardcodedObject(&commonShaderProgram));
+	//objects.push_back(new HardcodedObject(&commonShaderProgram));
 	for (auto m : myModels) {
 		auto obj = new SingleMesh(m.obj_address, m.texture_address, &commonShaderProgram);
 
@@ -522,6 +522,10 @@ void initApplication() {
 		obj->transformObject();
 
 		objects.push_back(obj);
+	}
+
+	for (const auto& m : HardCodedObjects) {
+		objects.push_back(new HardcodedObject(&commonShaderProgram, &m));
 	}
 
 	//initialize keyboard map

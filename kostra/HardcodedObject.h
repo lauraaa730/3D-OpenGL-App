@@ -1,12 +1,13 @@
 #pragma once
 
 #include "object.h"
+#include "SceneObjectsData.h"
 
 class HardcodedObject : public ObjectInstance
 {
 public:
 
-	HardcodedObject(ShaderProgram* shdrPrg = nullptr);
+	HardcodedObject(ShaderProgram* shdrPrg = nullptr, const HardCodedModel* model = nullptr);
 	~HardcodedObject();
 
 	void update(float elapsedTime, const glm::mat4* parentModelMatrix) override;
