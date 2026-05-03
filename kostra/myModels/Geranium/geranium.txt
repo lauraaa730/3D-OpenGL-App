@@ -1,0 +1,12 @@
+#DownloadModelFormat: OBJ
+#GeometryFile: geranium.obj
+#MaterialFile: none
+#PreviewFile: geranium.jpg
+#OtherFiles: geranium_color.png, geranium_normal.png
+#DownloadedFromURL: https://sketchfab.com/3d-models/geranium-flower-e2b49bd91dcd4bc3aecbd65160a38756
+#DateOfDownload: 6.6.2023
+#CreatedBy: MyVisoin
+#CreatedIn: Blender
+#UploadedBy: Jakub Profota
+#Description: Geranium Flower
+#NumberOfPolygons: 4242

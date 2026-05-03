@@ -1,0 +1,12 @@
+#DownloadModelFormat: OBJ
+#GeometryFile: trava.obj
+#MaterialFile: trava.mtl
+#PreviewFile: preview.jpg
+#OtherFiles: 
+#DownloadedFromURL: 
+#DateOfDownload: 28.5.2007
+#CreatedBy: Michaela Zbytovská
+#CreatedIn: 3DS Max 2008
+#UploadedBy: Michaela Zbytovská
+#Description: Normalni trava
+#NumberOfPolygons: 1216

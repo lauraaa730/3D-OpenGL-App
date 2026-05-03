@@ -1,0 +1,13 @@
+#DownloadModelFormat: OBJ
+#GeometryFile: lantern.obj
+#MaterialFile: lantern.mtl
+#PreviewFile: lantern.jpg
+#OtherFiles: lantern.txt, rust.jpg, rustbump.jpg, rustpec.jpg
+#DownloadedFromURL: http://o.ffrench.free.fr/meshbank 
+#DateOfDownload: 23.5.2008
+#CreatedBy: Olivier Ffrench
+#CreatedIn: Amapi
+#UploadedBy: Markéta Rejdová
+#Description: Model of lantern
+#NumberOfPolygons: 2552
+ 

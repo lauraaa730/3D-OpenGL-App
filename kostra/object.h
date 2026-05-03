@@ -36,10 +36,16 @@ typedef struct _ShaderProgram {
 		GLint matSpecular;
 		GLint matShininess;
 
+		//lights ---
 		GLint moonLightAmbient;
 		GLint moonLightDiffuse;
 		GLint moonLightSpecular;
 		GLint moonLightDirection;
+
+		GLint fireflyAmbient;
+		GLint fireflyDiffuse;
+		GLint fireflySpecular;
+		GLint fireflyPosition;
 		
 	} locations;
 
@@ -61,6 +67,10 @@ typedef struct _ShaderProgram {
 		locations.moonLightDiffuse = -1;
 		locations.moonLightDirection = -1;
 		locations.moonLightSpecular = -1;
+		locations.fireflyAmbient = -1;
+		locations.fireflyDiffuse = -1;
+		locations.fireflySpecular = -1;
+		locations.fireflyPosition = -1;
 	}
 
 } ShaderProgram;
@@ -103,6 +113,8 @@ protected:
 	glm::mat4		localModelMatrix;
 	glm::mat4		globalModelMatrix;
 
+	glm::mat4       modelRotationOffset; //object specific rotation offset (for weird models)
+
 	glm::vec3		positionInWorld;
 	glm::vec3		direction;
 	glm::vec3		upVector;
@@ -139,6 +151,7 @@ public:
 		upVector = glm::vec3(0.0f, 1.0f, 0.0f);
 		direction = glm::vec3(0.0f, 0.0f, 1.0f);
 		startPosition = glm::vec3(0.0f, 0.0f, 0.0f);
+		modelRotationOffset = glm::mat4(1.0f);
 	}
   
 	/**
@@ -210,7 +223,7 @@ public:
 			positionInWorld.x, positionInWorld.y, positionInWorld.z, 1.0
 		);
 
-		localModelMatrix = matrix;
+		localModelMatrix = matrix * modelRotationOffset;
 	}
 
 	virtual void setScale(float sc) {
@@ -229,8 +242,15 @@ public:
 	virtual void setDirection(glm::vec3 dir) {
 		direction = glm::normalize(dir);
 
+		glm::vec3 worldUp = glm::vec3(0.0f, 1.0f, 0.0f);
+
+		if (abs(direction.y) > 0.999f) {
+			// If pointing straight up/down, use the Z-axis as the reference instead
+			worldUp = glm::vec3(0.0f, 0.0f, 1.0f);
+		}
+
 		//update upvector accordingly
-		glm::vec3 right = glm::normalize(glm::cross(glm::vec3(0.0f, 1.0f, 0.0f), direction));
+		glm::vec3 right = glm::normalize(glm::cross(worldUp, direction));
 		upVector = glm::cross(direction, right);
 	}
 
@@ -243,5 +263,8 @@ public:
 		positionInWorld = pos;
 	}
 
+	virtual void setModelRotationOffset(float degrees, glm::vec3 axis) {
+		modelRotationOffset = glm::rotate(glm::mat4(1.0f), glm::radians(degrees), axis);
+	}
 	
 };

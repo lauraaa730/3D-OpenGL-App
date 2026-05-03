@@ -1,0 +1,12 @@
+#DownloadModelFormat: OBJ
+#GeometryFile: firefly.obj
+#MaterialFile: firefly.mtl
+#PreviewFile: firefly.jpg
+#OtherFiles: fly.png
+#DownloadedFromURL: -
+#DateOfDownload: -
+#CreatedBy: Karolína Zapletalová
+#CreatedIn: Blender
+#UploadedBy: Karolína Zapletalová
+#Description: Model of little firefly
+#NumberOfPolygons: 770

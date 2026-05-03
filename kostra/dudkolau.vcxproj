@@ -152,6 +152,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Billboard.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="HardcodedObject.cpp" />
     <ClCompile Include="singlemesh.cpp" />
@@ -160,6 +161,7 @@
     <ClCompile Include="Spline.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Billboard.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="HardcodedObject.h" />
     <ClInclude Include="Light.h" />
@@ -170,6 +172,8 @@
     <ClInclude Include="Spline.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Shaders\billboard.frag" />
+    <None Include="Shaders\billboard.vert" />
     <None Include="Shaders\simple.frag" />
     <None Include="Shaders\simple.vert" />
   </ItemGroup>

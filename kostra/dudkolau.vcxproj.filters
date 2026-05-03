@@ -1,26 +1,45 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="singlemesh.cpp" />
     <ClCompile Include="dudkolau.cpp" />
     <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="Skybox.cpp" />
     <ClCompile Include="Spline.cpp" />
-    <ClCompile Include="HardcodedObject.cpp" />
+    <ClCompile Include="singlemesh.cpp">
+      <Filter>ObjectTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="HardcodedObject.cpp">
+      <Filter>ObjectTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="Skybox.cpp" />
+    <ClCompile Include="Billboard.cpp">
+      <Filter>ObjectTypes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="object.h" />
-    <ClInclude Include="singlemesh.h" />
     <ClInclude Include="Camera.h" />
-    <ClInclude Include="Skybox.h" />
     <ClInclude Include="SceneObjectsData.h" />
     <ClInclude Include="Spline.h" />
-    <ClInclude Include="HardcodedObject.h" />
     <ClInclude Include="Light.h" />
+    <ClInclude Include="singlemesh.h">
+      <Filter>ObjectTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="object.h">
+      <Filter>ObjectTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="HardcodedObject.h">
+      <Filter>ObjectTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="Skybox.h" />
+    <ClInclude Include="Billboard.h">
+      <Filter>ObjectTypes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Shaders">
       <UniqueIdentifier>{11370cd4-40d5-4290-9fde-79344304a6a6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ObjectTypes">
+      <UniqueIdentifier>{45720ab7-00ee-42cd-ac90-75152ff6e5cb}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -28,6 +47,12 @@
       <Filter>Shaders</Filter>
     </None>
     <None Include="Shaders\simple.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\billboard.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\billboard.frag">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>

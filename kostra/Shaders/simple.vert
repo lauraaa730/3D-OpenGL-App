@@ -5,7 +5,9 @@ in vec3 normal;
 in vec2 texCoord;
 in vec3 color;
 
+uniform int currentFrame;
 uniform bool hasTexture;
+
 uniform mat4 PVMmatrix;
 uniform mat4 Vmatrix;
 uniform mat4 Mmatrix;

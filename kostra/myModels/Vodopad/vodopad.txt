@@ -1,0 +1,13 @@
+#DownloadModelFormat: OBJ
+#GeometryFile: vodopad.obj
+#MaterialFile: vodopad.mtl
+#PreviewFile: vodopad.jpg
+#OtherFiles: Mapa.bmp
+#DownloadedFromURL: ---
+#DateOfDownload: 13.5.2016
+#CreatedBy: Sebastian Vor·Ë (voracseb)
+#CreatedIn: 3DMAX
+#UploadedBy: Sebastian Vor·Ë (voracseb)
+#Description: Waterfall
+#NumberOfPolygons: 1392
+

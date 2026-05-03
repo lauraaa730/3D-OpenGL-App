@@ -1,0 +1,12 @@
+#DownloadModelFormat: OBJ
+#GeometryFile: mine.obj
+#MaterialFile: mine.mtl
+#PreviewFile: mine.jpg
+#OtherFiles: rpgpp_lt_tex_a.tga, VillagePackColorPalette.png, stoneV2.png, stoneV3.png, lowpoly_tex.png, well_wood.png, mountain.png, well2.png, well1.png
+#DownloadedFromURL: https://www.cgtrader.com/free-3d-models/exterior/industrial-exterior/stone-mine
+#DateOfDownload: 30.4.20024  
+#CreatedBy: arsenkrityan
+#CreatedIn: Unknown
+#UploadedBy: Eliška Rojíčková
+#Description: Model of stone mine
+#NumberOfPolygons: 21142

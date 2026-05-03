@@ -1,0 +1,10 @@
+#DownloadModelFormat: OBJ
+#GeometryFile: Torch.obj
+#MaterialFile: Torch.mtl
+#PreviewFile: Torch.jpg
+#OtherFiles: Torch.blend
+#CreatedBy: Natálie Kaslová
+#CreatedIn: Blender 3.1.2
+#UploadedBy: Natálie Kaslová
+#Description: Lowpoly model of torch with fire
+#NumberOfPolygons: 39

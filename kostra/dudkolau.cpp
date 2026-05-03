@@ -41,6 +41,7 @@
 #include "SceneObjectsData.h"
 #include "HardcodedObject.h"
 #include "Light.h"
+#include "Billboard.h"
 
 #define SCENE_WIDTH  1.0f
 #define SCENE_HEIGHT 1.0f
@@ -64,10 +65,13 @@ ObjectList objects;
 
 // shared shader programs
 ShaderProgram commonShaderProgram;
+ShaderProgram billboardShaderProgram;
 
 Camera myCamera;
 Skybox mySkybox;
 SceneLights sceneLights;
+
+Billboard* fireflyGlow;
 
 
 /*
@@ -86,10 +90,18 @@ actual rendering -> object->draw(...)
 updates -> object->update(...)
 */
 void setUpLights() {
-	sceneLights.moonLight.ambient = glm::vec3(0.2f, 0.2f, 0.5f);
-	sceneLights.moonLight.diffuse = glm::vec3(0.4f, 0.5f, 0.8f);
+	//Moon Light
+	sceneLights.moonLight.ambient = glm::vec3(0.3f, 0.3f, 0.9f);
+	sceneLights.moonLight.diffuse = glm::vec3(0.6f, 0.6f, 0.9f);
 	sceneLights.moonLight.specular = glm::vec3(1.0f, 1.0f, 1.0f);
 	sceneLights.moonLight.direction = glm::normalize(glm::vec3(1.0f, -1.0f, -0.1f));
+
+	//Firefly
+	sceneLights.firefly.position = glm::vec3(3.0f, 3.0f, 0.0f);
+	sceneLights.firefly.ambient = glm::vec3(0.2f, 0.2f, 0.2f);
+	sceneLights.firefly.diffuse = glm::vec3(1.0f, 1.0f, 0.0f);
+	sceneLights.firefly.specular = glm::vec3(0.5f, 0.5f, 0.1f);
+	
 }
 
 // -----------------------  OpenGL stuff ---------------------------------
@@ -128,6 +140,10 @@ void loadShaderPrograms()
 	commonShaderProgram.locations.moonLightDiffuse = glGetUniformLocation(commonShaderProgram.program, "moonLight.diffuse");
 	commonShaderProgram.locations.moonLightSpecular = glGetUniformLocation(commonShaderProgram.program, "moonLight.specular");
 	commonShaderProgram.locations.moonLightDirection = glGetUniformLocation(commonShaderProgram.program, "moonLight.direction");
+	commonShaderProgram.locations.fireflyAmbient = glGetUniformLocation(commonShaderProgram.program, "firefly.ambient");
+	commonShaderProgram.locations.fireflyDiffuse = glGetUniformLocation(commonShaderProgram.program, "firefly.diffuse");
+	commonShaderProgram.locations.fireflyPosition = glGetUniformLocation(commonShaderProgram.program, "firefly.position");
+	commonShaderProgram.locations.fireflySpecular = glGetUniformLocation(commonShaderProgram.program, "firefly.specular");
 
 
 	assert(commonShaderProgram.locations.PVMmatrix != -1);
@@ -157,8 +173,41 @@ void loadShaderPrograms()
 		std::cout << "SKY BOX SHADER COMPILATION FAILED!\N" << std::endl;
 	}
 
+	//BILLBOARD SHADERS ---
+	GLuint bbShaders[] = {
+	  pgr::createShaderFromFile(GL_VERTEX_SHADER, "shaders/billboard.vert"),
+	  pgr::createShaderFromFile(GL_FRAGMENT_SHADER, "shaders/billboard.frag"),
+	  0
+	};
+
+	billboardShaderProgram.program = pgr::createProgram(bbShaders);
+	billboardShaderProgram.locations.position = glGetAttribLocation(billboardShaderProgram.program, "position");
+	billboardShaderProgram.locations.texCoord = glGetAttribLocation(billboardShaderProgram.program, "texCoord");
+
+	//uniforms
+	billboardShaderProgram.locations.PVMmatrix = glGetUniformLocation(billboardShaderProgram.program, "PVMmatrix");
+	billboardShaderProgram.locations.texSampler = glGetUniformLocation(billboardShaderProgram.program, "texSampler");
+	// -----------------------------
+
 	commonShaderProgram.initialized = true;
 	skyboxShaderProgram.initialized = true;
+	billboardShaderProgram.initialized = true;
+
+	//set static uniforms, taht do not change:
+	glUseProgram(commonShaderProgram.program);
+
+	//lights ---
+	//moonlight
+	glUniform3fv(commonShaderProgram.locations.moonLightAmbient, 1, glm::value_ptr(sceneLights.moonLight.ambient));
+	glUniform3fv(commonShaderProgram.locations.moonLightDiffuse, 1, glm::value_ptr(sceneLights.moonLight.diffuse));
+	glUniform3fv(commonShaderProgram.locations.moonLightSpecular, 1, glm::value_ptr(sceneLights.moonLight.specular));
+	glUniform3fv(commonShaderProgram.locations.moonLightDirection, 1, glm::value_ptr(sceneLights.moonLight.direction));
+
+	//firefly
+	glUniform3fv(commonShaderProgram.locations.fireflyAmbient, 1, glm::value_ptr(sceneLights.firefly.ambient));
+	glUniform3fv(commonShaderProgram.locations.fireflyDiffuse, 1, glm::value_ptr(sceneLights.firefly.diffuse));
+	glUniform3fv(commonShaderProgram.locations.fireflySpecular, 1, glm::value_ptr(sceneLights.firefly.specular));
+	glUniform3fv(commonShaderProgram.locations.fireflyPosition, 1, glm::value_ptr(sceneLights.firefly.position));
 }
 
 /**
@@ -208,18 +257,6 @@ void drawScene(void)
 
 	glUniformMatrix4fv(commonShaderProgram.locations.Vmatrix, 1, GL_FALSE,
 		glm::value_ptr(viewMatrix));
-
-	glUniform3fv(commonShaderProgram.locations.moonLightAmbient, 1,
-		glm::value_ptr(sceneLights.moonLight.ambient));
-
-	glUniform3fv(commonShaderProgram.locations.moonLightDiffuse, 1,
-		glm::value_ptr(sceneLights.moonLight.diffuse));
-
-	glUniform3fv(commonShaderProgram.locations.moonLightSpecular, 1,
-		glm::value_ptr(sceneLights.moonLight.specular));
-
-	glUniform3fv(commonShaderProgram.locations.moonLightDirection, 1,
-		glm::value_ptr(sceneLights.moonLight.direction));
 
 	//glm::mat4 viewMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(50.0f, 0.0f, 0.0f));
 
@@ -458,12 +495,23 @@ void timerCb(int)
 
 	float elapsedTime = 0.001f * static_cast<float>(glutGet(GLUT_ELAPSED_TIME)); // milliseconds => seconds
 
+	//BILLBOARDS ---------
+	//Update the billboard to always face the camera
+	if (fireflyGlow != nullptr) {
+		fireflyGlow->setPosition(sceneLights.firefly.position);
+		glm::vec3 directionToCamera = myCamera.position - sceneLights.firefly.position;
+		fireflyGlow->setDirection(directionToCamera);
+		fireflyGlow->transformObject();
+	}
+
+	//OBJECTS UPDATE --------
 	// update the application state
 	for (ObjectInstance* object : objects) {   // for (auto object : objects) {
 		if (object != nullptr)
 			object->update(elapsedTime, &sceneRootMatrix);
 	}
 
+	//PROCESS INPUT --------
 	if (keyMap[KEY_RIGHT] == true)
 		myCamera.Move(-0.05f* glm::cross(myCamera.upVector, myCamera.direction));
 
@@ -519,6 +567,10 @@ void initApplication() {
 		obj->setStartPosition(m.position);
 		obj->setDirection(m.direction);
 		obj->setIsDynamic(m.isDynamic);
+
+		if (m.obj_address == "myModels/firefly/firefly.obj") {
+			obj->setModelRotationOffset(-90.0f, glm::vec3(1.0f, 0.0f, 0.0f));
+		}
 		obj->transformObject();
 
 		objects.push_back(obj);
@@ -527,6 +579,14 @@ void initApplication() {
 	for (const auto& m : HardCodedObjects) {
 		objects.push_back(new HardcodedObject(&commonShaderProgram, &m));
 	}
+
+	// Create the glow effect (no .obj file needed!)
+	fireflyGlow = new Billboard("resources/digits.png", &billboardShaderProgram);
+	fireflyGlow->setScale(1.5f);
+	fireflyGlow->setModelRotationOffset(-90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+	fireflyGlow->transformObject();
+
+	objects.push_back(fireflyGlow);
 
 	//initialize keyboard map
 	for (int i = 0; i < KEYS_COUNT; i++)

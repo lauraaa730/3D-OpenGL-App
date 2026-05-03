@@ -129,8 +129,9 @@ const unsigned int pond_indices[] = {
 
 const Model myModels[] = { 
 	{ "myModels/Fish/fish.obj", "myModels/Fish/fish.jpg", glm::vec3(0.0f,0.0f,0.0f),glm::vec3(3.0f,2.0,3.0), 0.3f, true },
-	{ "myModels/Hibiscous/hibiscous.obj", "myModels/Hibiscous/hibiscous_color.jpg", glm::vec3(0.0f,2.0f,0.0f),glm::vec3(3.0,2.0,3.0), 1.0f, false },
-	{ "myModels/Stone/Stone.obj", "myModels/Stone/Diffuse.tga", glm::vec3(0.0f,-10.0f,0.0f),glm::vec3(1.0,1.0,2.0), 10.0f, false }
+	{ "myModels/Hibiscous/hibiscous.obj", "myModels/Hibiscous/hibiscous_color.jpg", glm::vec3(0.0f,1.0f,0.0f),glm::vec3(0.0,1.0,0.0), 1.0f, false },
+	{ "myModels/Stone/Stone.obj", "myModels/Stone/Diffuse.tga", glm::vec3(0.0f,-10.0f,0.0f),glm::vec3(1.0,1.0,2.0), 10.0f, false },
+	{ "myModels/firefly/firefly.obj", "myModels/firefly/fly.png", glm::vec3(3.0f,3.0f,0.0f),glm::vec3(0.0f,1.0f,0.0f), 1.0f, true }
 
 };
 
