@@ -52,7 +52,8 @@ vec3 computeDirectionalLight(Light light) {
     // SPECULAR
     vec3 specular = vec3(0.0);
 
-    if (diff > 0.0) { //only calculate it if its hitting the front of the face
+    //only calculate it if its hitting the front of the face
+    if (diff > 0.0) {
         vec3 R = reflect(-L, N);
         float shininess = max(material.shininess, 0.01); //safety check, because 0.0 shininess causes problems
         float spec = pow(max(dot(V, R), 0.0), shininess);
@@ -83,7 +84,8 @@ vec3 computePointLight(Light light) {
     // SPECULAR
     vec3 specular = vec3(0.0);
 
-    if (diff > 0.0) { //only calculate it if its hitting the front of the face
+    //only calculate it if its hitting the front of the face
+    if (diff > 0.0) { 
         vec3 R = reflect(-L, N);
         float shininess = max(material.shininess, 0.01); //safety check, because 0.0 shininess causes problems
         float spec = pow(max(dot(V, R), 0.0), shininess);
@@ -100,10 +102,10 @@ vec3 computePointLight(Light light) {
 
 void main() {
     
-    //texture or plain color?
+    //choose texture or plain color
     vec4 baseColor = hasTexture ? texture(texSampler, vTexCoord): vec4(vColor, alpha); 
     
-
+    //LIGHTING ==========================================================
     vec3 lightsResult = vec3(0.0);
 
     //global ambient lighting
@@ -118,16 +120,18 @@ void main() {
     lightsResult += ambientLight;
     lightsResult += directionalLight_1;
     lightsResult += pointLight_1;
+    //===================================================================
 
-    //FOG
+
+    //FOG ===============================================================
     vec3 fogColor = vec3(0.0, 0.1953, 0.5039);
-    float fogEnd = 10.0;
-    float fogStart = 3.0;
-    float fogFactor = (fogEnd - distanceFromCamera) / (fogEnd - fogStart);
+    float fogDensity = 0.1;
+    float fogFactor = exp(-(pow(fogDensity * distanceFromCamera,2.0)));
     fogFactor = clamp(fogFactor, 0.0, 1.0);
+    //===================================================================
 
+    //multiply base color with result light and mix with fog factor
     vec3 finalColor = mix(fogColor, baseColor.rgb * lightsResult, fogFactor);
 
-    //multiply base color with result light
     fragmentColor = vec4(finalColor, baseColor.a);
 }

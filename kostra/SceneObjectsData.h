@@ -146,10 +146,10 @@ const HardCodedModel HardCodedObjects[] = {
 		stone_indices,
 		52,
 		28,
-		glm::vec3(0.2f, 0.2f, 0.2f), //ambient
-		glm::vec3(0.5f, 0.5f, 0.5f), //diffuse
-		glm::vec3(0.1f, 0.1f, 0.1f), //specular
-		8.0f //shininess
+		glm::vec3(0.2f, 0.2f, 0.2f),
+		glm::vec3(0.5f, 0.5f, 0.5f), 
+		glm::vec3(0.1f, 0.1f, 0.1f), 
+		8.0f 
 	},
 
 	{ //pond
@@ -162,10 +162,10 @@ const HardCodedModel HardCodedObjects[] = {
 		pond_indices,
 		2,
 		4,
-		glm::vec3(0.1f, 0.5f, 0.5f), //ambient
-		glm::vec3(0.0f, 0.3f, 0.5f), //diffuse
-		glm::vec3(1.0f), //specular
-		128.0f //shininess
+		glm::vec3(0.1f, 0.5f, 0.5f),
+		glm::vec3(0.0f, 0.3f, 0.5f),
+		glm::vec3(1.0f),
+		128.0f 
 		
 	}
 };
