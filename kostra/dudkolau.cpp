@@ -130,6 +130,7 @@ void loadShaderPrograms()
 	commonShaderProgram.locations.Mmatrix	   = glGetUniformLocation(commonShaderProgram.program, "Mmatrix");
 	commonShaderProgram.locations.normalMatrix = glGetUniformLocation(commonShaderProgram.program, "normalMatrix");
 	commonShaderProgram.locations.Vmatrix	  = glGetUniformLocation(commonShaderProgram.program, "Vmatrix");
+	commonShaderProgram.locations.alpha	  = glGetUniformLocation(commonShaderProgram.program, "alpha");
 	//materials
 	commonShaderProgram.locations.matAmbient   = glGetUniformLocation(commonShaderProgram.program, "material.ambient");
 	commonShaderProgram.locations.matDiffuse   = glGetUniformLocation(commonShaderProgram.program, "material.diffuse");
@@ -495,11 +496,12 @@ void timerCb(int)
 
 	float elapsedTime = 0.001f * static_cast<float>(glutGet(GLUT_ELAPSED_TIME)); // milliseconds => seconds
 
-	//BILLBOARDS ---------
+	//BILLBOARDS 
 	//Update the billboard to always face the camera
 	if (fireflyGlow != nullptr) {
-		fireflyGlow->setPosition(sceneLights.firefly.position);
-		glm::vec3 directionToCamera = myCamera.position - sceneLights.firefly.position;
+		glm::vec3 localFireflyOffset = glm::vec3(0.0f, 0.05f, 0.1f); //local offset of the light in firefly coord system
+		fireflyGlow->setPosition(sceneLights.firefly.position - localFireflyOffset);
+		glm::vec3 directionToCamera = myCamera.position - (sceneLights.firefly.position -localFireflyOffset);
 		fireflyGlow->setDirection(directionToCamera);
 		fireflyGlow->transformObject();
 	}
@@ -569,7 +571,7 @@ void initApplication() {
 		obj->setIsDynamic(m.isDynamic);
 
 		if (m.obj_address == "myModels/firefly/firefly.obj") {
-			obj->setModelRotationOffset(-90.0f, glm::vec3(1.0f, 0.0f, 0.0f));
+			obj->setModelRotationOffset(-90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
 		}
 		obj->transformObject();
 
@@ -582,7 +584,7 @@ void initApplication() {
 
 	// Create the glow effect (no .obj file needed!)
 	fireflyGlow = new Billboard("resources/glow-.png", &billboardShaderProgram);
-	fireflyGlow->setScale(1.5f);
+	fireflyGlow->setScale(1.0f);
 	fireflyGlow->setModelRotationOffset(-90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
 	fireflyGlow->transformObject();
 
