@@ -4,6 +4,7 @@ in vec2 vTexCoord;
 in vec3 vColor;
 in vec3 vNormal;
 in vec3 vPos;
+in float distanceFromCamera;
 
 uniform sampler2D texSampler;
 uniform bool hasTexture;
@@ -118,6 +119,15 @@ void main() {
     lightsResult += directionalLight_1;
     lightsResult += pointLight_1;
 
+    //FOG
+    vec3 fogColor = vec3(0.0, 0.1953, 0.5039);
+    float fogEnd = 10.0;
+    float fogStart = 3.0;
+    float fogFactor = (fogEnd - distanceFromCamera) / (fogEnd - fogStart);
+    fogFactor = clamp(fogFactor, 0.0, 1.0);
+
+    vec3 finalColor = mix(fogColor, baseColor.rgb * lightsResult, fogFactor);
+
     //multiply base color with result light
-    fragmentColor = vec4((lightsResult * baseColor.rgb), baseColor.a);
+    fragmentColor = vec4(finalColor, baseColor.a);
 }

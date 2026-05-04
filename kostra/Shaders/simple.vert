@@ -17,6 +17,7 @@ out vec3 vPos;
 out vec3 vNormal;
 out vec2 vTexCoord;
 out vec3 vColor;
+out float distanceFromCamera;
 
 void main() {
 	vec4 worldPos = Mmatrix * vec4(position, 1.0);
@@ -30,5 +31,6 @@ void main() {
 		vColor = color;
 	}
 	
+	distanceFromCamera = length(-vPos);
 	gl_Position = PVMmatrix * vec4(position, 1.0f);
 }
