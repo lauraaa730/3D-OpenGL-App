@@ -581,7 +581,7 @@ void initApplication() {
 	}
 
 	// Create the glow effect (no .obj file needed!)
-	fireflyGlow = new Billboard("resources/digits.png", &billboardShaderProgram);
+	fireflyGlow = new Billboard("resources/glow-.png", &billboardShaderProgram);
 	fireflyGlow->setScale(1.5f);
 	fireflyGlow->setModelRotationOffset(-90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
 	fireflyGlow->transformObject();

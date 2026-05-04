@@ -69,7 +69,7 @@ Billboard::Billboard(const std::string& texturePath, ShaderProgram* shdrPrg)
     //initialize values
     currentFrame = 0;
     totalFrames = 16;
-    timePerFrame = 1.0f / 2.0f; //FPS
+    timePerFrame = 1.0f / 10.0f; //FPS
 }
 
 //destructor
