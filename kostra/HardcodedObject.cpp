@@ -10,6 +10,10 @@ void HardcodedObject::update(float elapsedTime, const glm::mat4* parentModelMatr
 void HardcodedObject::draw(const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix)
 {
 	if (initialized && (shaderProgram != nullptr)) {
+
+		//enable additive blending and disable depth mask
+		glEnable(GL_BLEND);
+
 		glUseProgram(shaderProgram->program);
 
 		glm::mat4 PVM = projectionMatrix * viewMatrix * globalModelMatrix;
@@ -34,6 +38,9 @@ void HardcodedObject::draw(const glm::mat4& viewMatrix, const glm::mat4& project
 		//no texture
 		glUniform1i(shaderProgram->locations.hasTexture, 0);
 
+		//alpha
+		glUniform1f(shaderProgram->locations.alpha, alpha);
+
 		//bind VAO for this specific object
 		glBindVertexArray(geometry->vertexArrayObject);
 
@@ -47,6 +54,9 @@ void HardcodedObject::draw(const glm::mat4& viewMatrix, const glm::mat4& project
 
 		//unbind VAO
 		glBindVertexArray(0);
+
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glDisable(GL_BLEND);
 
 	}
 	else {
@@ -67,6 +77,8 @@ HardcodedObject::HardcodedObject(ShaderProgram* shdrPrg, const HardCodedModel * 
 	material->diffuse = model->diffuse;
 	material->specular = model->specular;
 	material->shininess = model->shininess;
+
+	alpha = model->alpha;
 
 	//OBJECT DATA
 	//TODO - MOVE TO DATA FILE AND READ FROM THERE

@@ -8,6 +8,7 @@ in vec3 vPos;
 uniform sampler2D texSampler;
 uniform bool hasTexture;
 uniform mat4 Vmatrix;
+uniform float alpha;
 
 struct Material {
     vec3 ambient;
@@ -99,9 +100,8 @@ vec3 computePointLight(Light light) {
 void main() {
     
     //texture or plain color?
-    vec4 texColor = hasTexture ? texture(texSampler, vTexCoord): vec4(vColor, 1.0); //TODO add alpha channel to hardcoded objects
-    vec3 baseColor = texColor.rgb;
-    float alpha = texColor.a;
+    vec4 baseColor = hasTexture ? texture(texSampler, vTexCoord): vec4(vColor, alpha); 
+    
 
     vec3 lightsResult = vec3(0.0);
 
@@ -119,5 +119,5 @@ void main() {
     lightsResult += pointLight_1;
 
     //multiply base color with result light
-    fragmentColor = vec4((lightsResult * baseColor), alpha);
+    fragmentColor = vec4((lightsResult * baseColor.rgb), baseColor.a);
 }

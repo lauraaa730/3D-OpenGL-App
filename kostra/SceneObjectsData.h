@@ -116,10 +116,10 @@ const unsigned int stone_indices[] = {
 };
 
 const float pond_vertices[] = {
-	3.0f, 0.0f, 0.0f,		0.0f, 0.1f, 1.0f,
-	-3.0f, 0.0f, 0.0f,		0.0f, 0.1f, 1.0f,
-	0.0f, 0.0f, 3.0f,		0.0f, 0.1f, 1.0f,
-	0.0f, 0.0f, -3.0f,		0.0f, 0.1f, 1.0f
+	3.0f, 0.0f, 0.0f,		1.0f, 1.0f, 1.0f,
+	-3.0f, 0.0f, 0.0f,		1.0f, 1.0f, 1.0f,
+	0.0f, 1.0f, 3.0f,		1.0f, 1.0f, 1.0f,
+	0.0f, 0.0f, -3.0f,		1.0f, 1.0f, 1.0f
 };
 
 const unsigned int pond_indices[] = {
@@ -131,7 +131,7 @@ const Model myModels[] = {
 	{ "myModels/Fish/fish.obj", "myModels/Fish/fish.jpg", glm::vec3(0.0f,0.0f,0.0f),glm::vec3(3.0f,2.0,3.0), 0.3f, true },
 	{ "myModels/Hibiscous/hibiscous.obj", "myModels/Hibiscous/hibiscous_color.jpg", glm::vec3(0.0f,1.0f,0.0f),glm::vec3(0.0,1.0,0.0), 1.0f, false },
 	{ "myModels/Stone/Stone.obj", "myModels/Stone/Diffuse.tga", glm::vec3(0.0f,-10.0f,0.0f),glm::vec3(1.0,1.0,2.0), 10.0f, false },
-	{ "myModels/firefly/firefly.obj", "myModels/firefly/fly.png", glm::vec3(3.0f,3.0f,0.0f),glm::vec3(0.0f,1.0f,0.0f), 1.0f, true }
+	{ "myModels/firefly/firefly.obj", "myModels/firefly/fly.png", glm::vec3(3.0f,3.0f,0.0f),glm::vec3(0.0f,1.0f,0.0f), 0.1f, false }
 
 };
 
@@ -157,15 +157,15 @@ const HardCodedModel HardCodedObjects[] = {
 		glm::vec3(1.0f, 0.0f, 0.0f),
 		1.0f,
 		false,
-		1.0f,
+		0.6f,
 		pond_vertices,
 		pond_indices,
 		2,
 		4,
-		glm::vec3(1.0f, 1.0f, 1.0f), //ambient
-		glm::vec3(0.0f, 0.1f, 1.0f), //diffuse
+		glm::vec3(0.1f, 0.5f, 0.5f), //ambient
+		glm::vec3(0.0f, 0.3f, 0.5f), //diffuse
 		glm::vec3(1.0f), //specular
-		32.0f //shininess
+		128.0f //shininess
 		
 	}
 };

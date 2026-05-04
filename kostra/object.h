@@ -21,6 +21,7 @@ typedef struct _ShaderProgram {
 		GLint position;
 		GLint normal;
 		GLint color;
+		GLint alpha;
 		GLint texCoord;
 
 		// uniforms locations
@@ -71,6 +72,7 @@ typedef struct _ShaderProgram {
 		locations.fireflyDiffuse = -1;
 		locations.fireflySpecular = -1;
 		locations.fireflyPosition = -1;
+		locations.alpha = -1;
 	}
 
 } ShaderProgram;
@@ -119,6 +121,7 @@ protected:
 	glm::vec3		direction;
 	glm::vec3		upVector;
 	float			scale;
+	float alpha;
 
 	// dynamic objects
 	bool			isDynamic;
@@ -265,6 +268,10 @@ public:
 
 	virtual void setModelRotationOffset(float degrees, glm::vec3 axis) {
 		modelRotationOffset = glm::rotate(glm::mat4(1.0f), glm::radians(degrees), axis);
+	}
+
+	virtual void setAlpha(float a) {
+		alpha = a;
 	}
 	
 };
