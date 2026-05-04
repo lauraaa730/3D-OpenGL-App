@@ -166,6 +166,7 @@
     <ClInclude Include="HardcodedObject.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="object.h" />
+    <ClInclude Include="Parameters.h" />
     <ClInclude Include="SceneObjectsData.h" />
     <ClInclude Include="singlemesh.h" />
     <ClInclude Include="Skybox.h" />

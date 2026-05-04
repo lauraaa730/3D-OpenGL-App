@@ -42,19 +42,7 @@
 #include "HardcodedObject.h"
 #include "Light.h"
 #include "Billboard.h"
-
-#define SCENE_WIDTH  1.0f
-#define SCENE_HEIGHT 1.0f
-#define SCENE_DEPTH  1.0f
-
-#define FAR_CLIPPING_PLANE 100.f
-
-enum { KEY_LEFT, KEY_RIGHT, KEY_FORWARD, KEY_BACKWARDS, KEY_UP, KEY_DOWN, KEY_SWITCH_CAMERA, KEYS_COUNT };
-bool keyMap[KEYS_COUNT];
-
-constexpr int WINDOW_WIDTH = 1080;
-constexpr int WINDOW_HEIGHT = 850;
-constexpr char WINDOW_TITLE[] = "PGR: dudkolau";
+#include "Parameters.h"
 
 //mouse movement handling
 float lastMousePosX = WINDOW_WIDTH/2;

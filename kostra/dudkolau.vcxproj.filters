@@ -33,6 +33,7 @@
     <ClInclude Include="Billboard.h">
       <Filter>ObjectTypes</Filter>
     </ClInclude>
+    <ClInclude Include="Parameters.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Shaders">
