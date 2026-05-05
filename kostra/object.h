@@ -47,6 +47,20 @@ typedef struct _ShaderProgram {
 		GLint fireflyDiffuse;
 		GLint fireflySpecular;
 		GLint fireflyPosition;
+		GLint fireflyConstant;
+		GLint fireflyLinear;
+		GLint fireflyQuadratic;
+
+		GLint lamp1Ambient;
+		GLint lamp1Diffuse;
+		GLint lamp1Specular;
+		GLint lamp1Position;
+		GLint lamp1Direction;
+		GLint lamp1Constant;
+		GLint lamp1Linear;
+		GLint lamp1Quadratic;
+		GLint lamp1SpotCosCutOff;
+		GLint lamp1SpotExponent;
 		
 	} locations;
 
@@ -73,6 +87,19 @@ typedef struct _ShaderProgram {
 		locations.fireflySpecular = -1;
 		locations.fireflyPosition = -1;
 		locations.alpha = -1;
+		locations.fireflyConstant = -1;
+		locations.fireflyLinear = -1;
+		locations.fireflyQuadratic = -1;
+		locations.lamp1Ambient = -1;
+		locations.lamp1Diffuse = -1;
+		locations.lamp1Specular = -1;
+		locations.lamp1Position = -1;
+		locations.lamp1Constant = -1;
+		locations.lamp1Linear = -1;
+		locations.lamp1Quadratic = -1;
+		locations.lamp1SpotCosCutOff = -1;
+		locations.lamp1SpotExponent = -1;
+		locations.lamp1Direction = -1;
 	}
 
 } ShaderProgram;
@@ -155,6 +182,8 @@ public:
 		direction = glm::vec3(0.0f, 0.0f, 1.0f);
 		startPosition = glm::vec3(0.0f, 0.0f, 0.0f);
 		modelRotationOffset = glm::mat4(1.0f);
+		alpha = 1.0f;
+		scale = 1.0f;
 	}
   
 	/**
@@ -231,15 +260,18 @@ public:
 
 	virtual void setScale(float sc) {
 		scale = sc;
+		transformObject();
 	}
 
 	virtual void setPosition(glm::vec3 new_position) {
 		//TODO jaky je presne rozdil mezi globalModelMatrix a localModelMatrix?
 		positionInWorld = new_position;
+		transformObject();
 	}
 
 	virtual void setIsDynamic(bool parameter) {
 		isDynamic = parameter;
+		transformObject();
 	}
 
 	virtual void setDirection(glm::vec3 dir) {
@@ -255,23 +287,29 @@ public:
 		//update upvector accordingly
 		glm::vec3 right = glm::normalize(glm::cross(worldUp, direction));
 		upVector = glm::cross(direction, right);
+
+		transformObject();
 	}
 
 	virtual void setUpVector(glm::vec3 upVec) {
 		upVector = glm::normalize(upVec);
+		transformObject();
 	}
 
 	virtual void setStartPosition(glm::vec3 pos) {
 		startPosition = pos;
 		positionInWorld = pos;
+		transformObject();
 	}
 
 	virtual void setModelRotationOffset(float degrees, glm::vec3 axis) {
 		modelRotationOffset = glm::rotate(glm::mat4(1.0f), glm::radians(degrees), axis);
+		transformObject();
 	}
 
 	virtual void setAlpha(float a) {
 		alpha = a;
+		transformObject();
 	}
 	
 };

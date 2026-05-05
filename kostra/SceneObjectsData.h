@@ -116,31 +116,111 @@ const unsigned int stone_indices[] = {
 };
 
 const float pond_vertices[] = {
-	3.0f, 0.0f, 0.0f,		1.0f, 1.0f, 1.0f,
-	-3.0f, 0.0f, 0.0f,		1.0f, 1.0f, 1.0f,
-	0.0f, 1.0f, 3.0f,		1.0f, 1.0f, 1.0f,
-	0.0f, 0.0f, -3.0f,		1.0f, 1.0f, 1.0f
+	// Row 0 (Z = -3.0)
+	 3.0f, 0.02f, -3.0f,    1.0f, 1.0f, 1.0f,
+	 2.0f, 0.05f, -3.0f,    1.0f, 1.0f, 1.0f,
+	 1.0f, 0.08f, -3.0f,    1.0f, 1.0f, 1.0f,
+	 0.0f, 0.04f, -3.0f,    1.0f, 1.0f, 1.0f,
+	-1.0f, 0.01f, -3.0f,    1.0f, 1.0f, 1.0f,
+	-2.0f, 0.06f, -3.0f,    1.0f, 1.0f, 1.0f,
+	-3.0f, 0.03f, -3.0f,    1.0f, 1.0f, 1.0f,
+
+	// Row 1 (Z = -2.0)
+	 3.0f, 0.05f, -2.0f,    1.0f, 1.0f, 1.0f,
+	 2.0f, 0.09f, -2.0f,    1.0f, 1.0f, 1.0f,
+	 1.0f, 0.03f, -2.0f,    1.0f, 1.0f, 1.0f,
+	 0.0f, 0.07f, -2.0f,    1.0f, 1.0f, 1.0f,
+	-1.0f, 0.02f, -2.0f,    1.0f, 1.0f, 1.0f,
+	-2.0f, 0.08f, -2.0f,    1.0f, 1.0f, 1.0f,
+	-3.0f, 0.00f, -2.0f,    1.0f, 1.0f, 1.0f,
+
+	// Row 2 (Z = -1.0)
+	 3.0f, 0.07f, -1.0f,    1.0f, 1.0f, 1.0f,
+	 2.0f, 0.01f, -1.0f,    1.0f, 1.0f, 1.0f,
+	 1.0f, 0.06f, -1.0f,    1.0f, 1.0f, 1.0f,
+	 0.0f, 0.09f, -1.0f,    1.0f, 1.0f, 1.0f,
+	-1.0f, 0.05f, -1.0f,    1.0f, 1.0f, 1.0f,
+	-2.0f, 0.02f, -1.0f,    1.0f, 1.0f, 1.0f,
+	-3.0f, 0.04f, -1.0f,    1.0f, 1.0f, 1.0f,
+
+	// Row 3 (Z = 0.0)
+	 3.0f, 0.01f,  0.0f,    1.0f, 1.0f, 1.0f,
+	 2.0f, 0.06f,  0.0f,    1.0f, 1.0f, 1.0f,
+	 1.0f, 0.02f,  0.0f,    1.0f, 1.0f, 1.0f,
+	 0.0f, 0.08f,  0.0f,    1.0f, 1.0f, 1.0f,
+	-1.0f, 0.03f,  0.0f,    1.0f, 1.0f, 1.0f,
+	-2.0f, 0.09f,  0.0f,    1.0f, 1.0f, 1.0f,
+	-3.0f, 0.05f,  0.0f,    1.0f, 1.0f, 1.0f,
+
+	// Row 4 (Z = 1.0)
+	 3.0f, 0.04f,  1.0f,    1.0f, 1.0f, 1.0f,
+	 2.0f, 0.02f,  1.0f,    1.0f, 1.0f, 1.0f,
+	 1.0f, 0.09f,  1.0f,    1.0f, 1.0f, 1.0f,
+	 0.0f, 0.05f,  1.0f,    1.0f, 1.0f, 1.0f,
+	-1.0f, 0.01f,  1.0f,    1.0f, 1.0f, 1.0f,
+	-2.0f, 0.07f,  1.0f,    1.0f, 1.0f, 1.0f,
+	-3.0f, 0.03f,  1.0f,    1.0f, 1.0f, 1.0f,
+
+	// Row 5 (Z = 2.0)
+	 3.0f, 0.08f,  2.0f,    1.0f, 1.0f, 1.0f,
+	 2.0f, 0.05f,  2.0f,    1.0f, 1.0f, 1.0f,
+	 1.0f, 0.03f,  2.0f,    1.0f, 1.0f, 1.0f,
+	 0.0f, 0.01f,  2.0f,    1.0f, 1.0f, 1.0f,
+	-1.0f, 0.06f,  2.0f,    1.0f, 1.0f, 1.0f,
+	-2.0f, 0.04f,  2.0f,    1.0f, 1.0f, 1.0f,
+	-3.0f, 0.09f,  2.0f,    1.0f, 1.0f, 1.0f,
+
+	// Row 6 (Z = 3.0)
+	 3.0f, 0.03f,  3.0f,    1.0f, 1.0f, 1.0f,
+	 2.0f, 0.08f,  3.0f,    1.0f, 1.0f, 1.0f,
+	 1.0f, 0.05f,  3.0f,    1.0f, 1.0f, 1.0f,
+	 0.0f, 0.02f,  3.0f,    1.0f, 1.0f, 1.0f,
+	-1.0f, 0.09f,  3.0f,    1.0f, 1.0f, 1.0f,
+	-2.0f, 0.01f,  3.0f,    1.0f, 1.0f, 1.0f,
+	-3.0f, 0.06f,  3.0f,    1.0f, 1.0f, 1.0f
 };
 
 const unsigned int pond_indices[] = {
-	0, 1, 2,
-	0, 1, 3
+	// Row 0
+	0, 7, 1, 1, 7, 8,       1, 8, 2, 2, 8, 9,       2, 9, 3, 3, 9, 10,
+	3, 10, 4, 4, 10, 11,    4, 11, 5, 5, 11, 12,    5, 12, 6, 6, 12, 13,
+
+	// Row 1
+	7, 14, 8, 8, 14, 15,    8, 15, 9, 9, 15, 16,    9, 16, 10, 10, 16, 17,
+	10, 17, 11, 11, 17, 18, 11, 18, 12, 12, 18, 19, 12, 19, 13, 13, 19, 20,
+
+	// Row 2
+	14, 21, 15, 15, 21, 22, 15, 22, 16, 16, 22, 23, 16, 23, 17, 17, 23, 24,
+	17, 24, 18, 18, 24, 25, 18, 25, 19, 19, 25, 26, 19, 26, 20, 20, 26, 27,
+
+	// Row 3
+	21, 28, 22, 22, 28, 29, 22, 29, 23, 23, 29, 30, 23, 30, 24, 24, 30, 31,
+	24, 31, 25, 25, 31, 32, 25, 32, 26, 26, 32, 33, 26, 33, 27, 27, 33, 34,
+
+	// Row 4
+	28, 35, 29, 29, 35, 36, 29, 36, 30, 30, 36, 37, 30, 37, 31, 31, 37, 38,
+	31, 38, 32, 32, 38, 39, 32, 39, 33, 33, 39, 40, 33, 40, 34, 34, 40, 41,
+
+	// Row 5
+	35, 42, 36, 36, 42, 43, 36, 43, 37, 37, 43, 44, 37, 44, 38, 38, 44, 45,
+	38, 45, 39, 39, 45, 46, 39, 46, 40, 40, 46, 47, 40, 47, 41, 41, 47, 48
 };
 
 const Model myModels[] = { 
-	{ "myModels/Fish/fish.obj", "myModels/Fish/fish.jpg", glm::vec3(0.0f,0.0f,0.0f),glm::vec3(3.0f,2.0,3.0), 0.3f, true },
-	{ "myModels/Hibiscous/hibiscous.obj", "myModels/Hibiscous/hibiscous_color.jpg", glm::vec3(0.0f,1.0f,0.0f),glm::vec3(0.0,1.0,0.0), 1.0f, false },
-	{ "myModels/Stone/Stone.obj", "myModels/Stone/Diffuse.tga", glm::vec3(0.0f,-10.0f,0.0f),glm::vec3(1.0,1.0,2.0), 10.0f, false },
-	{ "myModels/firefly/firefly.obj", "myModels/firefly/fly.png", glm::vec3(3.0f,3.0f,0.0f),glm::vec3(0.0f,1.0f,0.0f), 0.1f, false }
+	{ "myModels/Fish/fish.obj", "myModels/Fish/fish.jpg", glm::vec3(0.0f, -0.3f, 0.5f),glm::vec3(3.0f,2.0,3.0), 0.3f, true },
+	{ "myModels/Hibiscous/hibiscous.obj", "myModels/Hibiscous/hibiscous_color.jpg", glm::vec3(2.0f,3.0f,0.0f),glm::vec3(0.0,1.0,0.0), 1.0f, false },
+	{ "myModels/Stone/Stone.obj", "myModels/Stone/Diffuse.tga", glm::vec3(0.0f,-8.5f,0.0f),glm::vec3(1.0,1.0,2.0), 10.0f, false },
+	{ "myModels/firefly/firefly.obj", "myModels/firefly/fly.png", glm::vec3(0.0f,1.0f,0.0f),glm::vec3(0.0f,1.0f,0.0f), 0.05f, false },
+	{ "myModels/Mine/mine2.obj", "myModels/Mine/mine1.png", glm::vec3(0.0f,1.5f,6.0f),glm::vec3(0.0f,1.0f,0.0f), 3.0f, false }
 
 };
 
 const HardCodedModel HardCodedObjects[] = {
 	{	//stone
-		glm::vec3(0.0f),
+		glm::vec3(2.0f,3.0f,0.0f),
 		glm::vec3(1.0f),
 		1.0f,
-		false,
+		true,
 		1.0f,
 		stone_vertices,
 		stone_indices,
@@ -153,15 +233,15 @@ const HardCodedModel HardCodedObjects[] = {
 	},
 
 	{ //pond
-		glm::vec3(0.0f, -0.1f, 0.0f),
+		glm::vec3(0.1f, 0.0f, -0.5f),
 		glm::vec3(1.0f, 0.0f, 0.0f),
 		1.0f,
 		false,
 		0.6f,
 		pond_vertices,
 		pond_indices,
-		2,
-		4,
+		72,
+		49,
 		glm::vec3(0.1f, 0.5f, 0.5f),
 		glm::vec3(0.0f, 0.3f, 0.5f),
 		glm::vec3(1.0f),

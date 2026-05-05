@@ -10,8 +10,12 @@ uniform mat4 PVMmatrix;
 uniform int currentFrame;
 
 out vec2 vTexCoord;
+out float distanceFromCamera;
 
 void main() {
+    vec4 vPos = PVMmatrix * vec4(position, 1.0f);
+
+    //texture
     int cols = 8;
     int rows = 2;
     
@@ -25,6 +29,8 @@ void main() {
     float v = (texCoord.y * frameHeight) + (float((rows - 1) - row) * frameHeight);
     
     vTexCoord = vec2(u, v);
+
+    distanceFromCamera = length(-vPos.xyz);
     
     gl_Position = PVMmatrix * vec4(position, 1.0f);
 }

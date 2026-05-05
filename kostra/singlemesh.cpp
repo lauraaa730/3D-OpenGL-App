@@ -77,19 +77,56 @@ bool SingleMesh::loadSingleMesh(const std::string& fileName, ShaderProgram* shad
 		return false;
 	}
 
-	// some formats store whole scene (multiple meshes and materials, lights, cameras, ...) in one file, we cannot handle that in our simplified example
-	if (scn->mNumMeshes != 1) {
-		std::cerr << "SingleMesh::loadSingleMesh(): this simplified loader can only process files with only one mesh" << std::endl;
-		*geometry = NULL;
-		return false;
-	}
-
-	// in this phase we know we have one mesh in our loaded scene, we can directly copy its data to OpenGL ...
-	const aiMesh* mesh = scn->mMeshes[0];
+	// CHANGED: Removed the (scn->mNumMeshes != 1) check so we can process files with multiple meshes!
 
 	*geometry = new ObjectGeometry;
 	*material = new ObjectMaterial;
 
+	// NEW: We need to aggregate data from all meshes into these vectors before uploading to OpenGL
+	std::vector<float> allVertices;
+	std::vector<unsigned int> allIndices;
+	std::vector<float> allNormals;
+	std::vector<float> allTexCoords;
+	unsigned int vertexOffset = 0; // Keeps track of index offsets so triangles don't break across meshes
+
+	// NEW: Loop through all meshes and combine their data
+	for (unsigned int m = 0; m < scn->mNumMeshes; ++m) {
+		const aiMesh* mesh = scn->mMeshes[m];
+
+		for (unsigned int i = 0; i < mesh->mNumVertices; ++i) {
+			// Positions
+			allVertices.push_back(mesh->mVertices[i].x);
+			allVertices.push_back(mesh->mVertices[i].y);
+			allVertices.push_back(mesh->mVertices[i].z);
+
+			// Normals
+			if (mesh->HasNormals()) {
+				allNormals.push_back(mesh->mNormals[i].x);
+				allNormals.push_back(mesh->mNormals[i].y);
+				allNormals.push_back(mesh->mNormals[i].z);
+			}
+
+			// Texture Coordinates
+			if (mesh->HasTextureCoords(0)) {
+				allTexCoords.push_back(mesh->mTextureCoords[0][i].x);
+				allTexCoords.push_back(mesh->mTextureCoords[0][i].y);
+			}
+			else {
+				// Fallback to keep arrays aligned if a sub-mesh lacks UVs
+				allTexCoords.push_back(0.0f);
+				allTexCoords.push_back(0.0f);
+			}
+		}
+
+		// Indices
+		for (unsigned int f = 0; f < mesh->mNumFaces; ++f) {
+			allIndices.push_back(mesh->mFaces[f].mIndices[0] + vertexOffset);
+			allIndices.push_back(mesh->mFaces[f].mIndices[1] + vertexOffset);
+			allIndices.push_back(mesh->mFaces[f].mIndices[2] + vertexOffset);
+		}
+
+		vertexOffset += mesh->mNumVertices;
+	}
 
 	//Start loading to buffers =================================================
 
@@ -98,42 +135,35 @@ bool SingleMesh::loadSingleMesh(const std::string& fileName, ShaderProgram* shad
 	//VBO
 	glGenBuffers(1, &((*geometry)->vertexBufferObject));
 	glBindBuffer(GL_ARRAY_BUFFER, (*geometry)->vertexBufferObject);
-	glBufferData(
-		GL_ARRAY_BUFFER, 
-		3 * sizeof(float) * mesh->mNumVertices, 
-		0, 
-		GL_STATIC_DRAW);     // allocate memory for vertices
 
-	glBufferSubData(
-		GL_ARRAY_BUFFER, 
-		0, 
-		3 * sizeof(float) * mesh->mNumVertices, 
-		mesh->mVertices); // store all vertices
+	// CHANGED: Using our combined allVertices vector instead of a single mesh pointer
+	glBufferData(
+		GL_ARRAY_BUFFER,
+		sizeof(float) * allVertices.size(),
+		allVertices.data(),
+		GL_STATIC_DRAW);     // allocate memory for vertices and store all at once
+
+	// CHANGED: Removed glBufferSubData since we did it all in glBufferData above
 	//--------------------------------------------------------------------------
 
 
 	//INDEX BUFFER -------------------------------------------------------------
 	// copy all mesh faces into one big array (assimp supports faces with ordinary number of vertices, we use only 3 -> triangles)
-	unsigned int* indices = new unsigned int[mesh->mNumFaces * 3];
-	for (unsigned int f = 0; f < mesh->mNumFaces; ++f) {
-		indices[f * 3 + 0] = mesh->mFaces[f].mIndices[0];
-		indices[f * 3 + 1] = mesh->mFaces[f].mIndices[1];
-		indices[f * 3 + 2] = mesh->mFaces[f].mIndices[2];
-	}
 
-	// copy our temporary index array to OpenGL and free the array
+	// CHANGED: We already did the loop logic above, so we just pass our combined allIndices vector
 	//EBO
 	glGenBuffers(1, &((*geometry)->elementBufferObject));
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, (*geometry)->elementBufferObject);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, 3 * sizeof(unsigned int) * mesh->mNumFaces, indices, GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * allIndices.size(), allIndices.data(), GL_STATIC_DRAW);
 
-	delete[] indices;
 	//--------------------------------------------------------------------------
 
 
 	//LOAD MATERIAL ------------------------------------------------------------
 	// copy the material info to MeshGeometry structure
-	const aiMaterial* mat = scn->mMaterials[mesh->mMaterialIndex];
+
+	// CHANGED: Always grab the material from the 0th mesh as a baseline
+	const aiMaterial* mat = scn->mMaterials[scn->mMeshes[0]->mMaterialIndex];
 	aiColor3D color(0.0f, 0.0f, 0.0f);
 
 	// ambient
@@ -172,11 +202,11 @@ bool SingleMesh::loadSingleMesh(const std::string& fileName, ShaderProgram* shad
 	if ((shaderProgram != nullptr) && shaderProgram->initialized && (shaderProgram->locations.position != -1)) {
 
 		glEnableVertexAttribArray(shader->locations.position);
-		glVertexAttribPointer(shader->locations.position, 
-			3, 
-			GL_FLOAT, 
-			GL_FALSE, 
-			0, 
+		glVertexAttribPointer(shader->locations.position,
+			3,
+			GL_FLOAT,
+			GL_FALSE,
+			0,
 			0);
 
 		CHECK_GL_ERROR();
@@ -185,20 +215,16 @@ bool SingleMesh::loadSingleMesh(const std::string& fileName, ShaderProgram* shad
 	}
 
 	//2. normal attribute
-	if (mesh->HasNormals()) {
+	// CHANGED: checking if we collected normals instead of mesh->HasNormals()
+	if (!allNormals.empty()) {
 
-		std::vector<float> normals;
-
-		for (unsigned int i = 0; i < mesh->mNumVertices; ++i) {
-			normals.push_back(mesh->mNormals[i].x);
-			normals.push_back(mesh->mNormals[i].y);
-			normals.push_back(mesh->mNormals[i].z);
-		}
+		// CHANGED: the loop to gather normals was moved to the top
 
 		//bind to struct variable in object.h
 		glGenBuffers(1, &((*geometry)->normalBufferObject));
 		glBindBuffer(GL_ARRAY_BUFFER, (*geometry)->normalBufferObject);
-		glBufferData(GL_ARRAY_BUFFER, normals.size() * sizeof(float), normals.data(), GL_STATIC_DRAW);
+		// CHANGED: pass allNormals.data() directly
+		glBufferData(GL_ARRAY_BUFFER, allNormals.size() * sizeof(float), allNormals.data(), GL_STATIC_DRAW);
 
 		// Connect to shader's normal attribute
 		if (shader->locations.normal != -1) {
@@ -216,19 +242,16 @@ bool SingleMesh::loadSingleMesh(const std::string& fileName, ShaderProgram* shad
 
 	//3. texture coordinates attribute
 	//check if the model actually has texture coordinates
-	if (mesh->HasTextureCoords(0)) {
+	// CHANGED: checking if we collected texCoords instead of mesh->HasTextureCoords()
+	if (!allTexCoords.empty()) {
 
-		std::vector<float> texCoords;
-		for (unsigned int i = 0; i < mesh->mNumVertices; ++i) {
-			//uv coordinates
-			texCoords.push_back(mesh->mTextureCoords[0][i].x);
-			texCoords.push_back(mesh->mTextureCoords[0][i].y);
-		}
+		// CHANGED: the loop to gather UVs was moved to the top
 
 		//create VBO for texture coordinates
 		glGenBuffers(1, &((*geometry)->texCoordBufferObject));
 		glBindBuffer(GL_ARRAY_BUFFER, (*geometry)->texCoordBufferObject);
-		glBufferData(GL_ARRAY_BUFFER, texCoords.size() * sizeof(float), texCoords.data(), GL_STATIC_DRAW);
+		// CHANGED: pass allTexCoords.data() directly
+		glBufferData(GL_ARRAY_BUFFER, allTexCoords.size() * sizeof(float), allTexCoords.data(), GL_STATIC_DRAW);
 
 		//connect to shader's texCoord attribute
 		if (shader->locations.texCoord != -1) {
@@ -242,7 +265,8 @@ bool SingleMesh::loadSingleMesh(const std::string& fileName, ShaderProgram* shad
 
 	glBindVertexArray(0);
 
-	(*geometry)->numTriangles = mesh->mNumFaces;
+	// CHANGED: Count is now total aggregated indices / 3
+	(*geometry)->numTriangles = allIndices.size() / 3;
 
 	return validInit;
 }

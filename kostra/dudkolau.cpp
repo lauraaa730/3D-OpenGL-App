@@ -85,10 +85,25 @@ void setUpLights() {
 	sceneLights.moonLight.direction = glm::normalize(glm::vec3(1.0f, -1.0f, -0.1f));
 
 	//Firefly
-	sceneLights.firefly.position = glm::vec3(3.0f, 3.0f, 0.0f);
+	sceneLights.firefly.position = glm::vec3(0.0f, 1.0f, 0.0f); //
 	sceneLights.firefly.ambient = glm::vec3(0.2f, 0.2f, 0.2f);
-	sceneLights.firefly.diffuse = glm::vec3(1.0f, 1.0f, 0.0f);
+	sceneLights.firefly.diffuse = glm::vec3(3.0f, 3.0f, 0.0f);
 	sceneLights.firefly.specular = glm::vec3(0.5f, 0.5f, 0.1f);
+	sceneLights.firefly.constant = 1.0f;
+	sceneLights.firefly.linear = 0.2f;
+	sceneLights.firefly.quadratic = 0.3f;
+
+	//Lamp
+	sceneLights.lamp_1.ambient = glm::vec3(1.0f, 1.0f, 1.0f);
+	sceneLights.lamp_1.diffuse = glm::vec3(0.9f, 0.9f, 1.0f);       // Cold LED white/blue
+	sceneLights.lamp_1.specular = glm::vec3(1.0f, 1.0f, 1.0f);      // High glare
+	sceneLights.lamp_1.position = glm::vec3(0.0f, 5.0f, 0.0f);      // Hardcoded world position
+	sceneLights.lamp_1.direction = glm::vec3(0.0f, -1.0f, 0.5f);    // Hardcoded pointing forward (-Z)
+	sceneLights.lamp_1.constant = 1.0f;
+	sceneLights.lamp_1.linear = 0.045f;                      // Good for ~50 meters
+	sceneLights.lamp_1.quadratic = 0.0075f;
+	sceneLights.lamp_1.spotCosCutOff = 0.965f;               // ~15 degree cone
+	sceneLights.lamp_1.spotExponent = 40.0;                 // Soft edge
 	
 }
 
@@ -129,10 +144,25 @@ void loadShaderPrograms()
 	commonShaderProgram.locations.moonLightDiffuse = glGetUniformLocation(commonShaderProgram.program, "moonLight.diffuse");
 	commonShaderProgram.locations.moonLightSpecular = glGetUniformLocation(commonShaderProgram.program, "moonLight.specular");
 	commonShaderProgram.locations.moonLightDirection = glGetUniformLocation(commonShaderProgram.program, "moonLight.direction");
+
 	commonShaderProgram.locations.fireflyAmbient = glGetUniformLocation(commonShaderProgram.program, "firefly.ambient");
 	commonShaderProgram.locations.fireflyDiffuse = glGetUniformLocation(commonShaderProgram.program, "firefly.diffuse");
 	commonShaderProgram.locations.fireflyPosition = glGetUniformLocation(commonShaderProgram.program, "firefly.position");
 	commonShaderProgram.locations.fireflySpecular = glGetUniformLocation(commonShaderProgram.program, "firefly.specular");
+	commonShaderProgram.locations.fireflyConstant = glGetUniformLocation(commonShaderProgram.program, "firefly.constant");
+	commonShaderProgram.locations.fireflyLinear = glGetUniformLocation(commonShaderProgram.program, "firefly.linear");
+	commonShaderProgram.locations.fireflyQuadratic = glGetUniformLocation(commonShaderProgram.program, "firefly.quadratic");
+
+	commonShaderProgram.locations.lamp1Ambient = glGetUniformLocation(commonShaderProgram.program, "lamp_1.ambient");
+	commonShaderProgram.locations.lamp1Diffuse = glGetUniformLocation(commonShaderProgram.program, "lamp_1.diffuse");
+	commonShaderProgram.locations.lamp1Specular = glGetUniformLocation(commonShaderProgram.program, "lamp_1.specular");
+	commonShaderProgram.locations.lamp1Position = glGetUniformLocation(commonShaderProgram.program, "lamp_1.position");
+	commonShaderProgram.locations.lamp1Direction = glGetUniformLocation(commonShaderProgram.program, "lamp_1.direction");
+	commonShaderProgram.locations.lamp1Constant = glGetUniformLocation(commonShaderProgram.program, "lamp_1.constant");
+	commonShaderProgram.locations.lamp1Linear = glGetUniformLocation(commonShaderProgram.program, "lamp_1.linear");
+	commonShaderProgram.locations.lamp1Quadratic = glGetUniformLocation(commonShaderProgram.program, "lamp_1.quadratic");
+	commonShaderProgram.locations.lamp1SpotCosCutOff = glGetUniformLocation(commonShaderProgram.program, "lamp_1.spotCosCutOff");
+	commonShaderProgram.locations.lamp1SpotExponent = glGetUniformLocation(commonShaderProgram.program, "lamp_1.spotExponent");
 
 
 	assert(commonShaderProgram.locations.PVMmatrix != -1);
@@ -197,6 +227,22 @@ void loadShaderPrograms()
 	glUniform3fv(commonShaderProgram.locations.fireflyDiffuse, 1, glm::value_ptr(sceneLights.firefly.diffuse));
 	glUniform3fv(commonShaderProgram.locations.fireflySpecular, 1, glm::value_ptr(sceneLights.firefly.specular));
 	glUniform3fv(commonShaderProgram.locations.fireflyPosition, 1, glm::value_ptr(sceneLights.firefly.position));
+	glUniform1f(commonShaderProgram.locations.fireflyConstant, sceneLights.firefly.constant);
+	glUniform1f(commonShaderProgram.locations.fireflyLinear, sceneLights.firefly.linear);
+	glUniform1f(commonShaderProgram.locations.fireflyQuadratic,  sceneLights.firefly.quadratic);
+
+	//lamp 1
+	glUniform3fv(commonShaderProgram.locations.lamp1Ambient, 1, glm::value_ptr(sceneLights.lamp_1.ambient));
+	glUniform3fv(commonShaderProgram.locations.lamp1Diffuse, 1, glm::value_ptr(sceneLights.lamp_1.diffuse));
+	glUniform3fv(commonShaderProgram.locations.lamp1Specular, 1, glm::value_ptr(sceneLights.lamp_1.specular));
+	glUniform3fv(commonShaderProgram.locations.lamp1Position, 1, glm::value_ptr(sceneLights.lamp_1.position));
+	glUniform3fv(commonShaderProgram.locations.lamp1Direction, 1, glm::value_ptr(sceneLights.lamp_1.direction));
+	glUniform1f(commonShaderProgram.locations.lamp1Constant, sceneLights.lamp_1.constant);
+	glUniform1f(commonShaderProgram.locations.lamp1Linear, sceneLights.lamp_1.linear);
+	glUniform1f(commonShaderProgram.locations.lamp1Quadratic, sceneLights.lamp_1.quadratic);
+	glUniform1f(commonShaderProgram.locations.lamp1SpotExponent, sceneLights.lamp_1.spotExponent);
+	glUniform1f(commonShaderProgram.locations.lamp1SpotCosCutOff, sceneLights.lamp_1.spotCosCutOff);
+	
 }
 
 /**
@@ -508,11 +554,13 @@ void timerCb(int)
 	if (keyMap[KEY_LEFT] == true)
 		myCamera.Move(0.05f * glm::cross(myCamera.upVector, myCamera.direction));
 
-	if (keyMap[KEY_FORWARD] == true)
-		myCamera.Move(myCamera.direction * 0.1f); 
+	if (keyMap[KEY_FORWARD] == true) {
+		std::cout << myCamera.position.x << " " << myCamera.position.y << " " << myCamera.position.z << std::endl;
+		myCamera.Move(glm::vec3((myCamera.direction * 0.1f).x, 0.0f, (myCamera.direction * 0.1f).z));
+	}
 
 	if (keyMap[KEY_BACKWARDS] == true)
-		myCamera.Move(myCamera.direction * -0.1f);
+		myCamera.Move(glm::vec3((myCamera.direction * -0.1f).x, 0.0f, (myCamera.direction * -0.1f).z));
 
 	if (keyMap[KEY_UP] == true)
 		myCamera.Move(myCamera.upVector * 0.1f);
@@ -572,7 +620,8 @@ void initApplication() {
 
 	// Create the glow effect (no .obj file needed!)
 	fireflyGlow = new Billboard("resources/glow-.png", &billboardShaderProgram);
-	fireflyGlow->setScale(1.0f);
+	fireflyGlow->setScale(0.7f);
+	fireflyGlow->setStartPosition(sceneLights.firefly.position);
 	fireflyGlow->setModelRotationOffset(-90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
 	fireflyGlow->transformObject();
 

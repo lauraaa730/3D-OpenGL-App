@@ -2,10 +2,10 @@
 #include <iostream>
 
 
-void HardcodedObject::update(float elapsedTime, const glm::mat4* parentModelMatrix) {
+/*void HardcodedObject::update(float elapsedTime, const glm::mat4* parentModelMatrix) {
 	// propagate the update to children
 	ObjectInstance::update(elapsedTime, parentModelMatrix);
-}
+}*/
 
 void HardcodedObject::draw(const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix)
 {
@@ -78,7 +78,12 @@ HardcodedObject::HardcodedObject(ShaderProgram* shdrPrg, const HardCodedModel * 
 	material->specular = model->specular;
 	material->shininess = model->shininess;
 
-	alpha = model->alpha;
+	setAlpha(model->alpha);
+	setStartPosition(model->position);
+	setIsDynamic(model->isDynamic);
+	setDirection(model->direction);
+	setScale(model->scale);
+
 
 	//OBJECT DATA
 	//TODO - MOVE TO DATA FILE AND READ FROM THERE
