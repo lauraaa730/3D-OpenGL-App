@@ -534,24 +534,25 @@ void passiveMouseMotionCb(int mouseX, int mouseY) {
 }
 
 void processInput() {
+
 	if (keyMap[KEY_RIGHT] == true) {
-		myCamera.Move(-0.05f * glm::cross(myCamera.upVector, myCamera.direction));
+		myCamera.Move(-1.0f * glm::cross(myCamera.upVector, myCamera.direction));
 	}
-	else if (keyMap[KEY_LEFT] == true) {
-		myCamera.Move(0.05f * glm::cross(myCamera.upVector, myCamera.direction));
+	if (keyMap[KEY_LEFT] == true) {
+		myCamera.Move(glm::cross(myCamera.upVector, myCamera.direction));
 	}
-	else if (keyMap[KEY_FORWARD] == true) {
+	if (keyMap[KEY_FORWARD] == true) {
 		//std::cout << myCamera.position.x << " " << myCamera.position.y << " " << myCamera.position.z << std::endl;
-		myCamera.Move(myCamera.direction * myCamera.speed);
+		myCamera.Move(myCamera.direction);
 	}
-	else if (keyMap[KEY_BACKWARDS] == true) {
-		myCamera.Move(myCamera.direction * (-1.0f)* myCamera.speed);
+	if (keyMap[KEY_BACKWARDS] == true) {
+		myCamera.Move(myCamera.direction * (-1.0f));
 	}
-	else if (keyMap[KEY_UP] == true) {
-		myCamera.Move(myCamera.upVector * myCamera.speed);
+	if (keyMap[KEY_UP] == true) {
+		myCamera.Move(myCamera.upVector);
 	}
-	else if (keyMap[KEY_DOWN] == true) {
-		myCamera.Move(myCamera.upVector * (-1.0f) * myCamera.speed);
+	if (keyMap[KEY_DOWN] == true) {
+		myCamera.Move(myCamera.upVector * (-1.0f) );
 	}
 }
 
