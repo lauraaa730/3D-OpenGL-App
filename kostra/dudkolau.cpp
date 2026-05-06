@@ -80,31 +80,40 @@ updates -> object->update(...)
 */
 void setUpLights() {
 	//Moon Light
-	sceneLights.moonLight.ambient = glm::vec3(0.3f, 0.3f, 0.9f);
-	sceneLights.moonLight.diffuse = glm::vec3(0.6f, 0.6f, 0.9f);
-	sceneLights.moonLight.specular = glm::vec3(1.0f, 1.0f, 1.0f);
-	sceneLights.moonLight.direction = glm::normalize(glm::vec3(1.0f, -1.0f, -0.1f));
+	sceneLights.moonLight.ambient = moonLightAmbient;
+	sceneLights.moonLight.diffuse = moonLightDiffuse;
+	sceneLights.moonLight.specular = moonLightSpecular;
+	sceneLights.moonLight.direction = moonLightDirection;
 
 	//Firefly
-	sceneLights.firefly.position = glm::vec3(0.0f, 1.0f, 0.0f); //
-	sceneLights.firefly.ambient = glm::vec3(0.4f, 0.4f, 0.4f);
-	sceneLights.firefly.diffuse = glm::vec3(3.0f, 3.0f, 15.0f);
-	sceneLights.firefly.specular = glm::vec3(0.5f, 0.5f, 0.1f);
-	sceneLights.firefly.constant = 1.0f;
-	sceneLights.firefly.linear = 0.9f;
-	sceneLights.firefly.quadratic = 0.8f;
+	sceneLights.firefly.position = fireflyPosition; //
+	sceneLights.firefly.ambient = fireflyAmbient;
+	sceneLights.firefly.diffuse = fireflyDiffuse;
+	sceneLights.firefly.specular = fireflySpecular;
+	sceneLights.firefly.constant = fireflyConstant;
+	sceneLights.firefly.linear = fireflyLinear;
+	sceneLights.firefly.quadratic = fireflyQuadratic;
+
+	//Lantern
+	sceneLights.lantern.ambient = lanternAmbient;
+	sceneLights.lantern.diffuse = lanternDiffuse;
+	sceneLights.lantern.position = lanternPosition;
+	sceneLights.lantern.specular = lanternSpecular;
+	sceneLights.lantern.constant = lanternConstant;
+	sceneLights.lantern.linear = lanternLinear;
+	sceneLights.lantern.quadratic = lanternQuadratic;
 
 	//Lamp
-	sceneLights.lamp_1.ambient = glm::vec3(1.0f, 1.0f, 1.0f);
-	sceneLights.lamp_1.diffuse = glm::vec3(0.9f, 0.9f, 1.0f);       // Cold LED white/blue
-	sceneLights.lamp_1.specular = glm::vec3(1.0f, 1.0f, 1.0f);      // High glare
-	sceneLights.lamp_1.position = glm::vec3(0.0f, 5.0f, 0.0f);      // Hardcoded world position
-	sceneLights.lamp_1.direction = glm::vec3(0.0f, -1.0f, 0.5f);    // Hardcoded pointing forward (-Z)
-	sceneLights.lamp_1.constant = 1.0f;
-	sceneLights.lamp_1.linear = 0.045f;                      // Good for ~50 meters
-	sceneLights.lamp_1.quadratic = 0.0075f;
-	sceneLights.lamp_1.spotCosCutOff = 0.965f;               // ~15 degree cone
-	sceneLights.lamp_1.spotExponent = 40.0;                 // Soft edge
+	sceneLights.lamp_1.ambient = lamp_1Ambient;
+	sceneLights.lamp_1.diffuse = lamp_1Diffuse;       // Cold LED white/blue
+	sceneLights.lamp_1.specular = lamp_1Specular;      // High glare
+	sceneLights.lamp_1.position = lamp_1Position;      // Hardcoded world position
+	sceneLights.lamp_1.direction = lamp_1Direction;    // Hardcoded pointing forward (-Z)
+	sceneLights.lamp_1.constant = lamp_1Constant;
+	sceneLights.lamp_1.linear = lamp_1Linear;                      // Good for ~50 meters
+	sceneLights.lamp_1.quadratic = lamp_1Quadratic;
+	sceneLights.lamp_1.spotCosCutOff = lamp_1SpotCosCutOff;               // ~15 degree cone
+	sceneLights.lamp_1.spotExponent = lamp_1SpotExponent;                 // Soft edge
 	
 }
 
@@ -154,6 +163,14 @@ void loadShaderPrograms()
 	commonShaderProgram.locations.fireflyConstant = glGetUniformLocation(commonShaderProgram.program, "firefly.constant");
 	commonShaderProgram.locations.fireflyLinear = glGetUniformLocation(commonShaderProgram.program, "firefly.linear");
 	commonShaderProgram.locations.fireflyQuadratic = glGetUniformLocation(commonShaderProgram.program, "firefly.quadratic");
+
+	commonShaderProgram.locations.lanternAmbient = glGetUniformLocation(commonShaderProgram.program, "lantern.ambient");
+	commonShaderProgram.locations.lanternDiffuse = glGetUniformLocation(commonShaderProgram.program, "lantern.diffuse");
+	commonShaderProgram.locations.lanternPosition = glGetUniformLocation(commonShaderProgram.program, "lantern.position");
+	commonShaderProgram.locations.lanternSpecular = glGetUniformLocation(commonShaderProgram.program, "lantern.specular");
+	commonShaderProgram.locations.lanternConstant = glGetUniformLocation(commonShaderProgram.program, "lantern.constant");
+	commonShaderProgram.locations.lanternLinear = glGetUniformLocation(commonShaderProgram.program, "lantern.linear");
+	commonShaderProgram.locations.lanternQuadratic = glGetUniformLocation(commonShaderProgram.program, "lantern.quadratic");
 
 	commonShaderProgram.locations.lamp1Ambient = glGetUniformLocation(commonShaderProgram.program, "lamp_1.ambient");
 	commonShaderProgram.locations.lamp1Diffuse = glGetUniformLocation(commonShaderProgram.program, "lamp_1.diffuse");
@@ -232,6 +249,15 @@ void loadShaderPrograms()
 	glUniform1f(commonShaderProgram.locations.fireflyConstant, sceneLights.firefly.constant);
 	glUniform1f(commonShaderProgram.locations.fireflyLinear, sceneLights.firefly.linear);
 	glUniform1f(commonShaderProgram.locations.fireflyQuadratic,  sceneLights.firefly.quadratic);
+
+	//lantern
+	glUniform3fv(commonShaderProgram.locations.lanternAmbient, 1, glm::value_ptr(sceneLights.lantern.ambient));
+	glUniform3fv(commonShaderProgram.locations.lanternDiffuse, 1, glm::value_ptr(sceneLights.lantern.diffuse));
+	glUniform3fv(commonShaderProgram.locations.lanternSpecular, 1, glm::value_ptr(sceneLights.lantern.specular));
+	glUniform3fv(commonShaderProgram.locations.lanternPosition, 1, glm::value_ptr(sceneLights.lantern.position));
+	glUniform1f(commonShaderProgram.locations.lanternConstant, sceneLights.lantern.constant);
+	glUniform1f(commonShaderProgram.locations.lanternLinear, sceneLights.lantern.linear);
+	glUniform1f(commonShaderProgram.locations.lanternQuadratic,  sceneLights.lantern.quadratic);
 
 	//lamp 1
 	glUniform3fv(commonShaderProgram.locations.lamp1Ambient, 1, glm::value_ptr(sceneLights.lamp_1.ambient));
@@ -553,7 +579,7 @@ void processInput() {
 		moveVector += (glm::cross(myCamera.upVector, myCamera.direction));
 	}
 	if (keyMap[KEY_FORWARD] == true) {
-		//std::cout << myCamera.position.x << " " << myCamera.position.y << " " << myCamera.position.z << std::endl;
+		std::cout << myCamera.position.x << " " << myCamera.position.y << " " << myCamera.position.z << std::endl;
 		moveVector += (myCamera.direction);
 	}
 	if (keyMap[KEY_BACKWARDS] == true) {
@@ -646,8 +672,11 @@ void initApplication() {
 		obj->setIsDynamic(m.isDynamic);
 		obj->setHasAnimatedTexture(m.hasAnimatedTexture);
 
-		if (m.obj_address == "myModels/firefly/firefly.obj") {
+		if (m.name == "firefly") {
 			obj->setModelRotationOffset(-90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+		}
+		else if (m.name == "mine") {
+			obj->setModelRotationOffset(-125.0f, glm::vec3(1.0f, 0.0f, 0.0f));
 		}
 		obj->transformObject();
 

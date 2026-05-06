@@ -31,5 +31,6 @@ struct SpotLight : Light {
 struct SceneLights {
     DirectionalLight moonLight;
     PointLight firefly;
+    PointLight lantern;
     SpotLight lamp_1;
 };

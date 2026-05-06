@@ -36,6 +36,7 @@ struct Light {
 uniform Light moonLight;
 uniform Light firefly;
 uniform Light lamp_1;
+uniform Light lantern;
 
 out vec4 fragmentColor;
 
@@ -180,7 +181,8 @@ void main() {
     //compute all lights
     vec3 directionalLight_1 = computeDirectionalLight(moonLight);
     vec3 pointLight_1       = computePointLight(firefly);
-    vec3 spotLight_1        = computeSpotLight(lamp_1); //try to compute it from uniforms
+    vec3 spotLight_1        = computeSpotLight(lamp_1);
+    vec3 pointLight_2       = computePointLight(lantern);
 
     //testing ----------------------------------
     Light flashlight;
@@ -202,6 +204,7 @@ void main() {
     lightsResult += directionalLight_1;
     lightsResult += pointLight_1;
     lightsResult += spotLight_1;
+    lightsResult += pointLight_2;
     //===================================================================
 
     //FOG ===============================================================

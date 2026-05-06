@@ -62,6 +62,14 @@ typedef struct _ShaderProgram {
 		GLint lamp1Quadratic;
 		GLint lamp1SpotCosCutOff;
 		GLint lamp1SpotExponent;
+
+		GLint lanternPosition;
+		GLint lanternAmbient;
+		GLint lanternDiffuse;
+		GLint lanternSpecular;
+		GLint lanternConstant;
+		GLint lanternLinear;
+		GLint lanternQuadratic;
 		
 	} locations;
 
@@ -102,6 +110,13 @@ typedef struct _ShaderProgram {
 		locations.lamp1SpotExponent = -1;
 		locations.lamp1Direction = -1;
 		locations.UVMatrix = -1;
+		locations.lanternPosition = -1;
+		locations.lanternAmbient = -1;
+		locations.lanternDiffuse = -1;
+		locations.lanternSpecular = -1;
+		locations.lanternConstant = -1;
+		locations.lanternLinear = -1;
+		locations.lanternQuadratic = -1;
 	}
 
 } ShaderProgram;
