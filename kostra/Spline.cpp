@@ -20,6 +20,7 @@ glm::vec3 controlPoints[] = {
 };
 
 int segmentsNum = 12;
+float curveScale = 0.2f;
 
 glm::vec3 findPointOnCurveSegment(
     const glm::vec3& P0,
@@ -33,7 +34,7 @@ glm::vec3 findPointOnCurveSegment(
     const float t2 = t * t;
     const float t3 = t2 * t;
 
-    result = 0.5f * (
+    result = curveScale * (
         P0 * ((-1.0f) * t3 + (2.0f) * t2 + (-1.0f) * t + (0.0f)) +
         P1 * ((3.0f) * t3 + (-5.0f) * t2 + (0.0f) * t + (2.0f)) +
         P2 * ((-3.0f) * t3 + (4.0f) * t2 + (1.0f) * t + (0.0f)) +
@@ -68,7 +69,7 @@ glm::vec3 find_1stDerivative_OnCurveSegment(
     glm::vec3 result(1.0, 0.0, 0.0);
     const float t2 = t * t;
 
-    result = 0.5f * (
+    result = curveScale * (
         P0 * ((-1.0f) * 3.0f * t2 + (2.0f) * 2.0f * t + (-1.0f)) +
         P1 * ((3.0f) * 3.0f * t2 + (-5.0f) * 2.0f * t + (0.0f)) +
         P2 * ((-3.0f) * 3.0f * t2 + (4.0f) * 2.0f * t + (1.0f)) +

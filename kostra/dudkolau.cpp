@@ -87,12 +87,12 @@ void setUpLights() {
 
 	//Firefly
 	sceneLights.firefly.position = glm::vec3(0.0f, 1.0f, 0.0f); //
-	sceneLights.firefly.ambient = glm::vec3(0.2f, 0.2f, 0.2f);
-	sceneLights.firefly.diffuse = glm::vec3(3.0f, 3.0f, 0.0f);
+	sceneLights.firefly.ambient = glm::vec3(0.4f, 0.4f, 0.4f);
+	sceneLights.firefly.diffuse = glm::vec3(3.0f, 3.0f, 15.0f);
 	sceneLights.firefly.specular = glm::vec3(0.5f, 0.5f, 0.1f);
 	sceneLights.firefly.constant = 1.0f;
-	sceneLights.firefly.linear = 0.2f;
-	sceneLights.firefly.quadratic = 0.3f;
+	sceneLights.firefly.linear = 0.9f;
+	sceneLights.firefly.quadratic = 0.8f;
 
 	//Lamp
 	sceneLights.lamp_1.ambient = glm::vec3(1.0f, 1.0f, 1.0f);

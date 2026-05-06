@@ -3,6 +3,7 @@
 
 extern glm::vec3 controlPoints[];
 extern int segmentsNum;
+extern float curveScale;
 
 
 glm::vec3 findPointOnCurveSegment(

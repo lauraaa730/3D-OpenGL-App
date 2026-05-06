@@ -177,7 +177,8 @@ public:
 		shaderProgram = shdrPrg;
 		positionInWorld = glm::vec3(0.0f, 0.0f, 0.0f);
 		isDynamic = false;
-		speed = 0.5f; 
+		//TODO set speed!!!
+		speed = 0.7f; 
 		upVector = glm::vec3(0.0f, 1.0f, 0.0f);
 		direction = glm::vec3(0.0f, 0.0f, 1.0f);
 		startPosition = glm::vec3(0.0f, 0.0f, 0.0f);
