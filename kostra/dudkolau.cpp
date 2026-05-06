@@ -443,6 +443,12 @@ void specialKeyboardCb(int specKeyPressed, int mouseX, int mouseY) {
 	case GLUT_KEY_SHIFT_L: 
 		keyMap[KEY_UP] = true;
 		break;
+	case GLUT_KEY_F2 :
+		if (!keyMap[KEY_GET_STATUS]) {
+			keyMap[KEY_GET_STATUS] = true;
+			std::cout << "Current status: feeling good!" << std::endl;
+		}
+		break;
 	default:
 		;
 	}
@@ -455,6 +461,9 @@ void specialKeyboardUpCb(int specKeyReleased, int mouseX, int mouseY) {
 		break;
 	case GLUT_KEY_SHIFT_L: 
 		keyMap[KEY_UP] = false;
+		break;
+	case GLUT_KEY_F2:
+		keyMap[KEY_GET_STATUS] = false;
 		break;
 	default:
 		;
