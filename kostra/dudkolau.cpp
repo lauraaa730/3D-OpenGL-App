@@ -33,6 +33,7 @@
 
 
 #include <iostream>
+#include <cctype>
 #include "pgr.h"
 #include "object.h"
 #include "singlemesh.h"
@@ -345,6 +346,15 @@ void reshapeCb(int newWidth, int newHeight) {
  * \param mouseY mouse (cursor) Y position
  */
 void keyboardCb(unsigned char keyPressed, int mouseX, int mouseY) {
+	//pressing CTRL at the same time causes the value of keyPressed to change
+	//NOTE standart Ctrl + '' combinations now dont work!!
+	if (keyPressed >= 1 && keyPressed <= 26) {
+		keyPressed += 96;
+		
+	}
+
+	unsigned char lowerKey = std::tolower(keyPressed);
+	keyPressed = lowerKey;
 
 	switch (keyPressed) {
 	case 27:
@@ -384,6 +394,15 @@ void keyboardCb(unsigned char keyPressed, int mouseX, int mouseY) {
  * \param mouseY mouse (cursor) Y position
  */
 void keyboardUpCb(unsigned char keyReleased, int mouseX, int mouseY) {
+	//pressing CTRL at the same time causes the value of keyPressed to change
+	//NOTE standart Ctrl + '' combinations now dont work!!
+	if (keyReleased >= 1 && keyReleased <= 26) {
+		keyReleased += 96;
+
+	}
+
+	unsigned char lowerKey = std::tolower(keyReleased);
+	keyReleased = lowerKey;
 
 	switch (keyReleased) {
 	case ('d') :
@@ -514,6 +533,28 @@ void passiveMouseMotionCb(int mouseX, int mouseY) {
 	
 }
 
+void processInput() {
+	if (keyMap[KEY_RIGHT] == true) {
+		myCamera.Move(-0.05f * glm::cross(myCamera.upVector, myCamera.direction));
+	}
+	else if (keyMap[KEY_LEFT] == true) {
+		myCamera.Move(0.05f * glm::cross(myCamera.upVector, myCamera.direction));
+	}
+	else if (keyMap[KEY_FORWARD] == true) {
+		//std::cout << myCamera.position.x << " " << myCamera.position.y << " " << myCamera.position.z << std::endl;
+		myCamera.Move(myCamera.direction * myCamera.speed);
+	}
+	else if (keyMap[KEY_BACKWARDS] == true) {
+		myCamera.Move(myCamera.direction * (-1.0f)* myCamera.speed);
+	}
+	else if (keyMap[KEY_UP] == true) {
+		myCamera.Move(myCamera.upVector * myCamera.speed);
+	}
+	else if (keyMap[KEY_DOWN] == true) {
+		myCamera.Move(myCamera.upVector * (-1.0f) * myCamera.speed);
+	}
+}
+
 #pragma endregion
 
 
@@ -548,25 +589,7 @@ void timerCb(int)
 	}
 
 	//PROCESS INPUT --------
-	if (keyMap[KEY_RIGHT] == true)
-		myCamera.Move(-0.05f* glm::cross(myCamera.upVector, myCamera.direction));
-
-	if (keyMap[KEY_LEFT] == true)
-		myCamera.Move(0.05f * glm::cross(myCamera.upVector, myCamera.direction));
-
-	if (keyMap[KEY_FORWARD] == true) {
-		std::cout << myCamera.position.x << " " << myCamera.position.y << " " << myCamera.position.z << std::endl;
-		myCamera.Move(glm::vec3((myCamera.direction * 0.1f).x, 0.0f, (myCamera.direction * 0.1f).z));
-	}
-
-	if (keyMap[KEY_BACKWARDS] == true)
-		myCamera.Move(glm::vec3((myCamera.direction * -0.1f).x, 0.0f, (myCamera.direction * -0.1f).z));
-
-	if (keyMap[KEY_UP] == true)
-		myCamera.Move(myCamera.upVector * 0.1f);
-
-	if (keyMap[KEY_DOWN] == true)
-		myCamera.Move(myCamera.upVector * -0.1f);
+	processInput();
 
 #endif // task_1_0
 
