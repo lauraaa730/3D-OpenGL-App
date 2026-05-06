@@ -31,6 +31,7 @@ typedef struct _ShaderProgram {
 		GLint Mmatrix;
 		GLint normalMatrix;
 		GLint Vmatrix;
+		GLint UVMatrix;
 
 		GLint matAmbient;
 		GLint matDiffuse;
@@ -100,6 +101,7 @@ typedef struct _ShaderProgram {
 		locations.lamp1SpotCosCutOff = -1;
 		locations.lamp1SpotExponent = -1;
 		locations.lamp1Direction = -1;
+		locations.UVMatrix = -1;
 	}
 
 } ShaderProgram;
@@ -141,6 +143,7 @@ protected:
 	ObjectMaterial* material;
 	glm::mat4		localModelMatrix;
 	glm::mat4		globalModelMatrix;
+	glm::mat4		UVMatrix;
 
 	glm::mat4       modelRotationOffset; //object specific rotation offset (for weird models)
 
@@ -152,6 +155,7 @@ protected:
 
 	// dynamic objects
 	bool			isDynamic;
+	bool			hasAnimatedTexture;
 	float			speed;
 	glm::vec3		startPosition;
 	
@@ -185,6 +189,8 @@ public:
 		modelRotationOffset = glm::mat4(1.0f);
 		alpha = 1.0f;
 		scale = 1.0f;
+		UVMatrix = glm::mat4(1.0f);
+		hasAnimatedTexture = true;
 	}
   
 	/**
@@ -311,6 +317,14 @@ public:
 	virtual void setAlpha(float a) {
 		alpha = a;
 		transformObject();
+	}
+
+	virtual void setUVMatrix(glm::mat4 matrix) {
+		UVMatrix = matrix;
+	}
+
+	virtual void setHasAnimatedTexture(bool parameter) {
+		hasAnimatedTexture = parameter;
 	}
 	
 };

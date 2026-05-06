@@ -12,6 +12,7 @@ uniform mat4 PVMmatrix;
 uniform mat4 Vmatrix;
 uniform mat4 Mmatrix;
 uniform mat3 normalMatrix;
+uniform mat4 UVMatrix;
 
 out vec3 vPos;
 out vec3 vNormal;
@@ -26,7 +27,7 @@ void main() {
 	vNormal = normalize(mat3(Vmatrix) * normalMatrix * normal);
 
 	if (hasTexture) {
-		vTexCoord = texCoord;
+		vTexCoord = (UVMatrix * vec4(texCoord, 0.0, 1.0)).xy;
 	} else {
 		vColor = color;
 	}

@@ -4,6 +4,14 @@
 
 void SingleMesh::update(float elapsedTime, const glm::mat4* parentModelMatrix) {
 	// instance specific stuff
+	if (hasAnimatedTexture) {
+		glm::mat4 matrix = glm::mat4(1.0f); //reset
+		matrix = glm::translate(matrix, glm::vec3(0.0f, elapsedTime * -0.5f, 0.0f));
+		matrix = glm::scale(matrix, glm::vec3(sin(elapsedTime)* 0.2f + 1.0 )); //to scale from 0.8 to 1.2
+		setUVMatrix(matrix);
+		setAlpha(0.5f);
+	}
+	
 
 	// propagate the update to children
 	ObjectInstance::update(elapsedTime, parentModelMatrix);
@@ -31,6 +39,7 @@ void SingleMesh::draw(const glm::mat4& viewMatrix, const glm::mat4& projectionMa
 		glUniformMatrix3fv(shaderProgram->locations.normalMatrix, 1, GL_FALSE, glm::value_ptr(normalMat3));
 		glUniformMatrix4fv(shaderProgram->locations.PVMmatrix, 1, GL_FALSE, glm::value_ptr(PVM));
 		glUniformMatrix4fv(shaderProgram->locations.Mmatrix, 1, GL_FALSE, glm::value_ptr(globalModelMatrix));
+		glUniformMatrix4fv(shaderProgram->locations.UVMatrix, 1, GL_FALSE, glm::value_ptr(UVMatrix));
 		
 
 		//BIND TEXTURE ---

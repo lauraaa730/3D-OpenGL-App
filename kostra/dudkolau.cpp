@@ -134,6 +134,7 @@ void loadShaderPrograms()
 	commonShaderProgram.locations.Mmatrix	   = glGetUniformLocation(commonShaderProgram.program, "Mmatrix");
 	commonShaderProgram.locations.normalMatrix = glGetUniformLocation(commonShaderProgram.program, "normalMatrix");
 	commonShaderProgram.locations.Vmatrix	  = glGetUniformLocation(commonShaderProgram.program, "Vmatrix");
+	commonShaderProgram.locations.UVMatrix	  = glGetUniformLocation(commonShaderProgram.program, "UVMatrix");
 	commonShaderProgram.locations.alpha	  = glGetUniformLocation(commonShaderProgram.program, "alpha");
 	//materials
 	commonShaderProgram.locations.matAmbient   = glGetUniformLocation(commonShaderProgram.program, "material.ambient");
@@ -543,25 +544,30 @@ void passiveMouseMotionCb(int mouseX, int mouseY) {
 }
 
 void processInput() {
+	glm::vec3 moveVector(0.0f);
 
 	if (keyMap[KEY_RIGHT] == true) {
-		myCamera.Move(-1.0f * glm::cross(myCamera.upVector, myCamera.direction));
+		moveVector += (-1.0f * glm::cross(myCamera.upVector, myCamera.direction));
 	}
 	if (keyMap[KEY_LEFT] == true) {
-		myCamera.Move(glm::cross(myCamera.upVector, myCamera.direction));
+		moveVector += (glm::cross(myCamera.upVector, myCamera.direction));
 	}
 	if (keyMap[KEY_FORWARD] == true) {
 		//std::cout << myCamera.position.x << " " << myCamera.position.y << " " << myCamera.position.z << std::endl;
-		myCamera.Move(myCamera.direction);
+		moveVector += (myCamera.direction);
 	}
 	if (keyMap[KEY_BACKWARDS] == true) {
-		myCamera.Move(myCamera.direction * (-1.0f));
+		moveVector += (myCamera.direction * (-1.0f));
 	}
 	if (keyMap[KEY_UP] == true) {
-		myCamera.Move(myCamera.upVector);
+		moveVector += (myCamera.upVector);
 	}
 	if (keyMap[KEY_DOWN] == true) {
-		myCamera.Move(myCamera.upVector * (-1.0f) );
+		moveVector += (myCamera.upVector * (-1.0f) );
+	}
+
+	if (glm::length(moveVector) != 0.0f) {
+		myCamera.Move(glm::normalize(moveVector));
 	}
 }
 
@@ -638,6 +644,7 @@ void initApplication() {
 		obj->setStartPosition(m.position);
 		obj->setDirection(m.direction);
 		obj->setIsDynamic(m.isDynamic);
+		obj->setHasAnimatedTexture(m.hasAnimatedTexture);
 
 		if (m.obj_address == "myModels/firefly/firefly.obj") {
 			obj->setModelRotationOffset(-90.0f, glm::vec3(0.0f, 1.0f, 0.0f));

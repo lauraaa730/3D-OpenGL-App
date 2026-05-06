@@ -13,6 +13,7 @@ struct Model {
 	glm::vec3 direction;
 	float scale;
 	bool isDynamic;
+	bool hasAnimatedTexture;
 };
 
 struct HardCodedModel {
@@ -207,13 +208,14 @@ const unsigned int pond_indices[] = {
 };
 
 const Model myModels[] = { 
-	{ "myModels/Fish/fish.obj", "myModels/Fish/fish.jpg", glm::vec3(0.0f, -0.3f, 0.5f),glm::vec3(3.0f,2.0,3.0), 0.2f, true },
-	{ "myModels/Hibiscous/hibiscous.obj", "myModels/Hibiscous/hibiscous_color.jpg", glm::vec3(2.0f,3.0f,0.0f),glm::vec3(0.0,1.0,0.0), 1.0f, false },
-	//{ "myModels/Stone/Stone.obj", "myModels/Stone/Diffuse.tga", glm::vec3(0.0f,-8.5f,0.0f),glm::vec3(1.0,1.0,2.0), 10.0f, false },
-	{ "myModels/firefly/firefly.obj", "myModels/firefly/fly.png", glm::vec3(0.0f,1.0f,0.0f),glm::vec3(0.0f,1.0f,0.0f), 0.05f, false },
-	{ "myModels/Mine/mine2.obj", "myModels/Mine/mine1.png", glm::vec3(5.0f,0.5f,2.0f),glm::vec3(0.0f,1.0f,0.0f), 3.0f, false },
-	{ "myModels/StoneCircle/stone_circle.obj", "myModels/StoneCircle/stone_circle.png", glm::vec3(-0.1f,4.5f,-1.5f),glm::vec3(1.0f,0.0f,0.0f), 20.0f, false }
-	//{ "myModels/StoneCircle/stone_circle.obj", "myModels/StoneCircle/bake-cave.png", glm::vec3(0.0f,1.0f,-0.3f),glm::vec3(-1.0f,0.0f,1.0f), 7.0f, false }
+	{ "myModels/Fish/fish.obj", "myModels/Fish/fish.jpg", glm::vec3(0.0f, -0.3f, 0.5f),glm::vec3(3.0f,2.0,3.0), 0.2f, true, false },
+	{ "myModels/Hibiscous/hibiscous.obj", "myModels/Hibiscous/hibiscous_color.jpg", glm::vec3(-3.5f,0.1f,0.0f),glm::vec3(1.0,0.0,0.0), 0.5f, false, false },
+	//{ "myModels/Stone/Stone.obj", "myModels/Stone/Diffuse.tga", glm::vec3(0.0f,-8.5f,0.0f),glm::vec3(1.0,1.0,2.0), 10.0f, false, false },
+	{ "myModels/firefly/firefly.obj", "myModels/firefly/fly.png", glm::vec3(0.0f,1.0f,0.0f),glm::vec3(0.0f,1.0f,0.0f), 0.05f, false, false },
+	{ "myModels/Mine/mine2.obj", "myModels/Mine/mine1.png", glm::vec3(3.1f,2.0f,2.0f),glm::vec3(0.0f,1.0f,0.0f), 2.5f, false, false },
+	{ "myModels/StoneCircle/stone_circle.obj", "myModels/StoneCircle/stone_circle.png", glm::vec3(-0.1f,4.5f,-1.5f),glm::vec3(1.0f,0.0f,0.0f), 20.0f, false, false },
+	{ "myModels/Vodopad/vodopad.obj", "myModels/Vodopad/vodopad.png", glm::vec3(0.3f,0.8f,2.2f),glm::vec3(0.2f,-0.5f,1.0f), 1.0f, false, true }
+	
 
 };
 
