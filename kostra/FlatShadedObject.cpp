@@ -1,17 +1,17 @@
-#include "HardcodedObject.h"
+#include "FlatShadedObject.h"
 #include <iostream>
 
 
-/*void HardcodedObject::update(float elapsedTime, const glm::mat4* parentModelMatrix) {
+/*void FlatShadedObject::update(float elapsedTime, const glm::mat4* parentModelMatrix) {
 	// propagate the update to children
 	ObjectInstance::update(elapsedTime, parentModelMatrix);
 }*/
 
-void HardcodedObject::draw(const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix)
+void FlatShadedObject::draw(const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix)
 {
 	if (initialized && (shaderProgram != nullptr)) {
 
-		//enable additive blending and disable depth mask
+		//enable additive blending
 		glEnable(GL_BLEND);
 
 		glUseProgram(shaderProgram->program);
@@ -44,12 +44,11 @@ void HardcodedObject::draw(const glm::mat4& viewMatrix, const glm::mat4& project
 		//bind VAO for this specific object
 		glBindVertexArray(geometry->vertexArrayObject);
 
-		//draw using indices
-		glDrawElements(
-			GL_TRIANGLES,                    // draw triangles
-			geometry->numTriangles * 3,     // total indices
-			GL_UNSIGNED_INT,                // type of indices[]
-			0                               // start at beginning
+		//draw VBO
+		glDrawArrays(
+			GL_TRIANGLES,                   // draw triangles
+			0,                              // start at beginning
+			geometry->numTriangles * 3      // total number of vertices
 		);
 
 		//unbind VAO
@@ -60,14 +59,14 @@ void HardcodedObject::draw(const glm::mat4& viewMatrix, const glm::mat4& project
 
 	}
 	else {
-		std::cerr << "HardcodedObject::draw(): Can't draw, HardcodedObject not initialized properly!" << std::endl;
+		std::cerr << "FlatShadedObject::draw(): Can't draw, FlatShadedObject not initialized properly!" << std::endl;
 	}
 
 	//maybe draw children too?
 	//ObjectInstance::draw(viewMatrix, projectionMatrix);
 }
 
-HardcodedObject::HardcodedObject(ShaderProgram* shdrPrg, const HardCodedModel * model) 
+FlatShadedObject::FlatShadedObject(ShaderProgram* shdrPrg, const FlatShadedModel* model)
 	: ObjectInstance(shdrPrg)
 {
 	geometry = new ObjectGeometry;
@@ -87,25 +86,25 @@ HardcodedObject::HardcodedObject(ShaderProgram* shdrPrg, const HardCodedModel * 
 
 	//OBJECT DATA
 	const float* vertices = model->vertices;
-	const unsigned int* indices = model->indeces;
 
 	geometry->numTriangles = model->trianglesNum;
 
-	int numIndices = model->trianglesNum * 3;
+	
 
-	//calculate normals ---
-	std::vector<glm::vec3> calculatedNormals(model->verticesNum, glm::vec3(0.0f));
+	// CHANGED: Create new unrolled vectors for vertices and flat normals
+	std::vector<float> flatVertices;
+	std::vector<glm::vec3> flatNormals;
 
-	for (int i = 0; i < numIndices; i += 3) {
-		unsigned int idx0 = indices[i];
-		unsigned int idx1 = indices[i + 1];
-		unsigned int idx2 = indices[i + 2];
+	// Each triangle consists of 3 vertices, which is 9 floats (3 * 3) in the array.
+	for (int i = 0; i < geometry->numTriangles; i++) {
+
+		int offset = i * 9; // Starting index in the float array for this triangle
 
 		//extract 3D positions of the triangle's 3 vertices
-		//6 floats per vertex: X,Y,Z,R,G,B)
-		glm::vec3 v0(vertices[idx0 * 6], vertices[idx0 * 6 + 1], vertices[idx0 * 6 + 2]);
-		glm::vec3 v1(vertices[idx1 * 6], vertices[idx1 * 6 + 1], vertices[idx1 * 6 + 2]);
-		glm::vec3 v2(vertices[idx2 * 6], vertices[idx2 * 6 + 1], vertices[idx2 * 6 + 2]);
+		// CHANGED: Read directly from the linear array without using indices
+		glm::vec3 v0(vertices[offset + 0], vertices[offset + 1], vertices[offset + 2]);
+		glm::vec3 v1(vertices[offset + 3], vertices[offset + 4], vertices[offset + 5]);
+		glm::vec3 v2(vertices[offset + 6], vertices[offset + 7], vertices[offset + 8]);
 
 		//calculate  two edges of the triangle
 		glm::vec3 edge1 = v1 - v0;
@@ -114,43 +113,47 @@ HardcodedObject::HardcodedObject(ShaderProgram* shdrPrg, const HardCodedModel * 
 		//alculate normal of this specific face
 		glm::vec3 faceNormal = glm::normalize(glm::cross(edge2, edge1));
 
-		//add this face normal to all 3 vertices that touch this face
-		calculatedNormals[idx0] += faceNormal;
-		calculatedNormals[idx1] += faceNormal;
-		calculatedNormals[idx2] += faceNormal;
-	}
+		// CHANGED: Push data for all 3 vertices of this triangle
+		for (int j = 0; j < 3; ++j) {
+			int vOffset = offset + (j * 3);
 
-	//normalize all normals
-	for (int i = 0; i < model->verticesNum; ++i) {
-		calculatedNormals[i] = glm::normalize(calculatedNormals[i]);
+			// Add Position (X, Y, Z)
+			flatVertices.push_back(vertices[vOffset + 0]);
+			flatVertices.push_back(vertices[vOffset + 1]);
+			flatVertices.push_back(vertices[vOffset + 2]);
+
+			// Add Color (R, G, B) from the single model color
+			flatVertices.push_back(1.0f);
+			flatVertices.push_back(1.0f);
+			flatVertices.push_back(1.0f);
+
+			// Add the exact same face normal to all three vertices
+			flatNormals.push_back(faceNormal);
+		}
 	}
 
 	//VAO
 	glGenVertexArrays(1, &geometry->vertexArrayObject);
 	glBindVertexArray(geometry->vertexArrayObject);
 
-	//VBO
+	//VBO - bind the unrolled flatVertices instead of raw model vertices
 	glGenBuffers(1, &geometry->vertexBufferObject);
 	glBindBuffer(GL_ARRAY_BUFFER, geometry->vertexBufferObject);
-	glBufferData(GL_ARRAY_BUFFER, model->verticesNum * 6 * sizeof(float), vertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, flatVertices.size() * sizeof(float), flatVertices.data(), GL_STATIC_DRAW);
 
-	//EBO
-	glGenBuffers(1, &geometry->elementBufferObject);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, geometry->elementBufferObject);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, numIndices * sizeof(unsigned int), indices, GL_STATIC_DRAW);
 
 	if ((shaderProgram != nullptr) && shaderProgram->initialized && (shaderProgram->locations.position != -1) && (shaderProgram->locations.PVMmatrix != -1)) {
-		
+
 		//position attribute
 		glEnableVertexAttribArray(shaderProgram->locations.position);
 		glVertexAttribPointer(
-			shaderProgram->locations.position, 
+			shaderProgram->locations.position,
 			3, //x,y,z
-			GL_FLOAT, 
+			GL_FLOAT,
 			GL_FALSE,  //do not normalize
-			6* sizeof(float), //full vertex size - coordinates + color
+			6 * sizeof(float), //full vertex size - coordinates + color
 			(void*)0 //vertex position starts at offset 0 in each vertex
-		); 
+		);
 
 		//color attribute
 		glEnableVertexAttribArray(shaderProgram->locations.color);
@@ -160,22 +163,22 @@ HardcodedObject::HardcodedObject(ShaderProgram* shdrPrg, const HardCodedModel * 
 			GL_FLOAT,
 			GL_FALSE,  //do not normalize
 			6 * sizeof(float), //full vertex size - coordinates + color
-			(void*)(3*sizeof(float)) //after position
-		); 
+			(void*)(3 * sizeof(float)) //after position
+		);
 
 		//normals attribute
 		if (shaderProgram->locations.normal != -1) {
 			glGenBuffers(1, &geometry->normalBufferObject);
 			glBindBuffer(GL_ARRAY_BUFFER, geometry->normalBufferObject);
-			
-			glBufferData(GL_ARRAY_BUFFER, calculatedNormals.size() * sizeof(glm::vec3), calculatedNormals.data(), GL_STATIC_DRAW);
+
+			glBufferData(GL_ARRAY_BUFFER, flatNormals.size() * sizeof(glm::vec3), flatNormals.data(), GL_STATIC_DRAW);
 
 			glEnableVertexAttribArray(shaderProgram->locations.normal);
-			glVertexAttribPointer(shaderProgram->locations.normal, 
-				3, 
-				GL_FLOAT, 
-				GL_FALSE, 
-				0, 
+			glVertexAttribPointer(shaderProgram->locations.normal,
+				3,
+				GL_FLOAT,
+				GL_FALSE,
+				0,
 				0
 			);
 		}
@@ -183,15 +186,14 @@ HardcodedObject::HardcodedObject(ShaderProgram* shdrPrg, const HardCodedModel * 
 		initialized = true;
 	}
 	else {
-		std::cerr << "HardcodedObject::HardcodedObject(): shaderProgram struct not initialized!" << std::endl;
+		std::cerr << "FlatShadedObject::FlatShadedObject(): shaderProgram struct not initialized!" << std::endl;
 	}
 
 	glBindVertexArray(0);
 }
 
-HardcodedObject::~HardcodedObject() {
+FlatShadedObject::~FlatShadedObject() {
 	glDeleteVertexArrays(1, &(geometry->vertexArrayObject));
-	glDeleteBuffers(1, &(geometry->elementBufferObject));
 	glDeleteBuffers(1, &(geometry->vertexBufferObject));
 	glDeleteBuffers(1, &(geometry->normalBufferObject));
 
@@ -200,4 +202,3 @@ HardcodedObject::~HardcodedObject() {
 
 	initialized = false;
 }
-

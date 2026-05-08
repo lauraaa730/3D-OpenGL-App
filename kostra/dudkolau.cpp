@@ -41,6 +41,8 @@
 #include "Skybox.h"
 #include "SceneObjectsData.h"
 #include "HardcodedObject.h"
+#include "FlatShadedObject.h"
+#include "ColorChangingCrystals.h"
 #include "Light.h"
 #include "Billboard.h"
 #include "Parameters.h"
@@ -61,6 +63,8 @@ Skybox mySkybox;
 SceneLights sceneLights;
 
 Billboard* fireflyGlow;
+
+Crystal* crystals[crystalsNum];
 
 
 /*
@@ -327,6 +331,23 @@ void drawScene(void)
 		if (object != nullptr)
 			object->draw(viewMatrix, projectionMatrix);
 	}
+
+	glClearStencil(0);
+	// enable stencil test
+	glEnable(GL_STENCIL_TEST);
+	glStencilMask(0xFF); //why???
+	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+
+	for (int i = 0; i < crystalsNum; i++) {
+		Crystal * obj = crystals[i];
+		if (obj != nullptr) {
+			glStencilFunc(GL_ALWAYS, i + 1, -1); //0 is reserved for blank stencil buffer
+			obj->crystal->draw(viewMatrix, projectionMatrix);
+		}
+	}
+
+	// disable stencil test
+	glDisable(GL_STENCIL_TEST);
 }
 
 
@@ -337,7 +358,7 @@ void drawScene(void)
  */
 void displayCb() {
 
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
 	// draw the window contents (scene objects)
 	drawScene();
@@ -512,6 +533,26 @@ void specialKeyboardUpCb(int specKeyReleased, int mouseX, int mouseY) {
  * \param mouseY mouse (cursor) Y position
  */
 void mouseCb(int buttonPressed, int buttonState, int mouseX, int mouseY) {
+	if (buttonPressed == GLUT_LEFT_BUTTON && buttonState == GLUT_DOWN) {
+		unsigned char clickedID = 0;
+
+		int xPos = mouseX;
+		int yPos = WINDOW_HEIGHT - mouseY;
+
+		glReadPixels(
+			xPos,				// X coordinate of mouse position on screen
+			yPos,				// Y coordinate of mouse position on screen
+			1, 1,               // width and heights of what we are picking (just 1 pixel)
+			GL_STENCIL_INDEX,
+			GL_UNSIGNED_BYTE,  
+			&clickedID          //save answer
+		);
+
+		if (clickedID != 0) {
+			changeColor(crystals[clickedID-1]);
+		}
+	}
+			
 }
 
 /**
@@ -630,6 +671,16 @@ void timerCb(int)
 			object->update(elapsedTime, &sceneRootMatrix);
 	}
 
+	for (int i = 0; i < crystalsNum; i++) {
+		if (crystals[i] != nullptr) {
+			FlatShadedObject* obj = crystals[i]->crystal;
+			if (obj != nullptr) {
+				obj->update(elapsedTime, &sceneRootMatrix);
+			}
+		}
+		
+	}
+
 	//PROCESS INPUT --------
 	processInput();
 
@@ -685,6 +736,27 @@ void initApplication() {
 
 	for (const auto& m : HardCodedObjects) {
 		objects.push_back(new HardcodedObject(&commonShaderProgram, &m));
+	}
+
+	for (const auto& m : FlatShadedObjects) {
+		if (m.vertices != crystal_vertices) {
+			objects.push_back(new FlatShadedObject(&commonShaderProgram, &m));
+		}
+
+		
+	}
+
+	unsigned int i = 0;
+	for (const auto& m : FlatShadedObjects) {
+		if (m.vertices == crystal_vertices) {
+			crystals[i] = new Crystal;
+			crystals[i]->crystal = new FlatShadedObject(&commonShaderProgram, &m);
+			crystals[i]->id = i;
+			crystals[i]->currColor = i%COLOR_COUNT;
+			std::cout << i%COLOR_COUNT << std::endl;
+			setColor(crystals[i]->crystal, i%COLOR_COUNT);
+			i++;
+		}
 	}
 
 	// Create the glow effect (no .obj file needed!)
@@ -750,7 +822,7 @@ int main(int argc, char** argv) {
 		glutSpecialFunc(specialKeyboardCb);     // key pressed
 		glutSpecialUpFunc(specialKeyboardUpCb); // key released
 		glutPassiveMotionFunc(passiveMouseMotionCb);
-		//glutMouseFunc(mouseCb);
+		glutMouseFunc(mouseCb);
 		//glutMotionFunc(mouseMotionCb);
 
 		glutSetCursor(GLUT_CURSOR_NONE);

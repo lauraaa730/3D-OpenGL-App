@@ -3,17 +3,18 @@
 #include "object.h"
 #include "SceneObjectsData.h"
 
-/*
-* Object with hard-coded vertices and colors
-* using VBO, VAO and EBO,
-* for smooth shading
+/* 
+ * Object with hard-coded vertices and colors 
+ * using VBO and VAO for flat shading 
+
 */
-class HardcodedObject : public ObjectInstance
+
+class FlatShadedObject : public ObjectInstance
 {
 public:
 
-	HardcodedObject(ShaderProgram* shdrPrg = nullptr, const HardCodedModel* model = nullptr);
-	~HardcodedObject();
+	FlatShadedObject(ShaderProgram* shdrPrg = nullptr, const FlatShadedModel* model = nullptr);
+	~FlatShadedObject();
 
 	//void update(float elapsedTime, const glm::mat4* parentModelMatrix) override;
 	void draw(const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix) override;

@@ -342,4 +342,7 @@ public:
 		hasAnimatedTexture = parameter;
 	}
 	
+	virtual void setColor(glm::vec3 c) {
+		material->diffuse = c;
+	}
 };

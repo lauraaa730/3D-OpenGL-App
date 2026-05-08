@@ -38,6 +38,25 @@ struct HardCodedModel {
 	float shininess;
 };
 
+struct FlatShadedModel {
+	glm::vec3 position;
+	glm::vec3 direction;
+
+	float scale;
+	bool isDynamic;
+	float alpha;
+
+	//geometry
+	const float* vertices;
+	int trianglesNum;
+
+	//material
+	glm::vec3 ambient;
+	glm::vec3 diffuse;
+	glm::vec3 specular;
+	float shininess;
+};
+
 const float stone_vertices[] = {
 	// -------- top ring --------
  0.00f,  0.90f,  0.00f,   0.70f, 0.70f, 0.70f,
@@ -207,6 +226,74 @@ const unsigned int pond_indices[] = {
 	35, 42, 36, 36, 42, 43, 36, 43, 37, 37, 43, 44, 37, 44, 38, 38, 44, 45,
 	38, 45, 39, 39, 45, 46, 39, 46, 40, 40, 46, 47, 40, 47, 41, 41, 47, 48
 };
+
+
+const float crystal_vertices[] = {
+	//top half
+	// Triangle 1
+	0.0f, 1.5f, 0.0f,
+	1.0f, 0.0f, 0.0f,
+	0.5f, 0.0f, 0.866f,
+
+	// Triangle 2
+	0.0f, 1.5f, 0.0f,
+	0.5f, 0.0f, 0.866f,
+	-0.5f, 0.0f, 0.866f,
+
+	// Triangle 3
+	0.0f, 1.5f, 0.0f,
+	-0.5f, 0.0f, 0.866f,
+	-1.0f, 0.0f, 0.0f,
+
+	// Triangle 4
+	0.0f, 1.5f, 0.0f,
+	-1.0f, 0.0f, 0.0f,
+	-0.5f, 0.0f, -0.866f,
+
+	// Triangle 5
+	0.0f, 1.5f, 0.0f,
+	-0.5f, 0.0f, -0.866f,
+	0.5f, 0.0f, -0.866f,
+
+	// Triangle 6
+	0.0f, 1.5f, 0.0f,
+	0.5f, 0.0f, -0.866f,
+	1.0f, 0.0f, 0.0f,
+
+	//bottom half
+	// Triangle 7
+	0.0f, -1.5f, 0.0f,
+	0.5f, 0.0f, 0.866f,
+	1.0f, 0.0f, 0.0f,
+
+	// Triangle 8
+	0.0f, -1.5f, 0.0f,
+	-0.5f, 0.0f, 0.866f,
+	0.5f, 0.0f, 0.866f,
+
+	// Triangle 9
+	0.0f, -1.5f, 0.0f,
+	-1.0f, 0.0f, 0.0f,
+	-0.5f, 0.0f, 0.866f,
+
+	// Triangle 10
+	0.0f, -1.5f, 0.0f,
+	-0.5f, 0.0f, -0.866f,
+	-1.0f, 0.0f, 0.0f,
+
+	// Triangle 11
+	0.0f, -1.5f, 0.0f,
+	0.5f, 0.0f, -0.866f,
+	-0.5f, 0.0f, -0.866f,
+
+	// Triangle 12
+	0.0f, -1.5f, 0.0f,
+	1.0f, 0.0f, 0.0f,
+	0.5f, 0.0f, -0.866f
+};
+
+
+
 //dal od vodopadu dopredu - osa z zaporne, doleva - kladne na ose x
 const Model myModels[] = { 
 	{ "fish", "myModels/Fish/fish.obj", "myModels/Fish/fish.jpg", glm::vec3(0.0f, -0.3f, 0.5f),glm::vec3(3.0f,2.0,3.0), 0.2f, true, false },
@@ -222,10 +309,10 @@ const Model myModels[] = {
 
 const HardCodedModel HardCodedObjects[] = {
 	{	//stone
-		glm::vec3(2.0f,3.0f,0.0f),
+		glm::vec3(3.5f,0.5f,-2.0f),
 		glm::vec3(1.0f),
 		1.0f,
-		true,
+		false,
 		1.0f,
 		stone_vertices,
 		stone_indices,
@@ -236,6 +323,7 @@ const HardCodedModel HardCodedObjects[] = {
 		glm::vec3(0.1f, 0.1f, 0.1f), 
 		8.0f 
 	},
+
 
 	{ //pond
 		glm::vec3(0.1f, 0.0f, -0.5f),
@@ -254,4 +342,47 @@ const HardCodedModel HardCodedObjects[] = {
 		
 	}
 };
+
+const FlatShadedModel FlatShadedObjects[] = {
+	{	//crystal
+		glm::vec3(-1.5f,1.0f,-5.0f),
+		glm::vec3(1.0f, 0.0f, 0.0f),
+		0.2f,
+		false,
+		0.9f,
+		crystal_vertices,
+		12,
+		glm::vec3(0.2f, 0.2f, 0.2f),
+		glm::vec3(1.0f, 0.1f, 0.9f),
+		glm::vec3(0.1f, 0.1f, 0.1f),
+		8.0f
+	},
+	{	//crystal
+		glm::vec3(-0.5f,1.0f,-5.0f),
+		glm::vec3(1.0f, 0.0f, 0.0f),
+		0.2f,
+		false,
+		0.9f,
+		crystal_vertices,
+		12,
+		glm::vec3(0.2f, 0.2f, 0.2f),
+		glm::vec3(1.0f, 0.1f, 0.9f),
+		glm::vec3(0.1f, 0.1f, 0.1f),
+		8.0f
+	},
+	{	//crystal
+		glm::vec3(-1.0f,1.0f,-4.0f),
+		glm::vec3(1.0f, 0.0f, 0.0f),
+		0.2f,
+		false,
+		0.9f,
+		crystal_vertices,
+		12,
+		glm::vec3(0.2f, 0.2f, 0.2f),
+		glm::vec3(1.0f, 0.1f, 0.9f),
+		glm::vec3(0.1f, 0.1f, 0.1f),
+		8.0f
+	}
+};
+
 

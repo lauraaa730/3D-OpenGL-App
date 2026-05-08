@@ -7,7 +7,7 @@ Camera::Camera()
     upVector = glm::vec3(0.0f, 1.0f, 0.0f);
 
     currMode = FREE_LOOK;
-    position1 = glm::vec3(5.0, 5.0, 5.0);
+    position1 = glm::vec3(-3.0, 3.0, -4.0);
     position2 = glm::vec3(5.0, 5.0, -5.0);
 
     pitch = 0.0f;
@@ -28,8 +28,8 @@ void Camera::switchMode() {
     if (currMode == POSITION_1) {
         position = position1;
         //TODO make the yaw and pitch not these random numbers, but maybe -position or smth
-        yaw = -90.0f;
-        pitch = 0.0f;
+        yaw = 50.0f;
+        pitch = -20.0f;
     } else if (currMode == POSITION_2) {
         position = position2;
         yaw = 120.0f;

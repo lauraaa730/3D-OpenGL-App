@@ -14,6 +14,9 @@
     <ClCompile Include="Billboard.cpp">
       <Filter>ObjectTypes</Filter>
     </ClCompile>
+    <ClCompile Include="FlatShadedObject.cpp">
+      <Filter>ObjectTypes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
@@ -34,6 +37,10 @@
       <Filter>ObjectTypes</Filter>
     </ClInclude>
     <ClInclude Include="Parameters.h" />
+    <ClInclude Include="FlatShadedObject.h">
+      <Filter>ObjectTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="ColorChangingCrystals.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Shaders">

@@ -154,6 +154,7 @@
   <ItemGroup>
     <ClCompile Include="Billboard.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="FlatShadedObject.cpp" />
     <ClCompile Include="HardcodedObject.cpp" />
     <ClCompile Include="singlemesh.cpp" />
     <ClCompile Include="dudkolau.cpp" />
@@ -163,6 +164,8 @@
   <ItemGroup>
     <ClInclude Include="Billboard.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="ColorChangingCrystals.h" />
+    <ClInclude Include="FlatShadedObject.h" />
     <ClInclude Include="HardcodedObject.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="object.h" />
