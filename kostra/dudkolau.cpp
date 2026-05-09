@@ -51,6 +51,7 @@
 float lastMousePosX = WINDOW_WIDTH/2;
 float lastMousePosY = WINDOW_HEIGHT/2;
 bool firstMouse = true;
+bool showCursor = true;
 
 ObjectList objects;
 
@@ -63,6 +64,7 @@ Skybox mySkybox;
 SceneLights sceneLights;
 
 Billboard* fireflyGlow;
+Billboard* cursor;
 
 Crystal* crystals[crystalsNum];
 
@@ -572,6 +574,7 @@ void mouseMotionCb(int mouseX, int mouseY) {
 void passiveMouseMotionCb(int mouseX, int mouseY) {
 	//most of this code was written based on https://learnopengl.com/Getting-Started/Camera
 	// mouse hovering over window
+	glutWarpPointer(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
 
 	if (myCamera.currMode != FREE_LOOK) {
 		return;
@@ -620,7 +623,7 @@ void processInput() {
 		moveVector += (glm::cross(myCamera.upVector, myCamera.direction));
 	}
 	if (keyMap[KEY_FORWARD] == true) {
-		std::cout << myCamera.position.x << " " << myCamera.position.y << " " << myCamera.position.z << std::endl;
+		//std::cout << myCamera.position.x << " " << myCamera.position.y << " " << myCamera.position.z << std::endl;
 		moveVector += (myCamera.direction);
 	}
 	if (keyMap[KEY_BACKWARDS] == true) {
@@ -728,6 +731,9 @@ void initApplication() {
 		}
 		else if (m.name == "mine") {
 			obj->setModelRotationOffset(-125.0f, glm::vec3(1.0f, 0.0f, 0.0f));
+		}
+		else if (m.name == "crocus") {
+			obj->setModelRotationOffset(-90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
 		}
 		obj->transformObject();
 

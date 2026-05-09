@@ -57,6 +57,12 @@ struct FlatShadedModel {
 	float shininess;
 };
 
+struct BillboardModel {
+	glm::vec3 position;
+	bool isOverlay; //if true - its just a picture on top of the screen and we dont apply pvm
+
+};
+
 const float stone_vertices[] = {
 	// -------- top ring --------
  0.00f,  0.90f,  0.00f,   0.70f, 0.70f, 0.70f,
@@ -297,7 +303,12 @@ const float crystal_vertices[] = {
 //dal od vodopadu dopredu - osa z zaporne, doleva - kladne na ose x
 const Model myModels[] = { 
 	{ "fish", "myModels/Fish/fish.obj", "myModels/Fish/fish.jpg", glm::vec3(0.0f, -0.3f, 0.5f),glm::vec3(3.0f,2.0,3.0), 0.2f, true, false },
-	{ "hibiscous", "myModels/Hibiscous/hibiscous.obj", "myModels/Hibiscous/hibiscous_color.jpg", glm::vec3(-3.5f,0.1f,0.0f),glm::vec3(1.0,0.0,0.0), 0.5f, false, false },
+	{ "hibiscous", "myModels/Hibiscous/hibiscous.obj", "myModels/Hibiscous/hibiscous_color.jpg", glm::vec3(-2.0f,0.5f,0.0f),glm::vec3(1.0,0.0,0.0), 0.5f, false, false },
+	{ "hibiscous", "myModels/Hibiscous/hibiscous.obj", "myModels/Hibiscous/hibiscous_color.jpg", glm::vec3(1.75f,0.7f,1.25f),glm::vec3(0.5,0.0,1.0), 0.5f, false, false },
+	{ "crocus", "myModels/Crocus/Crocus.obj", "myModels/Crocus/Crocus.tga", glm::vec3(2.15f,0.5f,0.5f),glm::vec3(0.0,1.0,0.0), 0.2f, false, false },
+	{ "kapradi", "myModels/Kapradi/kapradi.obj", "myModels/Kapradi/plane.tga", glm::vec3(1.0f,-1.0f,0.1f),glm::vec3(0.5,0.0,1.0), 1.0f, false, false },
+	{ "kapradi", "myModels/Kapradi/kapradi.obj", "myModels/Kapradi/plane.tga", glm::vec3(0.0f,-1.1f,0.75f),glm::vec3(1.0,-0.1,-1.0), 0.7f, false, false },
+	{ "kapradi", "myModels/Kapradi/kapradi.obj", "myModels/Kapradi/plane.tga", glm::vec3(-0.5f,-1.1f,-0.1f),glm::vec3(-1.0,0.0,-0.5), 0.9f, false, false },
 	//{ "myModels/Stone/Stone.obj", "myModels/Stone/Diffuse.tga", glm::vec3(0.0f,-8.5f,0.0f),glm::vec3(1.0,1.0,2.0), 10.0f, false, false },
 	{ "firefly", "myModels/firefly/firefly.obj", "myModels/firefly/fly.png", glm::vec3(0.2f, 1.0f, -0.8f) ,glm::vec3(0.0f,1.0f,0.0f), 0.05f, false, false},
 	{ "mine", "myModels/Mine/mine2.obj", "myModels/Mine/mine1.png", glm::vec3(5.0f,1.4f,-5.2f),glm::vec3(0.0f,1.0f,0.0f), 2.5f, false, false},
