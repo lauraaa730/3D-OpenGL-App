@@ -13,6 +13,10 @@ Camera::Camera()
     pitch = 0.0f;
     yaw = -90.0f;
     speed = 0.1f;
+    colliderRadius = 1.0f;
+
+    //container = new SphereCollider;
+    //container->center = p
 }
 
 void Camera::Move(glm::vec3 dir) {

@@ -18,6 +18,8 @@ public:
 
 	float speed;
 	int currMode;
+	float colliderRadius;
+	//SphereCollider * container;
 
 	glm::vec3 position;
 	glm::vec3 direction;

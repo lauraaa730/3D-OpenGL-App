@@ -309,7 +309,7 @@ const Model myModels[] = {
 	{ "kapradi", "myModels/Kapradi/kapradi.obj", "myModels/Kapradi/plane.tga", glm::vec3(1.0f,-1.0f,0.1f),glm::vec3(0.5,0.0,1.0), 1.0f, false, false },
 	{ "kapradi", "myModels/Kapradi/kapradi.obj", "myModels/Kapradi/plane.tga", glm::vec3(0.0f,-1.1f,0.75f),glm::vec3(1.0,-0.1,-1.0), 0.7f, false, false },
 	{ "kapradi", "myModels/Kapradi/kapradi.obj", "myModels/Kapradi/plane.tga", glm::vec3(-0.5f,-1.1f,-0.1f),glm::vec3(-1.0,0.0,-0.5), 0.9f, false, false },
-	//{ "myModels/Stone/Stone.obj", "myModels/Stone/Diffuse.tga", glm::vec3(0.0f,-8.5f,0.0f),glm::vec3(1.0,1.0,2.0), 10.0f, false, false },
+	{ "collisionStone", "myModels/Stone/Stone.obj", "myModels/Stone/Diffuse.tga", glm::vec3(3.5f,1.0f,-0.5f),glm::vec3(1.0,1.0,2.0), 0.75f, false, false },
 	{ "firefly", "myModels/firefly/firefly.obj", "myModels/firefly/fly.png", glm::vec3(0.2f, 1.0f, -0.8f) ,glm::vec3(0.0f,1.0f,0.0f), 0.05f, false, false},
 	{ "mine", "myModels/Mine/mine2.obj", "myModels/Mine/mine1.png", glm::vec3(5.0f,1.4f,-5.2f),glm::vec3(0.0f,1.0f,0.0f), 2.5f, false, false},
 	{ "cave","myModels/StoneCircle/stone_circle.obj", "myModels/StoneCircle/stone_circle.png", glm::vec3(-0.1f,4.5f,-1.5f),glm::vec3(1.0f,0.0f,0.0f), 20.0f, false, false},

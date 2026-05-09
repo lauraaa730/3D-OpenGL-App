@@ -636,8 +636,35 @@ void processInput() {
 		moveVector += (myCamera.upVector * (-1.0f) );
 	}
 
+	//if the user moved with camera
 	if (glm::length(moveVector) != 0.0f) {
+
+		//move the camera
 		myCamera.Move(glm::normalize(moveVector));
+
+		//check collisions with scene bound
+		if (glm::abs(myCamera.position.x) > SCENE_WIDTH || glm::abs(myCamera.position.y) > SCENE_HEIGHT || glm::abs(myCamera.position.z) > SCENE_DEPTH) {
+			std::cout << "Camera is at the edge of the scene! Cannot move anymore!" << std::endl;
+			//if out of bounds, reverse move
+			myCamera.Move((-1.0f) * glm::normalize(moveVector));
+			return;
+		}
+		
+		
+		for (const auto& m : myModels) {
+			if (m.name == "collisionStone") {
+				glm::vec3 stonePos = m.position;
+				float distance = glm::length(myCamera.position - stonePos);
+				if (distance < myCamera.colliderRadius + stoneColliderRadius) {
+					std::cout << "In collision with stone!" << std::endl;
+					myCamera.Move((-1.0f) * glm::normalize(moveVector));
+					return;
+				}
+
+			}
+		}
+
+		
 	}
 }
 

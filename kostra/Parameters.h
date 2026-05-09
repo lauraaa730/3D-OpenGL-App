@@ -1,9 +1,9 @@
 #pragma once
 #include "pgr.h"
 
-constexpr float SCENE_WIDTH = 1.0f;
-constexpr float SCENE_HEIGHT = 1.0f;
-constexpr float SCENE_DEPTH = 1.0f;
+constexpr float SCENE_WIDTH = 7.5f;
+constexpr float SCENE_HEIGHT = 10.0f;
+constexpr float SCENE_DEPTH = 7.5f;
 
 constexpr float FAR_CLIPPING_PLANE = 100.f;
 
@@ -14,6 +14,13 @@ constexpr char WINDOW_TITLE[] = "PGR: dudkolau";
 enum { KEY_LEFT, KEY_RIGHT, KEY_FORWARD, KEY_BACKWARDS, KEY_UP, KEY_DOWN, KEY_SWITCH_CAMERA, KEY_GET_STATUS, CLICK_KEY, KEYS_COUNT };
 
 bool keyMap[KEYS_COUNT];
+/*
+struct SphereCollider {
+	glm::vec3 center;
+	float radius;
+};*/
+
+constexpr float stoneColliderRadius = 0.15f;
 
 
 //LIGHTS
