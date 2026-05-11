@@ -1,11 +1,22 @@
+//----------------------------------------------------------------------------------------
+/**
+ * \file    Skybox.cpp
+ * \brief   Implementation of the Skybox class and shader source code.
+ * \author  Laura Katerina Dudkova
+ * \date    2026/05/11
+ */
+
 #include "Skybox.h"
 
-
-
+ /**
+  * \brief Vertex shader source code for the skybox.
+  * \details Outputs texture coordinates based on vertex positions and calculates the gl_Position
+  *          using a view matrix with its translation component removed.
+  */
 const std::string skyboxVertexShaderSrc(
-	"#version 140\n"
-	"\n"
-	"in vec3 position;\n"
+    "#version 140\n"
+    "\n"
+    "in vec3 position;\n"
     "out vec3 texCoord;\n"
     "\n"
     "uniform mat4 viewNoTranslation;\n"
@@ -17,16 +28,20 @@ const std::string skyboxVertexShaderSrc(
     "}\n"
 );
 
+/**
+ * \brief Fragment shader source code for the skybox.
+ * \details Samples the cubemap texture using the 3D texture coordinates provided by the vertex shader.
+ */
 const std::string skyboxFragmentShaderSrc(
-	"#version 140\n"
-	"\n"
+    "#version 140\n"
+    "\n"
     "in vec3 texCoord;\n"
     "uniform samplerCube skyboxSampler;\n"
-	"out vec4 color_f;\n"
-	"\n"
-	"void main() {\n"
-	"  color_f = texture(skyboxSampler,texCoord);\n"
-	"}\n"
+    "out vec4 color_f;\n"
+    "\n"
+    "void main() {\n"
+    "  color_f = texture(skyboxSampler,texCoord);\n"
+    "}\n"
 );
 
 SkyboxShaderProgram skyboxShaderProgram;
@@ -45,7 +60,7 @@ void Skybox::init() {
         "resources/skybox/night-no-moon/jettelly_no_moon_FRONT.png",  // GL_TEXTURE_CUBE_MAP_POSITIVE_Z // FRONT
         "resources/skybox/night-no-moon/jettelly_no_moon_BACK.png"   // GL_TEXTURE_CUBE_MAP_NEGATIVE_Z //BACK
     };
-    
+
     geometry->texture = loadCubemap(faces);
 }
 
@@ -56,7 +71,7 @@ void Skybox::draw(const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix
     //remove translation from view matrix (skybox stays at camera position)
     glm::mat4 viewNoTranslation = glm::mat4(glm::mat3(viewMatrix));
 
-    //pload uniforms
+    //upload uniforms
     glUniformMatrix4fv(
         skyboxShaderProgram.viewNoTranslationLocation,
         1,

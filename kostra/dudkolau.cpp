@@ -1,10 +1,10 @@
 //----------------------------------------------------------------------------------------
 /**
- * \file    skeleton.cpp : This file contains the 'main' function and callbacks.
+ * \file    dudkolau.cpp : This file contains the 'main' function and callbacks.
 			Program execution begins and ends there.
- * \author  Jaroslav Sloup, Petr Felkel
- * \date    2022/03/03
- * \brief   Prepared for the Computer graphics course on FEE and FIT CTU in Prague CZ
+ * \author  Laura Katerina Dudkova
+ * \date    2026/05/11
+ * \brief   Semestral project for the Computer graphics course on FEE in Prague CZ
  */
 
  /**
@@ -18,18 +18,7 @@
   * Comment your code using the [doxygen](https://www.doxygen.nl/index.html) documenting system style.
   * Create "doxygen" directory, make it current by "cd doxygen", prepare a configuration file with "doxygen -g" and edit the details.
   *
-  * Start by renaming of this file from skeleton.cpp to <your_name>.cpp and the project to <your_name>.vcxproj
-  *
-  * In <your_name>.vcxproj:
-  *   - rename skeleton in <RootNamespace>skeleton</RootNamespace> to <your_name>
-  *   - replace skeleton.cpp in <ClCompile Include="skeleton.cpp" /> to <your_name>.cpp
-  *
-  * Start coding and documenting. Generate the documentation by the command "doxygen" in the "doxygen" directory.
-  *
   */
-
-
-  // TODO: tabulka klaves a jeji obsluha keyPressed/keyReleased a timer
 
 
 #include <iostream>
@@ -47,43 +36,57 @@
 #include "Billboard.h"
 #include "Parameters.h"
 
+/** \defgroup GlobalVars Global Variables for Engine State
+*  \brief Global variables handling cursor position, camera state, objects, and shaders.
+*  @{
+*/
+
 //mouse movement handling
-float lastMousePosX = WINDOW_WIDTH/2;
-float lastMousePosY = WINDOW_HEIGHT/2;
-bool firstMouse = true;
-bool showCursor = true;
+float lastMousePosX = WINDOW_WIDTH / 2; ///< \brief Last recorded X position of the mouse cursor.
+float lastMousePosY = WINDOW_HEIGHT / 2; ///< \brief Last recorded Y position of the mouse cursor.
+bool firstMouse = true; ///< \brief Flag indicating if this is the first mouse interaction.
+bool showCursor = true; ///< \brief Flag to toggle cursor visibility.
 
 ObjectList objects;
 
 // shared shader programs
-ShaderProgram commonShaderProgram;
-ShaderProgram billboardShaderProgram;
+ShaderProgram commonShaderProgram; ///< \brief Shader program used for common 3D objects.
+ShaderProgram billboardShaderProgram; ///< \brief Shader program used specifically for billboards.
 
-Camera myCamera;
-Skybox mySkybox;
-SceneLights sceneLights;
+Camera myCamera; ///< \brief Main camera object handling view matrices.
+Skybox mySkybox; ///< \brief Skybox object handling the background environment.
+SceneLights sceneLights; ///< \brief Struct containing all light sources in the scene.
 
-Billboard* fireflyGlow;
-Billboard* cursor;
+Billboard* fireflyGlow; ///< \brief Billboard object for the firefly light glow effect.
+Billboard* cursor; ///< \brief Billboard object for the custom cursor.
 
-Crystal* crystals[crystalsNum];
+Crystal* crystals[crystalsNum]; ///< \brief Array holding color-changing crystal objects.
 
+/** @} */
 
-/*
-THE CORE ENGINE LOOP
+/**
+ * \details
+ * THE CORE ENGINE LOOP
+ *
+ * 1. Setup
+ * - create window
+ * - load shaders
+ * - create objects
+ *
+ * 2. Main loop
+ * - Handled by GLUT, not while(true)
+ *
+ * 3. Delegation
+ * - actual rendering -> object->draw(...)
+ * - updates -> object->update(...)
+ */
 
-1. Setup
-* create window
-* load shaders
-* create objects
+/**
+ * \brief Initialize and set up lighting parameters for the scene.
+ * \details Configures the ambient, diffuse, specular, and positioning variables for all lights:
+ *          Moon Light, Firefly, Lantern, and Lamp.
+ */
 
-2. Main loop
-* Handled by GLUT, not while(true)
-
-3. Delegation
-actual rendering -> object->draw(...)
-updates -> object->update(...)
-*/
 void setUpLights() {
 	//Moon Light
 	sceneLights.moonLight.ambient = moonLightAmbient;
@@ -92,7 +95,7 @@ void setUpLights() {
 	sceneLights.moonLight.direction = moonLightDirection;
 
 	//Firefly
-	sceneLights.firefly.position = fireflyPosition; //
+	sceneLights.firefly.position = fireflyPosition; 
 	sceneLights.firefly.ambient = fireflyAmbient;
 	sceneLights.firefly.diffuse = fireflyDiffuse;
 	sceneLights.firefly.specular = fireflySpecular;
@@ -111,22 +114,24 @@ void setUpLights() {
 
 	//Lamp
 	sceneLights.lamp_1.ambient = lamp_1Ambient;
-	sceneLights.lamp_1.diffuse = lamp_1Diffuse;       // Cold LED white/blue
-	sceneLights.lamp_1.specular = lamp_1Specular;      // High glare
-	sceneLights.lamp_1.position = lamp_1Position;      // Hardcoded world position
-	sceneLights.lamp_1.direction = lamp_1Direction;    // Hardcoded pointing forward (-Z)
+	sceneLights.lamp_1.diffuse = lamp_1Diffuse;       
+	sceneLights.lamp_1.specular = lamp_1Specular;      
+	sceneLights.lamp_1.position = lamp_1Position;     
+	sceneLights.lamp_1.direction = lamp_1Direction;  
 	sceneLights.lamp_1.constant = lamp_1Constant;
-	sceneLights.lamp_1.linear = lamp_1Linear;                      // Good for ~50 meters
+	sceneLights.lamp_1.linear = lamp_1Linear;                     
 	sceneLights.lamp_1.quadratic = lamp_1Quadratic;
-	sceneLights.lamp_1.spotCosCutOff = lamp_1SpotCosCutOff;               // ~15 degree cone
-	sceneLights.lamp_1.spotExponent = lamp_1SpotExponent;                 // Soft edge
+	sceneLights.lamp_1.spotCosCutOff = lamp_1SpotCosCutOff;              
+	sceneLights.lamp_1.spotExponent = lamp_1SpotExponent;
 	
 }
 
+#pragma region OpenGLStuff
 // -----------------------  OpenGL stuff ---------------------------------
 
 /**
  * \brief Load and compile shader programs. Get attribute locations.
+ * \details Compiles the common, skybox, and billboard shaders, and caches all necessary uniform and attribute locations.
  */
 void loadShaderPrograms()
 {
@@ -142,7 +147,7 @@ void loadShaderPrograms()
 	commonShaderProgram.locations.color = glGetAttribLocation(commonShaderProgram.program, "color");
 	commonShaderProgram.locations.normal = glGetAttribLocation(commonShaderProgram.program, "normal");
 
-	// other attributes and uniforms
+	// other attributes and uniforms ---
 	commonShaderProgram.locations.texSampler   = glGetUniformLocation(commonShaderProgram.program, "texSampler");
 	commonShaderProgram.locations.PVMmatrix    = glGetUniformLocation(commonShaderProgram.program, "PVMmatrix");
 	commonShaderProgram.locations.hasTexture   = glGetUniformLocation(commonShaderProgram.program, "hasTexture");
@@ -151,12 +156,14 @@ void loadShaderPrograms()
 	commonShaderProgram.locations.Vmatrix	  = glGetUniformLocation(commonShaderProgram.program, "Vmatrix");
 	commonShaderProgram.locations.UVMatrix	  = glGetUniformLocation(commonShaderProgram.program, "UVMatrix");
 	commonShaderProgram.locations.alpha	  = glGetUniformLocation(commonShaderProgram.program, "alpha");
-	//materials
+	
+	//materials ---
 	commonShaderProgram.locations.matAmbient   = glGetUniformLocation(commonShaderProgram.program, "material.ambient");
 	commonShaderProgram.locations.matDiffuse   = glGetUniformLocation(commonShaderProgram.program, "material.diffuse");
 	commonShaderProgram.locations.matSpecular  = glGetUniformLocation(commonShaderProgram.program, "material.specular");
 	commonShaderProgram.locations.matShininess = glGetUniformLocation(commonShaderProgram.program, "material.shininess");
-	//lights
+	
+	//lights ---
 	commonShaderProgram.locations.moonLightAmbient = glGetUniformLocation(commonShaderProgram.program, "moonLight.ambient");
 	commonShaderProgram.locations.moonLightDiffuse = glGetUniformLocation(commonShaderProgram.program, "moonLight.diffuse");
 	commonShaderProgram.locations.moonLightSpecular = glGetUniformLocation(commonShaderProgram.program, "moonLight.specular");
@@ -194,30 +201,25 @@ void loadShaderPrograms()
 	assert(commonShaderProgram.locations.position != -1);
 	// ...
 
-	//SKYBOX SHADERS
-    // create the program with two shaders
-
+	//SKYBOX SHADERS ---
+    // special shader just for skybox without lights or fog
 	skyboxShaderProgram.program = pgr::createProgram({ 
 		pgr::createShaderFromSource(GL_VERTEX_SHADER, skyboxVertexShaderSrc) , 
 		pgr::createShaderFromSource(GL_FRAGMENT_SHADER, skyboxFragmentShaderSrc) });
 
-	skyboxShaderProgram.positionLocation =
-		glGetAttribLocation(skyboxShaderProgram.program, "position");
+	//locations
+	skyboxShaderProgram.positionLocation = glGetAttribLocation(skyboxShaderProgram.program, "position");
 
-	skyboxShaderProgram.skyboxSamplerLocation =
-		glGetUniformLocation(skyboxShaderProgram.program, "skyboxSampler");
-
-	skyboxShaderProgram.viewNoTranslationLocation =
-		glGetUniformLocation(skyboxShaderProgram.program, "viewNoTranslation");
-
-	skyboxShaderProgram.projectionMatrixLocation =
-		glGetUniformLocation(skyboxShaderProgram.program, "projection");
+	skyboxShaderProgram.skyboxSamplerLocation = glGetUniformLocation(skyboxShaderProgram.program, "skyboxSampler");
+	skyboxShaderProgram.viewNoTranslationLocation = glGetUniformLocation(skyboxShaderProgram.program, "viewNoTranslation");
+	skyboxShaderProgram.projectionMatrixLocation =glGetUniformLocation(skyboxShaderProgram.program, "projection");
 
 	if (!skyboxShaderProgram.program) {
 		std::cout << "SKY BOX SHADER COMPILATION FAILED!\N" << std::endl;
 	}
 
 	//BILLBOARD SHADERS ---
+	// special shader for billboard objects without lighting
 	GLuint bbShaders[] = {
 	  pgr::createShaderFromFile(GL_VERTEX_SHADER, "shaders/billboard.vert"),
 	  pgr::createShaderFromFile(GL_FRAGMENT_SHADER, "shaders/billboard.frag"),
@@ -225,19 +227,19 @@ void loadShaderPrograms()
 	};
 
 	billboardShaderProgram.program = pgr::createProgram(bbShaders);
+
+	//locations
 	billboardShaderProgram.locations.position = glGetAttribLocation(billboardShaderProgram.program, "position");
 	billboardShaderProgram.locations.texCoord = glGetAttribLocation(billboardShaderProgram.program, "texCoord");
 
-	//uniforms
 	billboardShaderProgram.locations.PVMmatrix = glGetUniformLocation(billboardShaderProgram.program, "PVMmatrix");
 	billboardShaderProgram.locations.texSampler = glGetUniformLocation(billboardShaderProgram.program, "texSampler");
-	// -----------------------------
 
 	commonShaderProgram.initialized = true;
 	skyboxShaderProgram.initialized = true;
 	billboardShaderProgram.initialized = true;
 
-	//set static uniforms, taht do not change:
+	//static uniforms, thatt do not change ---
 	glUseProgram(commonShaderProgram.program);
 
 	//lights ---
@@ -285,21 +287,27 @@ void loadShaderPrograms()
 void cleanupShaderPrograms(void) {
 
 	pgr::deleteProgramAndShaders(commonShaderProgram.program);
-	//TODO pgr::deleteProgramAndShaders(skyboxFarPlaneShaderProgram.program);
+	pgr::deleteProgramAndShaders(skyboxShaderProgram.program);
+	pgr::deleteProgramAndShaders(billboardShaderProgram.program);
 }
 
 /**
  * \brief Draw all scene objects.
+ * \details Configures the view and projection matrices, draws the skybox without depth mask,
+ *          then renders standard objects, and finally handles stencil buffer rendering for clickable crystals.
  */
 void drawScene(void)
 {
-	// setup parallel projection
+	// setup orthographic projection
+	/*
 	const glm::mat4 orthoProjectionMatrix = glm::ortho(
 		-SCENE_WIDTH, SCENE_WIDTH,
 		-SCENE_HEIGHT, SCENE_HEIGHT,
 		-10.0f * SCENE_DEPTH, 10.0f * SCENE_DEPTH
 	);
+	*/
 	
+	//perspective projection matrix
 	glm::mat4 projectionMatrix = glm::perspective(
 		glm::radians(50.0f), 
 		WINDOW_WIDTH / (float)WINDOW_HEIGHT, 
@@ -309,6 +317,7 @@ void drawScene(void)
 
 	glm::vec3 cameraCenter = myCamera.direction + myCamera.position;
 
+	//create lookAt matrix for current camera settings
 	glm::mat4 viewMatrix = glm::lookAt(
 		myCamera.position,
 		cameraCenter,
@@ -321,25 +330,23 @@ void drawScene(void)
 	glDepthMask(GL_TRUE);
 
 
-	//TODO cant i set this in load shaders???
+	//set uniforms
 	glUseProgram(commonShaderProgram.program);
+	glUniformMatrix4fv(commonShaderProgram.locations.Vmatrix, 1, GL_FALSE, glm::value_ptr(viewMatrix));
 
-	glUniformMatrix4fv(commonShaderProgram.locations.Vmatrix, 1, GL_FALSE,
-		glm::value_ptr(viewMatrix));
-
-	//glm::mat4 viewMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(50.0f, 0.0f, 0.0f));
-
-	for (ObjectInstance* object : objects) {   // for (auto object : objects) {
+	//draw every object
+	for (ObjectInstance* object : objects) { 
 		if (object != nullptr)
 			object->draw(viewMatrix, projectionMatrix);
 	}
 
-	glClearStencil(0);
-	// enable stencil test
+	// enable stencil test for picking
+	glClearStencil(0); //clearing stencil buffer sets everything to 0
 	glEnable(GL_STENCIL_TEST);
-	glStencilMask(0xFF); //why???
+	glStencilMask(0xFF); //enable writing
 	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 
+	//draw color changing crystals and write into stencil buffer
 	for (int i = 0; i < crystalsNum; i++) {
 		Crystal * obj = crystals[i];
 		if (obj != nullptr) {
@@ -352,14 +359,17 @@ void drawScene(void)
 	glDisable(GL_STENCIL_TEST);
 }
 
+#pragma endregion
 
 // -----------------------  Window callbacks ---------------------------------
 
 /**
  * \brief Draw the window contents.
+ * \details Clears buffers and calls drawScene() to render the frame, then swaps buffers.
  */
 void displayCb() {
 
+	//clear buffers
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
 	// draw the window contents (scene objects)
@@ -383,8 +393,8 @@ void reshapeCb(int newWidth, int newHeight) {
 
 
 
-// -----------------------  Keyboard ---------------------------------
-#pragma region KeyboardHandling
+// -----------------------  Keyboard & Mouse ---------------------------------
+#pragma region RawInputHandling
 
 /**
  * \brief Handle the key pressed event.
@@ -412,7 +422,6 @@ void keyboardCb(unsigned char keyPressed, int mouseX, int mouseY) {
 		exit(EXIT_SUCCESS);
 	case ('d'):
 		keyMap[KEY_RIGHT] = true;
-		//std::cout << myCamera.position.x << std::endl; 
 		break;
 	case ('a'):
 		keyMap[KEY_LEFT] = true;
@@ -435,10 +444,10 @@ void keyboardCb(unsigned char keyPressed, int mouseX, int mouseY) {
 	}
 }
 
-// Called whenever a key on the keyboard was released. The key is given by
-// the "keyReleased" parameter, which is in ASCII. 
 /**
  * \brief Handle the key released event.
+ * \details Called whenever a key on the keyboard was released. The key is given by
+ * the "keyReleased" parameter, which is in ASCII.
  * \param keyReleased ASCII code of the released key
  * \param mouseX mouse (cursor) X position
  * \param mouseY mouse (cursor) Y position
@@ -504,6 +513,12 @@ void specialKeyboardCb(int specKeyPressed, int mouseX, int mouseY) {
 	}
 }
 
+/**
+ * \brief Handle the non-ASCII key released event (such as arrows or modifiers).
+ * \param specKeyReleased int value of a predefined glut constant
+ * \param mouseX mouse (cursor) X position
+ * \param mouseY mouse (cursor) Y position
+ */
 void specialKeyboardUpCb(int specKeyReleased, int mouseX, int mouseY) {
 	switch (specKeyReleased) {
 	case GLUT_KEY_CTRL_L :
@@ -518,7 +533,7 @@ void specialKeyboardUpCb(int specKeyReleased, int mouseX, int mouseY) {
 	default:
 		;
 	}
-} // key released
+} 
 
 // -----------------------  Mouse ---------------------------------
 // three events - mouse click, mouse drag, and mouse move with no button pressed
@@ -542,8 +557,8 @@ void mouseCb(int buttonPressed, int buttonState, int mouseX, int mouseY) {
 		int yPos = WINDOW_HEIGHT - mouseY;
 
 		glReadPixels(
-			xPos,				// X coordinate of mouse position on screen
-			yPos,				// Y coordinate of mouse position on screen
+			xPos,				// X coordinate of mouse position in pixel coordinates
+			yPos,				// Y coordinate of mouse position in pixel coordinates
 			1, 1,               // width and heights of what we are picking (just 1 pixel)
 			GL_STENCIL_INDEX,
 			GL_UNSIGNED_BYTE,  
@@ -570,6 +585,7 @@ void mouseMotionCb(int mouseX, int mouseY) {
  * \brief Handle mouse movement over the window (with no button pressed).
  * \param mouseX mouse (cursor) X position
  * \param mouseY mouse (cursor) Y position
+ * \detail Moves the camera based on mouse movement
  */
 void passiveMouseMotionCb(int mouseX, int mouseY) {
 	//most of this code was written based on https://learnopengl.com/Getting-Started/Camera
@@ -586,8 +602,6 @@ void passiveMouseMotionCb(int mouseX, int mouseY) {
 	const float sensitivity = 0.05f;
 	xoffset *= sensitivity;
 	yoffset *= sensitivity;
-
-	//TODO maybe refactor this to be a camera function
 
 	myCamera.yaw += xoffset;
 	myCamera.pitch -= yoffset;
@@ -607,12 +621,13 @@ void passiveMouseMotionCb(int mouseX, int mouseY) {
 	glutWarpPointer(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
 
 	glutPostRedisplay();
-	
-
-	
-	
 }
 
+/**
+ * \brief Processes active input keys from the keyboard mapping array and updates the camera position.
+ * \details Calculates the intended movement vector based on active keys, updates the camera,
+ *          and checks for boundary limits and stone collision, reverting if necessary.
+ */
 void processInput() {
 	glm::vec3 moveVector(0.0f);
 
@@ -650,13 +665,14 @@ void processInput() {
 			return;
 		}
 		
-		
+		//check collision with designated rigid object
 		for (const auto& m : myModels) {
 			if (m.name == "collisionStone") {
 				glm::vec3 stonePos = m.position;
 				float distance = glm::length(myCamera.position - stonePos);
 				if (distance < myCamera.colliderRadius + stoneColliderRadius) {
 					std::cout << "In collision with stone!" << std::endl;
+					//if collision, reverse move
 					myCamera.Move((-1.0f) * glm::normalize(moveVector));
 					return;
 				}
@@ -675,7 +691,8 @@ void processInput() {
 
 /**
  * \brief Callback responsible for the scene update.
- * Physics, animation, movement...
+ * \details Physics, animation, movement...
+ * \param timerId Unused integer for the timer callback ID
  */
 void timerCb(int)
 {
@@ -684,7 +701,7 @@ void timerCb(int)
 
 	float elapsedTime = 0.001f * static_cast<float>(glutGet(GLUT_ELAPSED_TIME)); // milliseconds => seconds
 
-	//BILLBOARDS 
+	//BILLBOARDS UPDATE -----
 	//Update the billboard to always face the camera
 	if (fireflyGlow != nullptr) {
 		glm::vec3 localFireflyOffset = glm::vec3(0.0f, 0.05f, 0.1f); //local offset of the light in firefly coord system
@@ -695,8 +712,7 @@ void timerCb(int)
 	}
 
 	//OBJECTS UPDATE --------
-	// update the application state
-	for (ObjectInstance* object : objects) {   // for (auto object : objects) {
+	for (ObjectInstance* object : objects) {  
 		if (object != nullptr)
 			object->update(elapsedTime, &sceneRootMatrix);
 	}
@@ -725,9 +741,10 @@ void timerCb(int)
 
 
 // -----------------------  Application ---------------------------------
-
+#pragma region Application
 /**
  * \brief Initialize application data and OpenGL stuff.
+ * \details Initializes shaders, materials, skybox, all objects, and the key mappings logic.
  */
 void initApplication() {
 	// init OpenGL
@@ -741,8 +758,8 @@ void initApplication() {
 
 	mySkybox.init();
 
-	//ADD ALL OBJECTS TO SCENE--------------------------------------------------------
-	//objects.push_back(new HardcodedObject(&commonShaderProgram));
+	//ADD ALL OBJECTS TO SCENE ---
+	//loaded objects with texture
 	for (auto m : myModels) {
 		auto obj = new SingleMesh(m.obj_address, m.texture_address, &commonShaderProgram);
 
@@ -767,18 +784,19 @@ void initApplication() {
 		objects.push_back(obj);
 	}
 
+	//hardcoded objects without texture and with EBO
 	for (const auto& m : HardCodedObjects) {
 		objects.push_back(new HardcodedObject(&commonShaderProgram, &m));
 	}
 
+	//hardcoded objects without texture and without EBO
 	for (const auto& m : FlatShadedObjects) {
 		if (m.vertices != crystal_vertices) {
 			objects.push_back(new FlatShadedObject(&commonShaderProgram, &m));
 		}
-
-		
 	}
 
+	//color changing crystals set up
 	unsigned int i = 0;
 	for (const auto& m : FlatShadedObjects) {
 		if (m.vertices == crystal_vertices) {
@@ -792,7 +810,7 @@ void initApplication() {
 		}
 	}
 
-	// Create the glow effect (no .obj file needed!)
+	//load glow effect billboard
 	fireflyGlow = new Billboard("resources/glow-.png", &billboardShaderProgram);
 	fireflyGlow->setScale(0.7f);
 	fireflyGlow->setStartPosition(sceneLights.firefly.position);
@@ -804,9 +822,31 @@ void initApplication() {
 	//initialize keyboard map
 	for (int i = 0; i < KEYS_COUNT; i++)
 		keyMap[i] = false;
+}
 
-	// init your Application
-	// - setup the initial application state
+/**
+ * \brief Frees dynamically allocated memory for all objects in the scene.
+ * \details Iterates through the global objects list and the crystals array, deleting the pointers
+ *          to prevent memory leaks upon application exit.
+ */
+void cleanUpObjects() {
+	//delete standard objects and billboards
+	for (ObjectInstance* obj : objects) {
+		delete obj;
+	}
+	objects.clear();
+	fireflyGlow = nullptr;
+
+	//delete color-changing crystals
+	for (int i = 0; i < crystalsNum; i++) {
+		if (crystals[i] != nullptr) {
+			if (crystals[i]->crystal != nullptr) {
+				delete crystals[i]->crystal;
+			}
+			delete crystals[i];
+			crystals[i] = nullptr;
+		}
+	}
 }
 
 /**
@@ -814,7 +854,7 @@ void initApplication() {
  */
 void finalizeApplication(void) {
 
-	// cleanUpObjects();
+	cleanUpObjects();
 
 	// delete buffers
 	// cleanupModels();
@@ -822,7 +862,7 @@ void finalizeApplication(void) {
 	// delete shaders
 	cleanupShaderPrograms();
 }
-
+#pragma endregion
 
 /**
  * \brief Entry point of the application.
@@ -847,7 +887,7 @@ int main(int argc, char** argv) {
 		glutInitWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 		glutCreateWindow(WINDOW_TITLE);
 
-		// callbacks - use only those you need
+		// callbacks
 		glutDisplayFunc(displayCb);
 		glutReshapeFunc(reshapeCb);
 		glutKeyboardFunc(keyboardCb);
@@ -873,7 +913,6 @@ int main(int argc, char** argv) {
 	if (!pgr::initialize(pgr::OGL_VER_MAJOR, pgr::OGL_VER_MINOR))
 		pgr::dieWithError("pgr init failed, required OpenGL not supported?");
 
-	// init your stuff - shaders & program, buffers, locations, state of the application
 	initApplication();
 
 	// handle window close by the user
@@ -883,8 +922,6 @@ int main(int argc, char** argv) {
 	// Infinite loop handling the events
 	glutMainLoop(); //calls displaz and update (timerFc)
 
-	// code after glutLeaveMainLoop()
-	// cleanup
 
 	return EXIT_SUCCESS;
 }
