@@ -1,11 +1,19 @@
+//----------------------------------------------------------------------------------------
+/**
+ * \file    FlatShadedObject.cpp
+ * \author  Laura Katerina Dudkova
+ * \date    2026/05/11
+ * \brief   Implementation of the FlatShadedObject class, handling face normal calculations.
+ */
+
 #include "FlatShadedObject.h"
 #include <iostream>
 
 
-/*void FlatShadedObject::update(float elapsedTime, const glm::mat4* parentModelMatrix) {
-	// propagate the update to children
-	ObjectInstance::update(elapsedTime, parentModelMatrix);
-}*/
+ /*void FlatShadedObject::update(float elapsedTime, const glm::mat4* parentModelMatrix) {
+	 //propagate the update to children
+	 ObjectInstance::update(elapsedTime, parentModelMatrix);
+ }*/
 
 void FlatShadedObject::draw(const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix)
 {
@@ -41,17 +49,17 @@ void FlatShadedObject::draw(const glm::mat4& viewMatrix, const glm::mat4& projec
 		//alpha
 		glUniform1f(shaderProgram->locations.alpha, alpha);
 
-		//bind VAO for this specific object
+		//bind vao for this specific object
 		glBindVertexArray(geometry->vertexArrayObject);
 
-		//draw VBO
+		//draw vbo
 		glDrawArrays(
-			GL_TRIANGLES,                   // draw triangles
-			0,                              // start at beginning
-			geometry->numTriangles * 3      // total number of vertices
+			GL_TRIANGLES,                   //draw triangles
+			0,                              //start at beginning
+			geometry->numTriangles * 3      //total number of vertices
 		);
 
-		//unbind VAO
+		//unbind vao
 		glBindVertexArray(0);
 
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -84,59 +92,59 @@ FlatShadedObject::FlatShadedObject(ShaderProgram* shdrPrg, const FlatShadedModel
 	setScale(model->scale);
 
 
-	//OBJECT DATA
+	//object data
 	const float* vertices = model->vertices;
 
 	geometry->numTriangles = model->trianglesNum;
 
-	
 
-	// CHANGED: Create new unrolled vectors for vertices and flat normals
+
+	//create new unrolled vectors for vertices and flat normals
 	std::vector<float> flatVertices;
 	std::vector<glm::vec3> flatNormals;
 
-	// Each triangle consists of 3 vertices, which is 9 floats (3 * 3) in the array.
+	//each triangle consists of 3 vertices, which is 9 floats (3 * 3) in the array
 	for (int i = 0; i < geometry->numTriangles; i++) {
 
-		int offset = i * 9; // Starting index in the float array for this triangle
+		int offset = i * 9; //starting index in the float array for this triangle
 
-		//extract 3D positions of the triangle's 3 vertices
-		// CHANGED: Read directly from the linear array without using indices
+		//extract 3d positions of the triangle's 3 vertices
+		//read directly from the linear array without using indices
 		glm::vec3 v0(vertices[offset + 0], vertices[offset + 1], vertices[offset + 2]);
 		glm::vec3 v1(vertices[offset + 3], vertices[offset + 4], vertices[offset + 5]);
 		glm::vec3 v2(vertices[offset + 6], vertices[offset + 7], vertices[offset + 8]);
 
-		//calculate  two edges of the triangle
+		//calculate two edges of the triangle
 		glm::vec3 edge1 = v1 - v0;
 		glm::vec3 edge2 = v2 - v0;
 
-		//alculate normal of this specific face
+		//calculate normal of this specific face
 		glm::vec3 faceNormal = glm::normalize(glm::cross(edge2, edge1));
 
-		// CHANGED: Push data for all 3 vertices of this triangle
+		//push data for all 3 vertices of this triangle
 		for (int j = 0; j < 3; ++j) {
 			int vOffset = offset + (j * 3);
 
-			// Add Position (X, Y, Z)
+			//add position (x, y, z)
 			flatVertices.push_back(vertices[vOffset + 0]);
 			flatVertices.push_back(vertices[vOffset + 1]);
 			flatVertices.push_back(vertices[vOffset + 2]);
 
-			// Add Color (R, G, B) from the single model color
+			//add color (r, g, b) from the single model color
 			flatVertices.push_back(1.0f);
 			flatVertices.push_back(1.0f);
 			flatVertices.push_back(1.0f);
 
-			// Add the exact same face normal to all three vertices
+			//add the exact same face normal to all three vertices
 			flatNormals.push_back(faceNormal);
 		}
 	}
 
-	//VAO
+	//vao
 	glGenVertexArrays(1, &geometry->vertexArrayObject);
 	glBindVertexArray(geometry->vertexArrayObject);
 
-	//VBO - bind the unrolled flatVertices instead of raw model vertices
+	//vbo - bind the unrolled flatvertices instead of raw model vertices
 	glGenBuffers(1, &geometry->vertexBufferObject);
 	glBindBuffer(GL_ARRAY_BUFFER, geometry->vertexBufferObject);
 	glBufferData(GL_ARRAY_BUFFER, flatVertices.size() * sizeof(float), flatVertices.data(), GL_STATIC_DRAW);

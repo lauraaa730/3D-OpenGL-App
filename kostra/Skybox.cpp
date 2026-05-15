@@ -52,6 +52,8 @@ Skybox::Skybox() {
 
 void Skybox::init() {
     initSkyboxGeometry(&geometry);
+
+    //Define the 6 faces of the cubemap. The order matches the OpenGL GL_TEXTURE_CUBE_MAP_POSITIVE_X + i sequence.
     std::vector<std::string> faces = {
         "resources/skybox/night-no-moon/jettelly_no_moon_LEFT.png",  // GL_TEXTURE_CUBE_MAP_POSITIVE_X //LEFT
         "resources/skybox/night-no-moon/jettelly_no_moon_RIGHT.png",  // GL_TEXTURE_CUBE_MAP_NEGATIVE_X //RIGHT
@@ -125,6 +127,10 @@ void Skybox::initSkyboxGeometry(ObjectGeometry** geometry) {
         0,1,5, 5,4,0  // bottom
     };
 
+    // VAO
+    glGenVertexArrays(1, &((*geometry)->vertexArrayObject));
+    glBindVertexArray((*geometry)->vertexArrayObject);
+
     // VBO
     glGenBuffers(1, &((*geometry)->vertexBufferObject));
     glBindBuffer(GL_ARRAY_BUFFER, (*geometry)->vertexBufferObject);
@@ -135,12 +141,6 @@ void Skybox::initSkyboxGeometry(ObjectGeometry** geometry) {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, (*geometry)->elementBufferObject);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
-    // VAO
-    glGenVertexArrays(1, &((*geometry)->vertexArrayObject));
-    glBindVertexArray((*geometry)->vertexArrayObject);
-
-    glBindBuffer(GL_ARRAY_BUFFER, (*geometry)->vertexBufferObject);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, (*geometry)->elementBufferObject);
 
     if (skyboxShaderProgram.positionLocation != -1) {
         glEnableVertexAttribArray(skyboxShaderProgram.positionLocation);
@@ -161,15 +161,22 @@ void Skybox::initSkyboxGeometry(ObjectGeometry** geometry) {
 
 GLuint Skybox::loadCubemap(const std::vector<std::string>& faces) {
     GLuint textureID;
+
+    //generate and bind texture
     glGenTextures(1, &textureID);
     glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
+
     for (unsigned int i = 0; i < faces.size(); i++) {
         if (!pgr::loadTexImage2D(faces[i], GL_TEXTURE_CUBE_MAP_POSITIVE_X + i)) {
             std::cerr << "Failed to load cubemap texture at: " << faces[i] << std::endl;
         }
     }
+
+    //set texture filtering to linear for smooth blending between texels
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    //clamp to edge for all 3 axes
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);

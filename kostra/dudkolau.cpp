@@ -733,7 +733,7 @@ void timerCb(int)
 #endif // task_1_0
 
 	// and plan a new event
-	glutTimerFunc(33, timerCb, 0);
+	glutTimerFunc(15, timerCb, 0);
 
 	// create display event
 	glutPostRedisplay();

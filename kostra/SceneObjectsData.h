@@ -1,22 +1,31 @@
+//----------------------------------------------------------------------------------------
+/**
+ * \file    SceneObjectsData.h
+ * \author  Laura Katerina Dudkova
+ * \date    2026/05/11
+ * \brief   Pure data structures and arrays containing scene objects geometry and initialization data.
+ */
+
 #pragma once
 #include "pgr.h"
 
-/*
-* pure data class
-* 
-*/
-
+ /**
+  * \brief Structure holding initialization data for loaded textured models.
+  */
 struct Model {
-	const char* name;
-	const char* obj_address;
-	const char* texture_address;
+	const char* name;               ///< \brief Identifier name.
+	const char* obj_address;        ///< \brief Path to the .obj file.
+	const char* texture_address;    ///< \brief Path to the texture file.
 	glm::vec3 position;
 	glm::vec3 direction;
 	float scale;
-	bool isDynamic;
+	bool isDynamic;                 ///< \brief Flag for physics/animation updates.
 	bool hasAnimatedTexture;
 };
 
+/**
+ * \brief Structure holding initialization data for hardcoded, indexed geometry.
+ */
 struct HardCodedModel {
 	glm::vec3 position;
 	glm::vec3 direction;
@@ -26,8 +35,8 @@ struct HardCodedModel {
 	float alpha;
 
 	//geometry
-	const float * vertices;
-	const unsigned int * indeces;
+	const float* vertices;         ///< \brief Pointer to vertex data array.
+	const unsigned int* indeces;   ///< \brief Pointer to index data array.
 	int trianglesNum;
 	int verticesNum;
 
@@ -38,6 +47,9 @@ struct HardCodedModel {
 	float shininess;
 };
 
+/**
+ * \brief Structure holding initialization data for flat-shaded geometry without indices.
+ */
 struct FlatShadedModel {
 	glm::vec3 position;
 	glm::vec3 direction;
@@ -47,7 +59,7 @@ struct FlatShadedModel {
 	float alpha;
 
 	//geometry
-	const float* vertices;
+	const float* vertices;          ///< \brief Pointer to vertex data array.
 	int trianglesNum;
 
 	//material
@@ -57,12 +69,16 @@ struct FlatShadedModel {
 	float shininess;
 };
 
+/**
+ * \brief Structure for 2D billboard objects (sprites).
+ */
 struct BillboardModel {
 	glm::vec3 position;
-	bool isOverlay; //if true - its just a picture on top of the screen and we dont apply pvm
+	bool isOverlay;                 ///< \brief If true, renders as UI overlay without PVM matrix.
 
 };
 
+/// \brief Vertices and colors for the hardcoded stone object.
 const float stone_vertices[] = {
 	// -------- top ring --------
  0.00f,  0.90f,  0.00f,   0.70f, 0.70f, 0.70f,
@@ -101,6 +117,7 @@ const float stone_vertices[] = {
 	0.00f, -0.62f,  0.00f,   0.30f, 0.30f, 0.30f,
 };
 
+/// \brief Indices for the hardcoded stone object.
 const unsigned int stone_indices[] = {
 	// top cap
 0,1,2,   0,2,3,   0,3,4,
@@ -142,6 +159,7 @@ const unsigned int stone_indices[] = {
 
 };
 
+/// \brief Vertices and colors for the hardcoded pond water plane.
 const float pond_vertices[] = {
 	// Row 0 (Z = -3.0)
 	 3.0f, 0.02f, -3.0f,    1.0f, 1.0f, 1.0f,
@@ -207,6 +225,7 @@ const float pond_vertices[] = {
 	-3.0f, 0.06f,  3.0f,    1.0f, 1.0f, 1.0f
 };
 
+/// \brief Indices for the hardcoded pond water plane.
 const unsigned int pond_indices[] = {
 	// Row 0
 	0, 7, 1, 1, 7, 8,       1, 8, 2, 2, 8, 9,       2, 9, 3, 3, 9, 10,
@@ -234,6 +253,7 @@ const unsigned int pond_indices[] = {
 };
 
 
+/// \brief Vertices for the hardcoded, flat-shaded crystal object.
 const float crystal_vertices[] = {
 	//top half
 	// Triangle 1
@@ -300,8 +320,9 @@ const float crystal_vertices[] = {
 
 
 
+/// \brief Array of standard textured models placed in the scene.
 //dal od vodopadu dopredu - osa z zaporne, doleva - kladne na ose x
-const Model myModels[] = { 
+const Model myModels[] = {
 	{ "fish", "myModels/Fish/fish.obj", "myModels/Fish/fish.jpg", glm::vec3(0.0f, -0.3f, 0.5f),glm::vec3(3.0f,2.0,3.0), 0.2f, true, false },
 	{ "hibiscous", "myModels/Hibiscous/hibiscous.obj", "myModels/Hibiscous/hibiscous_color.jpg", glm::vec3(-2.0f,0.5f,0.0f),glm::vec3(1.0,0.0,0.0), 0.5f, false, false },
 	{ "hibiscous", "myModels/Hibiscous/hibiscous.obj", "myModels/Hibiscous/hibiscous_color.jpg", glm::vec3(1.75f,0.7f,1.25f),glm::vec3(0.5,0.0,1.0), 0.5f, false, false },
@@ -314,10 +335,11 @@ const Model myModels[] = {
 	{ "mine", "myModels/Mine/mine2.obj", "myModels/Mine/mine1.png", glm::vec3(5.0f,1.4f,-5.2f),glm::vec3(0.0f,1.0f,0.0f), 2.5f, false, false},
 	{ "cave","myModels/StoneCircle/stone_circle.obj", "myModels/StoneCircle/stone_circle.png", glm::vec3(-0.1f,4.5f,-1.5f),glm::vec3(1.0f,0.0f,0.0f), 20.0f, false, false},
 	{ "vodopad", "myModels/Vodopad/vodopad.obj", "myModels/Vodopad/vodopad.png", glm::vec3(0.3f,0.8f,2.2f),glm::vec3(0.2f,-0.5f,1.0f), 1.0f, false, true}
-	
+
 
 };
 
+/// \brief Array of hardcoded models with indices placed in the scene.
 const HardCodedModel HardCodedObjects[] = {
 	{	//stone
 		glm::vec3(3.5f,0.5f,-2.0f),
@@ -330,9 +352,9 @@ const HardCodedModel HardCodedObjects[] = {
 		52,
 		28,
 		glm::vec3(0.2f, 0.2f, 0.2f),
-		glm::vec3(0.5f, 0.5f, 0.5f), 
-		glm::vec3(0.1f, 0.1f, 0.1f), 
-		8.0f 
+		glm::vec3(0.5f, 0.5f, 0.5f),
+		glm::vec3(0.1f, 0.1f, 0.1f),
+		8.0f
 	},
 
 
@@ -349,11 +371,12 @@ const HardCodedModel HardCodedObjects[] = {
 		glm::vec3(0.1f, 0.5f, 0.5f),
 		glm::vec3(0.0f, 0.3f, 0.5f),
 		glm::vec3(1.0f),
-		128.0f 
-		
+		128.0f
+
 	}
 };
 
+/// \brief Array of flat-shaded models (like crystals) placed in the scene.
 const FlatShadedModel FlatShadedObjects[] = {
 	{	//crystal
 		glm::vec3(-1.5f,1.0f,-5.0f),
@@ -395,5 +418,3 @@ const FlatShadedModel FlatShadedObjects[] = {
 		8.0f
 	}
 };
-
-
