@@ -395,4 +395,18 @@ public:
 	virtual void setColor(glm::vec3 c) {
 		material->diffuse = c;
 	}
+
+	/**
+	 * \brief Returns the current position in world.
+	 */
+	virtual glm::vec3 getWorldPosition() {
+		return positionInWorld;
+	}
+
+	/**
+	 * \brief Returns the current driection.
+	 */
+	virtual glm::vec3 getDirection() {
+		return direction;
+	}
 };

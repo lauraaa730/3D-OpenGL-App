@@ -13,18 +13,16 @@
   */
 Camera::Camera()
 {
-    position = glm::vec3(0.0f, 1.0f, 0.0f);
-    direction = glm::vec3(0.0f, 0.0f, -1.0f);
-    upVector = glm::vec3(0.0f, 1.0f, 0.0f);
+    position = startCameraPosition;
+    direction = StartCameraDirection;
+    upVector = startCameraUpVector;
 
-    currMode = FREE_LOOK;
-    position1 = glm::vec3(-3.0, 3.0, -4.0);
-    position2 = glm::vec3(5.0, 5.0, -5.0);
+    currMode = startCameraMode;
 
-    pitch = 0.0f;
-    yaw = -90.0f;
-    speed = 0.1f;
-    colliderRadius = 1.0f;
+    pitch = startCameraPitch;
+    yaw = startCameraYaw;
+    speed = cameraSpeed;
+    colliderRadius = cameraColliderRadius;
 }
 
 /**
@@ -48,12 +46,12 @@ void Camera::switchMode() {
 
     //set camera position
     if (currMode == POSITION_1) {
-        position = position1;
+        position = cameraPosition1;
         yaw = 50.0f;
         pitch = -20.0f;
     }
     else if (currMode == POSITION_2) {
-        position = position2;
+        position = cameraPosition2;
         yaw = 120.0f;
         pitch = -25.0f;
     }

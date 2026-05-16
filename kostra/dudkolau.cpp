@@ -61,6 +61,7 @@ Billboard* fireflyGlow; ///< \brief Billboard object for the firefly light glow 
 Billboard* cursor; ///< \brief Billboard object for the custom cursor.
 
 Crystal* crystals[crystalsNum]; ///< \brief Array holding color-changing crystal objects.
+unsigned int fishObjectIndex;
 
 /** @} */
 
@@ -592,7 +593,7 @@ void passiveMouseMotionCb(int mouseX, int mouseY) {
 	// mouse hovering over window
 	glutWarpPointer(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
 
-	if (myCamera.currMode != FREE_LOOK) {
+	if (myCamera.currMode != FREE_LOOK || myCamera.currMode == FISH_VIEW) {
 		return;
 	}
 
@@ -727,6 +728,15 @@ void timerCb(int)
 		
 	}
 
+	//CAMERA UPDATE ---
+	if (myCamera.currMode == FISH_VIEW) {
+		ObjectInstance* fish = objects.at(fishObjectIndex);
+		if (fish != nullptr) {
+			myCamera.direction = fish->getDirection();
+			myCamera.position = fish->getWorldPosition() + 0.5f * myCamera.direction;
+		}
+	}
+
 	//PROCESS INPUT --------
 	processInput();
 
@@ -770,6 +780,9 @@ void initApplication() {
 		obj->setIsDynamic(m.isDynamic);
 		obj->setHasAnimatedTexture(m.hasAnimatedTexture);
 
+		if (m.name == "fish") {
+			fishObjectIndex = objects.size();
+		}
 		if (m.name == "firefly") {
 			obj->setModelRotationOffset(-90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
 		}
