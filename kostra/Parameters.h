@@ -41,7 +41,7 @@ bool keyMap[KEYS_COUNT]; ///< \brief Array storing the current state (pressed/re
 //LIGHTS =======================================================================
 
 //Moon Light
-glm::vec3 moonLightAmbient = glm::vec3(0.3f, 0.3f, 0.9f);             ///< \brief Ambient color component of the moon light.
+glm::vec3 moonLightAmbient = glm::vec3(0.5f, 0.5f, 1.0f);             ///< \brief Ambient color component of the moon light.
 glm::vec3 moonLightDiffuse = glm::vec3(0.6f, 0.6f, 0.9f);             ///< \brief Diffuse color component of the moon light.
 glm::vec3 moonLightSpecular = glm::vec3(1.0f, 1.0f, 1.0f);            ///< \brief Specular color component of the moon light.
 glm::vec3 moonLightDirection = glm::normalize(glm::vec3(1.0f, -1.0f, -0.1f)); ///< \brief Normalized direction vector of the moon light.
@@ -55,6 +55,10 @@ float fireflyConstant = 1.0f;                                         ///< \brie
 float fireflyLinear = 0.9f;                                           ///< \brief Linear attenuation factor for the firefly light.
 float fireflyQuadratic = 0.8f;                                        ///< \brief Quadratic attenuation factor for the firefly light.
 
+unsigned int maxGlowCounter = 16;
+//fps for firefly glow
+float fireflyTimePerFrame = 1.0f / 10.0f;							  ///< \brief Time per frame in dimming light animation.
+
 //Lantern
 glm::vec3 lanternPosition = glm::vec3(3.3f, 0.64f, -5.12f);           ///< \brief 3D position of the lantern point light.
 glm::vec3 lanternAmbient = glm::vec3(0.4f, 0.4f, 0.4f);               ///< \brief Ambient color component of the lantern light.
@@ -65,16 +69,16 @@ float lanternLinear = 0.9f;                                           ///< \brie
 float lanternQuadratic = 0.8f;                                        ///< \brief Quadratic attenuation factor for the lantern light.
 
 //Lamp
-glm::vec3 lamp_1Ambient = glm::vec3(1.0f, 1.0f, 1.0f);                ///< \brief Ambient color component of the lamp spotlight.
+glm::vec3 lamp_1Ambient = glm::vec3(0.05f, 0.05f, 0.05f);                ///< \brief Ambient color component of the lamp spotlight.
 glm::vec3 lamp_1Diffuse = glm::vec3(0.9f, 0.9f, 1.0f);                ///< \brief Diffuse color component of the lamp spotlight.
 glm::vec3 lamp_1Specular = glm::vec3(1.0f, 1.0f, 1.0f);               ///< \brief Specular color component of the lamp spotlight.
 glm::vec3 lamp_1Position = glm::vec3(0.0f, 5.0f, 0.0f);               ///< \brief 3D position of the lamp spotlight.
 glm::vec3 lamp_1Direction = glm::vec3(-0.2f, -1.0f, -1.0f);           ///< \brief Direction vector the lamp spotlight is pointing.
-float lamp_1Constant = 1.0f;                                          ///< \brief Constant attenuation factor for the lamp spotlight.
-float lamp_1Linear = 0.045f;                                          ///< \brief Linear attenuation factor for the lamp spotlight.
-float lamp_1Quadratic = 0.0075f;                                      ///< \brief Quadratic attenuation factor for the lamp spotlight.
-float lamp_1SpotCosCutOff = 0.965f;                                   ///< \brief Cosine of the half-angle defining the spotlight cone.
-float lamp_1SpotExponent = 40.0;                                      ///< \brief Exponent defining light falloff within the spotlight cone.
+float lamp_1Constant = 1.0f;                                          ///< \brief Constant attenuation factor for the lamp spotlight. The smaller the number, the further it can reach.
+float lamp_1Linear = 0.045f;                                          ///< \brief Linear attenuation factor for the lamp spotlight. The smaller the number, the further it can reach.
+float lamp_1Quadratic = 0.0075f;                                      ///< \brief Quadratic attenuation factor for the lamp spotlight. The smaller the number, the further it can reach.
+float lamp_1SpotCosCutOff = 0.965f;                                   ///< \brief Cosine of the half-angle defining the spotlight cone. The smaller the number, the bigger the cone.
+float lamp_1SpotExponent = 70.0;                                      ///< \brief Exponent defining light falloff within the spotlight cone. THe bigger the number, the bigger falloff.
 
 // =============================================================================
 

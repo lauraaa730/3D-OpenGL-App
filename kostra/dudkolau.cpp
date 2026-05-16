@@ -57,11 +57,13 @@ Camera myCamera; ///< \brief Main camera object handling view matrices.
 Skybox mySkybox; ///< \brief Skybox object handling the background environment.
 SceneLights sceneLights; ///< \brief Struct containing all light sources in the scene.
 
+
 Billboard* fireflyGlow; ///< \brief Billboard object for the firefly light glow effect.
+unsigned int fireflyLightTimer; ///< \brief Counter for dimming firefly light
 Billboard* cursor; ///< \brief Billboard object for the custom cursor.
 
 Crystal* crystals[crystalsNum]; ///< \brief Array holding color-changing crystal objects.
-unsigned int fishObjectIndex;
+unsigned int fishObjectIndex;  ///<  \brief Index of fish object inside objects list.
 
 /** @} */
 
@@ -89,6 +91,8 @@ unsigned int fishObjectIndex;
  */
 
 void setUpLights() {
+	fireflyLightTimer = 0;
+
 	//Moon Light
 	sceneLights.moonLight.ambient = moonLightAmbient;
 	sceneLights.moonLight.diffuse = moonLightDiffuse;
@@ -334,6 +338,11 @@ void drawScene(void)
 	//set uniforms
 	glUseProgram(commonShaderProgram.program);
 	glUniformMatrix4fv(commonShaderProgram.locations.Vmatrix, 1, GL_FALSE, glm::value_ptr(viewMatrix));
+	
+	//update color of changing light
+	glUniform3fv(commonShaderProgram.locations.lamp1Diffuse, 1, glm::value_ptr(sceneLights.lamp_1.diffuse));
+	glUniform3fv(commonShaderProgram.locations.lamp1Ambient, 1, glm::value_ptr(sceneLights.lamp_1.ambient));
+	glUniform3fv(commonShaderProgram.locations.fireflyDiffuse, 1, glm::value_ptr(sceneLights.firefly.diffuse));
 
 	//draw every object
 	for (ObjectInstance* object : objects) { 
@@ -727,6 +736,27 @@ void timerCb(int)
 		}
 		
 	}
+
+	//COLORED LIGHTS UPDATE ---+
+	float colorChangeSpeed = 2.0f; //speed of the color cycle
+	float time = elapsedTime * colorChangeSpeed;
+
+	//offset the phases by 120 degrees (2.094 radians)
+	float r = (sin(time) + 1.0f) / 2.0f;
+	float g = (sin(time + 2.0f) + 1.0f) / 2.0f;
+	float b = (sin(time + 4.0f) + 1.0f) / 2.0f;
+
+	sceneLights.lamp_1.diffuse = glm::vec3(r,g,b);
+	sceneLights.lamp_1.ambient = glm::vec3(r, g, b) * 0.9f;
+
+	//firefly glow light update
+	float timePerFrame = 1.0f / 10.0f;
+	int totalFrames = 16;
+	int syncedFrame = (int)(elapsedTime / timePerFrame) % totalFrames;
+	float cyclePercentage = float(syncedFrame) / float(totalFrames);
+
+	float intensity = sin(cyclePercentage * 3.14159f);
+	sceneLights.firefly.diffuse = fireflyDiffuse * (intensity * 0.1f);
 
 	//CAMERA UPDATE ---
 	if (myCamera.currMode == FISH_VIEW) {
