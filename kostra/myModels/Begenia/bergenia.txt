@@ -1,0 +1,12 @@
+#DownloadModelFormat: OBJ
+#GeometryFile: begenia.obj
+#MaterialFile: none
+#PreviewFile: bergenia.jpg
+#OtherFiles: bergenia_color.jpeg, bergenia_normal.jpeg
+#DownloadedFromURL: https://sketchfab.com/3d-models/bergenia-flower-a0f3d23779a2471a861e67249dd95fae
+#DateOfDownload: 6.6.2023
+#CreatedBy: Lassi Kaukonen
+#CreatedIn: Blender
+#UploadedBy: Jakub Profota
+#Description: Bergenia Flower
+#NumberOfPolygons: 7616

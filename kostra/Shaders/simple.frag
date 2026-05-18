@@ -120,7 +120,6 @@ vec3 computePointLight(Light light) {
     vec3 specular = vec3(0.0);
 
     //only calculate it if its hitting the front of the face
-    //todo is this neccessary???
     if (true) { 
         vec3 R = reflect(-L, N);
         float shininess = max(material.shininess, 0.01); //safety check, because 0.0 shininess causes problems
@@ -222,7 +221,7 @@ void main() {
     flashlight.position = vec3(0.0, 2.0, 0.0);      //hardcoded world position
     flashlight.direction = vec3(0.0, -1.0, 0.0);    //hardcoded pointing forward (-Z)
     flashlight.constant = 1.0;
-    flashlight.linear = 0.045;                      //good for ~50 meters
+    flashlight.linear = 0.045;                      
     flashlight.quadratic = 0.0075;
     flashlight.spotCosCutOff = 0.965;               //~15 degree cone
     flashlight.spotExponent = 40.0;                 //soft edge

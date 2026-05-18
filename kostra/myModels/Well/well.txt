@@ -1,0 +1,12 @@
+#DownloadModelFormat: OBJ
+#GeometryFile: well.obj
+#MaterialFile: well.mtl
+#PreviewFile: well.jpg
+#OtherFiles: well_water.png, stone.png, well_roof.png, well_roof2.png, well_rope.png, well1.png, well2.png, well_wood.png
+#DownloadedFromURL: https://www.cgtrader.com/free-3d-models/exterior/historic-exterior/stylized-water-well-low-poly
+#DateOfDownload: 29.4.2024  
+#CreatedBy: burcukayasii
+#CreatedIn: Unknown
+#UploadedBy: Eliška Rojíčková
+#Description: Model of well
+#NumberOfPolygons: 13463

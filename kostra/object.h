@@ -204,8 +204,6 @@ public:
 		shaderProgram = shdrPrg;
 		positionInWorld = glm::vec3(0.0f, 0.0f, 0.0f);
 		isDynamic = false;
-
-		//TODO set speed!!!
 		speed = 0.7f;
 		upVector = glm::vec3(0.0f, 1.0f, 0.0f);
 		direction = glm::vec3(0.0f, 0.0f, 1.0f);
@@ -299,7 +297,6 @@ public:
 	 * \param new_position The new 3D coordinate.
 	 */
 	virtual void setPosition(glm::vec3 new_position) {
-		//todo jaky je presne rozdil mezi globalModelMatrix a localModelMatrix?
 		positionInWorld = new_position;
 		transformObject();
 	}

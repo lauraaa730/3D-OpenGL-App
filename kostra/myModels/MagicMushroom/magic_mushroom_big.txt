@@ -1,0 +1,12 @@
+#DownloadModelFormat: OBJ
+#GeometryFile: magic_mushroom_big.obj
+#MaterialFile: magic_mushroom_big.mtl
+#PreviewFile: magic_mushroom_big.jpg
+#OtherFiles: mushroms_Base_color_1001.png
+#DownloadedFromURL: https://sketchfab.com/3d-models/stylized-mushrooms-9d22e02ce2a548959b1c4c4c1d546842
+#DateOfDownload: 2.5.20024
+#CreatedBy:QumoDone
+#CreatedIn: Unknown
+#UploadedBy: Eliška Rojíčková
+#Description: Model of Magic mushroom
+#NumberOfPolygons: 1008

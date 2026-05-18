@@ -8,11 +8,6 @@
 
 #include "Skybox.h"
 
- /**
-  * \brief Vertex shader source code for the skybox.
-  * \details Outputs texture coordinates based on vertex positions and calculates the gl_Position
-  *          using a view matrix with its translation component removed.
-  */
 const std::string skyboxVertexShaderSrc(
     "#version 140\n"
     "\n"
@@ -28,10 +23,6 @@ const std::string skyboxVertexShaderSrc(
     "}\n"
 );
 
-/**
- * \brief Fragment shader source code for the skybox.
- * \details Samples the cubemap texture using the 3D texture coordinates provided by the vertex shader.
- */
 const std::string skyboxFragmentShaderSrc(
     "#version 140\n"
     "\n"

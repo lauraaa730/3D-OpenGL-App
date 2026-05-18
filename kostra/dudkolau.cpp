@@ -813,8 +813,14 @@ void initApplication() {
 		if (m.name == "fish") {
 			fishObjectIndex = objects.size();
 		}
-		if (m.name == "firefly") {
+		else if (m.name == "firefly") {
 			obj->setModelRotationOffset(-90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+		}
+		else if (m.name == "snowdrop") {
+			obj->setModelRotationOffset(-90.0f, glm::vec3(1.0f, 0.0f, 0.0f));
+		}
+		else if (m.name == "magicMushroom") {
+			obj->setModelRotationOffset(-90.0f, glm::vec3(1.0f, 0.0f, 0.0f));
 		}
 		else if (m.name == "mine") {
 			obj->setModelRotationOffset(-125.0f, glm::vec3(1.0f, 0.0f, 0.0f));

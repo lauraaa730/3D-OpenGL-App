@@ -1,0 +1,12 @@
+#DownloadModelFormat: OBJ
+#GeometryFile: rose.obj
+#MaterialFile: none
+#PreviewFile: rose.jpg
+#OtherFiles: rose_color.jpg, rose_normal.jpg
+#DownloadedFromURL: https://sketchfab.com/3d-models/red-rose-74520e87c3ed46898668c83356dd9cfa
+#DateOfDownload: 6.6.2023
+#CreatedBy: Lassi Kaukonen
+#CreatedIn: Blender
+#UploadedBy: Jakub Profota
+#Description: Rose Flower
+#NumberOfPolygons: 4674

@@ -119,7 +119,7 @@ const float stone_vertices[] = {
 
 /// \brief Indices for the hardcoded stone object.
 const unsigned int stone_indices[] = {
-	// top cap
+	// top
 0,1,2,   0,2,3,   0,3,4,
 0,4,5,   0,5,6,   0,6,7,
 0,7,8,   0,8,1,
@@ -146,7 +146,7 @@ const unsigned int stone_indices[] = {
 16,25,26,  16,26,17,
 17,26,18,  17,18,9,
 
-// bottom taper
+// bottom
 18,27,19,
 19,27,20,
 20,27,21,
@@ -324,9 +324,14 @@ const float crystal_vertices[] = {
 //dal od vodopadu dopredu - osa z zaporne, doleva - kladne na ose x
 const Model myModels[] = {
 	{ "fish", "myModels/Fish/fish.obj", "myModels/Fish/fish.jpg", glm::vec3(0.0f, -0.3f, 0.5f),glm::vec3(3.0f,2.0,3.0), 0.2f, true, false },
-	{ "hibiscous", "myModels/Hibiscous/hibiscous.obj", "myModels/Hibiscous/hibiscous_color.jpg", glm::vec3(-2.0f,0.5f,0.0f),glm::vec3(1.0,0.0,0.0), 0.5f, false, false },
-	{ "hibiscous", "myModels/Hibiscous/hibiscous.obj", "myModels/Hibiscous/hibiscous_color.jpg", glm::vec3(1.75f,0.7f,1.25f),glm::vec3(0.5,0.0,1.0), 0.5f, false, false },
+	{ "hibiscous", "myModels/Hibiscous/hibiscous.obj", "myModels/Hibiscous/hibiscous_color.jpg", glm::vec3(-0.3f,0.5f,-1.5f),glm::vec3(1.0,0.0,0.0), 0.25f, false, false },
+	{ "rose", "myModels/Rose/rose.obj", "myModels/Rose/rose_color.jpg", glm::vec3(1.5f,0.5f,-1.2f),glm::vec3(1.0,0.0,0.0), 0.5f, false, false },
+	//{ "geranium", "myModels/Geranium/geranium.obj", "myModels/Geranium/geranium_color.png", glm::vec3(-1.75f,0.7f,1.25f),glm::vec3(0.5,0.0,1.0), 0.5f, false, false },
+	{ "snowdrop", "myModels/Snowdrop/Snowdrop.obj", "myModels/Snowdrop/Snowdrop_diffuse.tga", glm::vec3(1.0f,0.5f,-1.5f),glm::vec3(0.5,0.0,1.0), 0.25f, false, false },
+	{ "magicMushroom", "myModels/MagicMushroom/magic_mushroom_big.obj", "myModels/MagicMushroom/mushroms_Base_color_1001.png", glm::vec3(1.85f,0.7f,1.15f),glm::vec3(0.5,0.0,1.0), 0.5f, false, false },
 	{ "crocus", "myModels/Crocus/Crocus.obj", "myModels/Crocus/Crocus.tga", glm::vec3(2.15f,0.5f,0.5f),glm::vec3(0.0,1.0,0.0), 0.2f, false, false },
+	{ "crocus", "myModels/Crocus/Crocus.obj", "myModels/Crocus/Crocus.tga", glm::vec3(-1.5f,0.5f,-1.25f),glm::vec3(0.0,1.0,0.0), 0.2f, false, false },
+	{ "crocus", "myModels/Crocus/Crocus.obj", "myModels/Crocus/Crocus.tga", glm::vec3(-1.5f,0.5f,2.0f),glm::vec3(0.0,1.0,0.0), 0.4f, false, false },
 	{ "kapradi", "myModels/Kapradi/kapradi.obj", "myModels/Kapradi/plane.tga", glm::vec3(1.0f,-1.0f,0.1f),glm::vec3(0.5,0.0,1.0), 1.0f, false, false },
 	{ "kapradi", "myModels/Kapradi/kapradi.obj", "myModels/Kapradi/plane.tga", glm::vec3(0.0f,-1.1f,0.75f),glm::vec3(1.0,-0.1,-1.0), 0.7f, false, false },
 	{ "kapradi", "myModels/Kapradi/kapradi.obj", "myModels/Kapradi/plane.tga", glm::vec3(-0.5f,-1.1f,-0.1f),glm::vec3(-1.0,0.0,-0.5), 0.9f, false, false },
