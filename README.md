@@ -1,6 +1,12 @@
 ## Project Description
 An interactive 3D graphics application created in OpenGL. The scene consists of a large rock formation with a small pond in the middle, featuring a waterfall and a swimming fish. Furthermore, the scene includes flowers, stones, and crystals that change color when clicked. Lighting is calculated using the Phong illumination model, and the entire scene is surrounded by a night sky skybox.
 
+<img width="300" height="250" alt="thumb1" src="https://github.com/user-attachments/assets/03084a51-9a50-4cb2-a63f-8b4b04517e3d" />
+<img width="300" height="250" alt="thumb3" src="https://github.com/user-attachments/assets/3f5f5401-b9ae-4dba-8f14-6137c93a2a1e" />
+<img width="300" height="250" alt="thumb2" src="https://github.com/user-attachments/assets/9556ed9c-6a44-464c-9b5d-f95a71ef0184" />
+
+
+
 ## Controls
 * **W/S** - Move camera forward/backward in its viewing direction.
 * **A/D** - Move camera left/right.
